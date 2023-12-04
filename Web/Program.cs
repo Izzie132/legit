@@ -7,8 +7,6 @@ using Web.Infrastructure.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder
     .Services
     .Configure<ProjectNameOptions>(
@@ -23,11 +21,19 @@ builder
 
 builder.Services.AddDbContext<DataContext>();
 
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.AddSpaStaticFiles(spaStaticFiles => { spaStaticFiles.RootPath = "client-app/dist"; });
+}
+
 builder.Services.AddFastEndpoints();
+
 
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseFastEndpoints(c =>
 {

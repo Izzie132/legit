@@ -27,7 +27,7 @@ export const UserList = () => {
         setUsers(res.users);
       },
     });
-  }, [getUsers]);
+  }, []);
 
   return (
     <>

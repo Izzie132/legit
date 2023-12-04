@@ -35,7 +35,7 @@ export const Weather = () => {
         setWeatherInfo(response);
       },
     });
-  }, [getWeather]);
+  }, []);
 
   const cycleTemperatureUnits = () => {
     switch (temperatureUnits) {

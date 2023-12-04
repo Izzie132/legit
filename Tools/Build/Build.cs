@@ -30,7 +30,7 @@ class Build : NukeBuild
     private static AbsolutePath WebProjectDirectory => RootDirectory / "Web";
 
     private static AbsolutePath ReactClientDirectory => WebProjectDirectory / "client-app";
-    AbsolutePath MigrationsDirectory => RootDirectory / "Migrations";
+    AbsolutePath MigrationsDirectory => RootDirectory / "Tools" / "Migrations";
     AbsolutePath MigrationsDllFile =>
         MigrationsDirectory / $"bin/{Configuration}/net8.0/Migrations.dll";
 
