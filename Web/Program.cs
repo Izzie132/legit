@@ -23,16 +23,20 @@ builder.Services.AddDbContext<DataContext>();
 
 if (!builder.Environment.IsDevelopment())
 {
-    builder.Services.AddSpaStaticFiles(spaStaticFiles => { spaStaticFiles.RootPath = "client-app/dist"; });
+    builder
+        .Services
+        .AddSpaStaticFiles(spaStaticFiles =>
+        {
+            spaStaticFiles.RootPath = "client-app/dist";
+        });
 }
 
 builder.Services.AddFastEndpoints();
 
-
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
-app.UseDefaultFiles();
+
 app.UseStaticFiles();
 
 app.UseFastEndpoints(c =>
@@ -54,6 +58,8 @@ app.UseFastEndpoints(c =>
         );
     };
 });
+
+app.MapFallbackToFile("index.html");
 
 app.Run();
 

@@ -1,12 +1,13 @@
 ﻿using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Reflection;
+using Azure.Core;
+using Azure.Identity;
 using DbUp;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using DbUp.Helpers;
 using DbUp.SqlServer;
-using Microsoft.Azure.Services.AppAuthentication;
 
 namespace Migrations;
 
@@ -51,35 +52,28 @@ public static class MigrationRunner
 
                     IConnectionManager connectionManager;
 
-                    string? azureAccessToken = null;
                     if (useAzureIdentity)
                     {
-                        var httpClient = new HttpClient();
-                        var azureServiceTokenProvider = new AzureServiceTokenProvider();
-                        azureAccessToken = azureServiceTokenProvider
-                            .GetAccessTokenAsync("https://database.windows.net/")
-                            .Result;
+                        var defaultAzureCredentialOptions = new DefaultAzureCredentialOptions();
+                        var azureCredential = new DefaultAzureCredential(
+                            defaultAzureCredentialOptions
+                        );
+
+                        var databaseAccessToken = azureCredential.GetToken(
+                            new TokenRequestContext(
+                                new[] { "https://database.windows.net/.default" }
+                            )
+                        );
+
                         connectionManager = new AzureSqlConnectionManager(
                             connectionString,
-                            azureAccessToken
+                            azureAccessToken: databaseAccessToken.Token
                         );
                     }
                     else
                     {
                         connectionManager = new SqlConnectionManager(connectionString);
                     }
-
-                    var upgrader = DeployChanges
-                        .To
-                        .SqlDatabase(connectionManager)
-                        .WithScriptsEmbeddedInAssembly(
-                            Assembly.GetExecutingAssembly(),
-                            s => s.Contains("Migrations.Scripts")
-                        )
-                        .LogToConsole()
-                        .LogScriptOutput()
-                        .WithTransaction()
-                        .Build();
 
                     if (cleanFirst)
                     {

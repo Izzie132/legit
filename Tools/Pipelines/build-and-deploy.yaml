@@ -1,0 +1,34 @@
+trigger: 
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: build_and_test
+    jobs:
+      - job: build_and_test
+        displayName: 'Build and Test'
+        steps:
+          - template: prepare-agent.yaml
+          - task: PowerShell@2
+            displayName: 'Build, test and publish'
+            inputs:
+              filePath: './build.ps1'
+              arguments: 'Publish'
+          - powershell: ls
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish build artifacts'
+            inputs:
+              pathToPublish: 'build-output'
+              artifactName: 'build-artifacts'
+            
+  - stage: qa
+    jobs:
+      - template: deploy-job-template.yaml
+        parameters:
+          deploymentName: 'deploy_qa'
+          environmentName: 'QA'
+          serviceConnectionName: 'PRJCT-SERCON-LJD'
+          webAppResourceName: 'PRJCT-WA01-LJD'
+          databaseConnectionString: 'Server=tcp:prjct-sql01-ljd.database.windows.net,1433;Initial Catalog=PRJCT-SQLDB01-LJD;Encrypt=True;TrustServerCertificate=True;Connection Timeout=120;Authentication=Active Directory Default;'

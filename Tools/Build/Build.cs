@@ -34,6 +34,8 @@ class Build : NukeBuild
     AbsolutePath MigrationsDllFile =>
         MigrationsDirectory / $"bin/{Configuration}/net8.0/Migrations.dll";
 
+    private static AbsolutePath BuildOutputDirectory => RootDirectory / "build-output";
+
     Target CleanSolution =>
         _ =>
             _.Executes(() =>
@@ -78,6 +80,28 @@ class Build : NukeBuild
                 CheckBackEndCodeQuality,
                 RunBackendTests
             );
+
+    Target Publish =>
+        _ =>
+            _.DependsOn(BuildAndTest)
+                .Executes(() =>
+                {
+                    DotNetTasks.DotNetPublish(
+                        s =>
+                            s.SetProject(WebProjectDirectory)
+                                .SetConfiguration(Configuration)
+                                .SetOutput(BuildOutputDirectory / "Web")
+                                .EnableNoRestore()
+                    );
+
+                    DotNetTasks.DotNetPublish(
+                        s =>
+                            s.SetProject(MigrationsDirectory)
+                                .SetConfiguration(Configuration)
+                                .SetOutput(BuildOutputDirectory / "Migrations")
+                                .EnableNoRestore()
+                    );
+                });
 
     #region Tests
 
@@ -142,6 +166,11 @@ class Build : NukeBuild
         _ =>
             _.Executes(() =>
             {
+                // TODO - Check if this stops errors in DevOps
+                DockerTasks.DockerPull(
+                    c => c.SetName("mcr.microsoft.com/mssql/server:2022-latest")
+                );
+
                 DockerTasks.DockerCreate(
                     c =>
                         c.SetImage("mcr.microsoft.com/mssql/server:2022-latest")

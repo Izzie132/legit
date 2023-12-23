@@ -6,7 +6,7 @@ pool:
 steps:
   - template: prepare-agent.yaml
   - task: PowerShell@2
-    displayName: 'Build and Test'
+    displayName: 'Build and test'
     inputs:
       filePath: './build.ps1'
       arguments: 'BuildAndTest'

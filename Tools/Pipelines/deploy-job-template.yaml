@@ -1,0 +1,35 @@
+parameters:
+  - name: deploymentName
+    type: string
+  - name: environmentName
+    type: string
+  - name: serviceConnectionName
+    type: string
+  - name: webAppResourceName
+    type: string
+  - name: databaseConnectionString
+    type: string
+
+jobs:
+  - deployment: ${{ parameters.deploymentName }}
+    environment:
+      name: ${{ parameters.environmentName }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - task: AzureWebApp@1
+              displayName: 'Deploy Web App'
+              inputs:
+                azureSubscription: ${{ parameters.serviceConnectionName }}
+                appType: 'webAppLinux'
+                appName: ${{ parameters.webAppResourceName }}
+                package: '$(Agent.BuildDirectory)/build-artifacts/Web/'
+                runtimeStack: 'DOTNETCORE|8.0'
+            - task: AzureCLI@2
+              displayName: 'Dotnet migrate'
+              inputs:
+                azureSubscription: ${{ parameters.serviceConnectionName }}
+                scriptType: 'pscore'
+                scriptLocation: 'inlineScript'
+                inlineScript: "dotnet $(Agent.BuildDirectory)/build-artifacts/Migrations/Migrations.dll '${{ parameters.databaseConnectionString }}'"
