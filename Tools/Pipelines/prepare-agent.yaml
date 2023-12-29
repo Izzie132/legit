@@ -6,7 +6,7 @@ steps:
     displayName: 'Spin up SQL Server in a Docker container'
     inputs:
       filePath: './build.ps1'
-      arguments: 'CreateDatabaseDockerContainer'
+      arguments: 'CreateDatabaseContainer'
   - task: PowerShell@2
     displayName: 'Create test database'
     inputs:
