@@ -11,7 +11,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FastEndpoints.Testing" Version="5.19.2" />
+        <PackageReference Include="FastEndpoints.Testing" Version="5.20.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0"/>
         <PackageReference Include="Respawn" Version="6.1.0" />
         <PackageReference Include="xunit" Version="2.6.4"/>
