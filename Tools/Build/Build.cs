@@ -190,7 +190,7 @@ class Build : NukeBuild
                 .Executes(() =>
                 {
                     DockerTasks.DockerPull(
-                        c => c.SetName("mcr.microsoft.com/mssql/server:2022-latest").SetQuiet(true)
+                        c => c.SetName("mcr.microsoft.com/mssql/server:2022-latest")
                     );
 
                     DockerTasks.DockerCreate(

@@ -6,6 +6,7 @@ pool:
 
 stages:
   - stage: build_and_test
+    displayName: 'Build and Test'
     jobs:
       - job: build_and_test
         displayName: 'Build and Test'
@@ -24,6 +25,7 @@ stages:
               artifactName: 'build-artifacts'
             
   - stage: qa
+    displayName: 'Deploy to QA'
     jobs:
       - template: deploy-job-template.yaml
         parameters:
