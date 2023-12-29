@@ -17,17 +17,10 @@ public static class HttpContextExtensions
         context.Response.ContentType = "application/json; charset=utf-8";
         await context.Response.WriteAsync(Serialize(responseBody));
     }
-    
+
     private static JsonSerializerOptions JsonSerializerOptions =>
-        new()
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = true,
-        };
+        new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true, };
 
     private static string Serialize<T>(T responseBody) =>
-        JsonSerializer.Serialize(
-            value: responseBody,
-            options: JsonSerializerOptions
-        );
+        JsonSerializer.Serialize(value: responseBody, options: JsonSerializerOptions);
 }
