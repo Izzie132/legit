@@ -1,1 +1,2 @@
-# dotnet-react-template
+# .NET React Template
+

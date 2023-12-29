@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="UserContentModel">
+    <explicitIncludes>
+      <Path>README.md</Path>
+      <Path>Tools/Infrastructure</Path>
+      <Path>Tools/Pipelines</Path>
+    </explicitIncludes>
+    <explicitExcludes />
+  </component>
+</project>
