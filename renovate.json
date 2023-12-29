@@ -1,7 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["group:monorepos", "npm:unpublishSafe", ":automergeMinor", ":automergePr"],
-  "reviewers": ["required:Benjamin.Wallace-Stock@Ghyston.com"],
-  "prHourlyLimit": 0,
-  "prConcurrentLimit": 0
+  "extends": [
+    ":disableRateLimiting",
+    ":enableVulnerabilityAlerts",
+    "npm:unpublishSafe",
+    ":prConcurrentLimit10",
+    ":rebaseStalePrs",
+    "group:monorepos"
+  ],
+  "reviewers": [
+    "optional:Benjamin.Wallace-Stock@Ghyston.com"
+  ]
 }
