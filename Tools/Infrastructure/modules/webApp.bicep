@@ -45,7 +45,7 @@ var skuDetails = {
   }
 }
 
-resource appServiceServerFarm 'Microsoft.Web/serverfarms@2022-09-01' = {
+resource appServiceServerFarm 'Microsoft.Web/serverfarms@2023-01-01' = {
   name: '${projectCode}-ASP01-${environment}'
   location: location
   sku: {
