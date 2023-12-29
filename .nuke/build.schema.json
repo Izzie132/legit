@@ -84,7 +84,8 @@
               "RestoreFrontEnd",
               "RestoreSolution",
               "RunBackendTests",
-              "RunFrontEndTests"
+              "RunFrontEndTests",
+              "SetupDevelopmentEnvironment"
             ]
           }
         },
@@ -118,7 +119,8 @@
               "RestoreFrontEnd",
               "RestoreSolution",
               "RunBackendTests",
-              "RunFrontEndTests"
+              "RunFrontEndTests",
+              "SetupDevelopmentEnvironment"
             ]
           }
         },
