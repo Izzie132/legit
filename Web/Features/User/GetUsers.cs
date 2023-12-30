@@ -21,9 +21,7 @@ public class GetUsers
         public override async Task<Response> ExecuteAsync(CancellationToken ct)
         {
             var users = await dataContext.Users.ToListAsync(ct);
-            return new Response(
-                users.Select(u => new Response.UserResponse(u.Id, u.Name, u.Email)).ToList()
-            );
+            return new Response(users.Select(u => new Response.UserResponse(u.Id, u.Name, u.Email)).ToList());
         }
     }
 }

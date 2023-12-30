@@ -31,8 +31,7 @@ class Build : NukeBuild
 
     private static AbsolutePath ReactClientDirectory => WebProjectDirectory / "client-app";
     AbsolutePath MigrationsDirectory => RootDirectory / "Tools" / "Migrations";
-    AbsolutePath MigrationsDllFile =>
-        MigrationsDirectory / $"bin/{Configuration}/net8.0/Migrations.dll";
+    AbsolutePath MigrationsDllFile => MigrationsDirectory / $"bin/{Configuration}/net8.0/Migrations.dll";
 
     private static AbsolutePath BuildOutputDirectory => RootDirectory / "build-output";
 
@@ -67,10 +66,7 @@ class Build : NukeBuild
                 .Executes(() =>
                 {
                     DotNetTasks.DotNetBuild(
-                        s =>
-                            s.SetProjectFile(Solution)
-                                .SetConfiguration(Configuration)
-                                .EnableNoRestore()
+                        s => s.SetProjectFile(Solution).SetConfiguration(Configuration).EnableNoRestore()
                     );
                 });
 
@@ -155,10 +151,7 @@ class Build : NukeBuild
                 .Executes(() =>
                 {
                     DotNetTasks.DotNetTest(
-                        s =>
-                            s.SetProjectFile(Solution)
-                                .SetConfiguration(Configuration)
-                                .EnableNoRestore()
+                        s => s.SetProjectFile(Solution).SetConfiguration(Configuration).EnableNoRestore()
                     );
                 });
 
@@ -173,11 +166,7 @@ class Build : NukeBuild
     static readonly string DevelopmentDatabaseName = ProjectName;
     static readonly string DevelopmentDatabasePassword = "DefinitelyDurable1!";
     static string DevelopmentDatabaseConnectionString =>
-        DatabaseHelper.GetConnectionString(
-            DatabaseServer,
-            DevelopmentDatabaseName,
-            DevelopmentDatabasePassword
-        );
+        DatabaseHelper.GetConnectionString(DatabaseServer, DevelopmentDatabaseName, DevelopmentDatabasePassword);
 
     static readonly string TestDatabaseName = $"{ProjectName}Test";
     static readonly string TestDatabasePassword = "TotallyTrusted2!";
@@ -189,18 +178,13 @@ class Build : NukeBuild
             _.Description("Create SQL Server 2022 Docker container")
                 .Executes(() =>
                 {
-                    DockerTasks.DockerPull(
-                        c => c.SetName("mcr.microsoft.com/mssql/server:2022-latest")
-                    );
+                    DockerTasks.DockerPull(c => c.SetName("mcr.microsoft.com/mssql/server:2022-latest"));
 
                     DockerTasks.DockerCreate(
                         c =>
                             c.SetImage("mcr.microsoft.com/mssql/server:2022-latest")
                                 .SetName(ProjectName)
-                                .SetEnv(
-                                    "ACCEPT_EULA=Y",
-                                    $"SA_PASSWORD={DatabaseServerAdminPassword}"
-                                )
+                                .SetEnv("ACCEPT_EULA=Y", $"SA_PASSWORD={DatabaseServerAdminPassword}")
                                 .SetPublish($"{DatabasePort}:1433")
                     );
 
@@ -222,10 +206,7 @@ class Build : NukeBuild
                 .After(CreateDatabaseContainer)
                 .Executes(async () =>
                 {
-                    var databaseHelper = new DatabaseHelper(
-                        DatabaseServer,
-                        DatabaseServerAdminPassword
-                    );
+                    var databaseHelper = new DatabaseHelper(DatabaseServer, DatabaseServerAdminPassword);
 
                     await databaseHelper.WaitForSqlServerResponse();
                 });
@@ -237,10 +218,7 @@ class Build : NukeBuild
                 .After(CreateDatabaseContainer)
                 .Executes(async () =>
                 {
-                    var databaseHelper = new DatabaseHelper(
-                        DatabaseServer,
-                        DatabaseServerAdminPassword
-                    );
+                    var databaseHelper = new DatabaseHelper(DatabaseServer, DatabaseServerAdminPassword);
 
                     await databaseHelper.CreateDatabase(
                         DevelopmentDatabaseName,
@@ -256,16 +234,9 @@ class Build : NukeBuild
                 .After(CreateDatabaseContainer)
                 .Executes(async () =>
                 {
-                    var databaseHelper = new DatabaseHelper(
-                        DatabaseServer,
-                        DatabaseServerAdminPassword
-                    );
+                    var databaseHelper = new DatabaseHelper(DatabaseServer, DatabaseServerAdminPassword);
 
-                    await databaseHelper.CreateDatabase(
-                        TestDatabaseName,
-                        TestDatabaseName,
-                        TestDatabasePassword
-                    );
+                    await databaseHelper.CreateDatabase(TestDatabaseName, TestDatabaseName, TestDatabasePassword);
                 });
 
     Target MigrateDevelopmentDatabase =>
@@ -275,9 +246,7 @@ class Build : NukeBuild
                 .After(CreateDevelopmentDatabase)
                 .Executes(() =>
                 {
-                    DotNetTasks.DotNet(
-                        $"{MigrationsDllFile} {DevelopmentDatabaseConnectionString}"
-                    );
+                    DotNetTasks.DotNet($"{MigrationsDllFile} {DevelopmentDatabaseConnectionString}");
                 });
 
     Target MigrateTestDatabase =>
@@ -296,9 +265,7 @@ class Build : NukeBuild
                 .DependsOn(CompileSolution)
                 .Executes(() =>
                 {
-                    DotNetTasks.DotNet(
-                        $"{MigrationsDllFile} {DevelopmentDatabaseConnectionString} --cleanFirst"
-                    );
+                    DotNetTasks.DotNet($"{MigrationsDllFile} {DevelopmentDatabaseConnectionString} --cleanFirst");
                 });
 
     Target ResetTestDatabase =>
@@ -309,9 +276,7 @@ class Build : NukeBuild
                 {
                     Log.Information(MigrationsDllFile);
                     Log.Information(TestDatabaseConnectionString);
-                    DotNetTasks.DotNet(
-                        $"{MigrationsDllFile} {TestDatabaseConnectionString} --cleanFirst"
-                    );
+                    DotNetTasks.DotNet($"{MigrationsDllFile} {TestDatabaseConnectionString} --cleanFirst");
                 });
 
     Target CreateAndSetupDatabaseDockerContainer =>
@@ -331,9 +296,7 @@ class Build : NukeBuild
 
     Target SetupDevelopmentEnvironment =>
         _ =>
-            _.Description(
-                    "Setup development environment with docker database and required packages"
-                )
+            _.Description("Setup development environment with docker database and required packages")
                 .DependsOn(CreateAndSetupDatabaseDockerContainer, RestoreSolution, RestoreFrontEnd);
 
     #endregion

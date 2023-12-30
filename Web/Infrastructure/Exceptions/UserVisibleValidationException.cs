@@ -11,25 +11,18 @@ namespace Web.Infrastructure.Exceptions
         public UserVisibleValidationException(string message, string userVisibleMessage)
             : base(message, userVisibleMessage) { }
 
-        public UserVisibleValidationException(
-            string message,
-            string userVisibleMessage,
-            Exception innerException
-        )
+        public UserVisibleValidationException(string message, string userVisibleMessage, Exception innerException)
             : base(message, userVisibleMessage, innerException) { }
 
         public UserVisibleValidationException(IEnumerable<ValidationFailure> validationFailures)
             : base(GetValidationExceptionMessage(validationFailures)) { }
 
-        private static string GetValidationExceptionMessage(
-            IEnumerable<ValidationFailure> validationFailures
-        ) =>
+        private static string GetValidationExceptionMessage(IEnumerable<ValidationFailure> validationFailures) =>
             "One or more validation errors occurred:"
             + string.Join(
                 string.Empty,
                 validationFailures.Select(
-                    failure =>
-                        $"{Environment.NewLine}- {failure.PropertyName}: {failure.ErrorMessage}"
+                    failure => $"{Environment.NewLine}- {failure.PropertyName}: {failure.ErrorMessage}"
                 )
             );
     }

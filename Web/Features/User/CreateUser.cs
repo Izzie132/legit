@@ -27,10 +27,7 @@ public class CreateUser
             AllowAnonymous();
         }
 
-        public override async Task<Response> ExecuteAsync(
-            Request request,
-            CancellationToken cancellationToken
-        )
+        public override async Task<Response> ExecuteAsync(Request request, CancellationToken cancellationToken)
         {
             if (await dataContext.Users.AnyAsync(u => u.Email == request.Email, cancellationToken))
             {

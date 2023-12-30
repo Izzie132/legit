@@ -31,11 +31,7 @@ public static class MigrationRunner
                 description: "Runs scripts to clean the database before running migrations (should only be used in development/test scenarios)",
                 getDefaultValue: () => false
             ),
-            new Option<bool>(
-                name: "--quiet",
-                description: "Suppresses console output",
-                getDefaultValue: () => false
-            ),
+            new Option<bool>(name: "--quiet", description: "Suppresses console output", getDefaultValue: () => false),
         };
 
         rootCommand.Handler = CommandHandler.Create(
@@ -45,9 +41,7 @@ public static class MigrationRunner
                 {
                     if (string.IsNullOrEmpty(connectionString))
                     {
-                        throw new ArgumentException(
-                            "Please pass a connection string as the first argument"
-                        );
+                        throw new ArgumentException("Please pass a connection string as the first argument");
                     }
 
                     IConnectionManager connectionManager;
@@ -55,14 +49,10 @@ public static class MigrationRunner
                     if (useAzureIdentity)
                     {
                         var defaultAzureCredentialOptions = new DefaultAzureCredentialOptions();
-                        var azureCredential = new DefaultAzureCredential(
-                            defaultAzureCredentialOptions
-                        );
+                        var azureCredential = new DefaultAzureCredential(defaultAzureCredentialOptions);
 
                         var databaseAccessToken = azureCredential.GetToken(
-                            new TokenRequestContext(
-                                new[] { "https://database.windows.net/.default" }
-                            )
+                            new TokenRequestContext(new[] { "https://database.windows.net/.default" })
                         );
 
                         connectionManager = new AzureSqlConnectionManager(
@@ -110,8 +100,7 @@ public static class MigrationRunner
         }
 
         var upgradeEngineBuilder = DeployChanges
-            .To
-            .SqlDatabase(connectionManager)
+            .To.SqlDatabase(connectionManager)
             .WithScriptsEmbeddedInAssembly(
                 Assembly.GetExecutingAssembly(),
                 scriptPath => scriptPath.Contains(CleanScriptsDirectory)
@@ -130,9 +119,7 @@ public static class MigrationRunner
         }
         upgradeEngineBuilder
             .Build()
-            .PerformUpgradeAndLogResult(
-                successMessage: quiet ? null : "Finished running clean scripts"
-            );
+            .PerformUpgradeAndLogResult(successMessage: quiet ? null : "Finished running clean scripts");
     }
 
     private static void RunVersionedMigrations(IConnectionManager connectionManager, bool quiet)
@@ -143,13 +130,10 @@ public static class MigrationRunner
         }
 
         var upgradeEngineBuilder = DeployChanges
-            .To
-            .SqlDatabase(connectionManager)
+            .To.SqlDatabase(connectionManager)
             .WithScriptsEmbeddedInAssembly(
                 Assembly.GetExecutingAssembly(),
-                scriptPath =>
-                    !scriptPath.Contains(CleanScriptsDirectory)
-                    && !scriptPath.Contains(RepeatableScriptsDirectory)
+                scriptPath => !scriptPath.Contains(CleanScriptsDirectory) && !scriptPath.Contains(RepeatableScriptsDirectory)
             )
             .WithTransactionPerScript()
             .WithExecutionTimeout(TimeSpan.FromSeconds(120));
@@ -165,15 +149,10 @@ public static class MigrationRunner
 
         upgradeEngineBuilder
             .Build()
-            .PerformUpgradeAndLogResult(
-                successMessage: quiet ? null : "Finished running versioned migration scripts"
-            );
+            .PerformUpgradeAndLogResult(successMessage: quiet ? null : "Finished running versioned migration scripts");
     }
 
-    private static void PerformUpgradeAndLogResult(
-        this UpgradeEngine upgradeEngine,
-        string? successMessage
-    )
+    private static void PerformUpgradeAndLogResult(this UpgradeEngine upgradeEngine, string? successMessage)
     {
         var result = upgradeEngine.PerformUpgrade();
 

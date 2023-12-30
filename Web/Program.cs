@@ -7,28 +7,18 @@ using Web.Infrastructure.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder
-    .Services
-    .Configure<ProjectNameOptions>(
-        builder.Configuration.GetSection(key: ProjectNameOptions.ConfigurationKey)
-    );
+builder.Services.Configure<ProjectNameOptions>(builder.Configuration.GetSection(key: ProjectNameOptions.ConfigurationKey));
 
-builder
-    .Services
-    .Configure<ExceptionOptions>(
-        builder.Configuration.GetSection(key: ExceptionOptions.ConfigurationKey)
-    );
+builder.Services.Configure<ExceptionOptions>(builder.Configuration.GetSection(key: ExceptionOptions.ConfigurationKey));
 
 builder.Services.AddDbContext<DataContext>();
 
 if (!builder.Environment.IsDevelopment())
 {
-    builder
-        .Services
-        .AddSpaStaticFiles(spaStaticFiles =>
-        {
-            spaStaticFiles.RootPath = "client-app/dist";
-        });
+    builder.Services.AddSpaStaticFiles(spaStaticFiles =>
+    {
+        spaStaticFiles.RootPath = "client-app/dist";
+    });
 }
 
 builder.Services.AddFastEndpoints();
@@ -50,10 +40,7 @@ app.UseFastEndpoints(c =>
             userVisibleMessage: "One or more validation errors occurred:"
                 + string.Join(
                     string.Empty,
-                    failures.Select(
-                        failure =>
-                            $"{Environment.NewLine}- {failure.PropertyName}: {failure.ErrorMessage}"
-                    )
+                    failures.Select(failure => $"{Environment.NewLine}- {failure.PropertyName}: {failure.ErrorMessage}")
                 )
         );
     };

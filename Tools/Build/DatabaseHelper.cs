@@ -17,21 +17,14 @@ public class DatabaseHelper
         );
     }
 
-    public async Task CreateDatabase(
-        string databaseName,
-        string databaseUser,
-        string databasePassword
-    )
+    public async Task CreateDatabase(string databaseName, string databaseUser, string databasePassword)
     {
         Log.Information("Connecting to SQL Server...");
         await SqlConnection.OpenAsync();
         Log.Information("Successfully connected to SQL Server");
 
         Log.Information("Creating database {databaseName} on {Server}...", databaseName, Server);
-        var createDatabaseCommand = new SqlCommand(
-            $"CREATE DATABASE {databaseName}",
-            SqlConnection
-        );
+        var createDatabaseCommand = new SqlCommand($"CREATE DATABASE {databaseName}", SqlConnection);
         await createDatabaseCommand.ExecuteNonQueryAsync();
         Log.Information("Successfully created database");
 
@@ -43,12 +36,7 @@ public class DatabaseHelper
         await createLoginCommand.ExecuteNonQueryAsync();
         Log.Information("Successfully created login");
 
-        Log.Information(
-            "Creating user {databaseUser} on {Server}/{databaseName}...",
-            databaseName,
-            Server,
-            databaseName
-        );
+        Log.Information("Creating user {databaseUser} on {Server}/{databaseName}...", databaseName, Server, databaseName);
         var createUserCommand = new SqlCommand(
             $"USE {databaseName};"
                 + $"CREATE USER {databaseUser} FOR LOGIN {databaseUser};"
@@ -83,11 +71,7 @@ public class DatabaseHelper
             }
             catch (SqlException e)
             {
-                Log.Information(
-                    "Connection Attempt {ConnectionAttempts} - {Message}",
-                    connectionAttempts + 1,
-                    e.Message
-                );
+                Log.Information("Connection Attempt {ConnectionAttempts} - {Message}", connectionAttempts + 1, e.Message);
                 connectionAttempts++;
                 await Task.Delay(delayBetweenConnectionAttempts);
             }
@@ -96,11 +80,7 @@ public class DatabaseHelper
         throw new Exception("Failed to connect to SQL Server");
     }
 
-    public static string GetConnectionString(
-        string server,
-        string databaseName,
-        string databasePassword
-    )
+    public static string GetConnectionString(string server, string databaseName, string databasePassword)
     {
         return $"Server={server};Database={databaseName};User Id={databaseName};Password={databasePassword};Encrypt=False;";
     }

@@ -6,7 +6,9 @@
     "npm:unpublishSafe",
     ":prConcurrentLimit10",
     ":rebaseStalePrs",
-    "group:monorepos"
+    "group:allNonMajor",
+    ":automergeMinor",
+    ":automergePr"
   ],
   "reviewers": [
     "optional:Benjamin.Wallace-Stock@Ghyston.com"

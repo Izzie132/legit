@@ -14,11 +14,9 @@ public class CreateUserTests : BaseWebTest
     [Fact]
     public async Task ValidRequest_CreatesUser()
     {
-        var (rsp, res) = await Fixture
-            .Client
-            .POSTAsync<CreateUser.Endpoint, CreateUser.Request, CreateUser.Response>(
-                new CreateUser.Request("Ben", "ben@ghyston.com")
-            );
+        var (rsp, res) = await Fixture.Client.POSTAsync<CreateUser.Endpoint, CreateUser.Request, CreateUser.Response>(
+            new CreateUser.Request("Ben", "ben@ghyston.com")
+        );
 
         Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
 
@@ -35,11 +33,9 @@ public class CreateUserTests : BaseWebTest
 
         AddEntity(user);
 
-        var (rsp, res) = await Client.POSTAsync<
-            CreateUser.Endpoint,
-            CreateUser.Request,
-            ApiErrorResponse
-        >(new CreateUser.Request(user.Name, user.Email));
+        var (rsp, res) = await Client.POSTAsync<CreateUser.Endpoint, CreateUser.Request, ApiErrorResponse>(
+            new CreateUser.Request(user.Name, user.Email)
+        );
 
         Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
         Assert.Contains("Email", res.UserVisibleMessage);
@@ -48,11 +44,9 @@ public class CreateUserTests : BaseWebTest
     [Fact]
     public async Task InvalidEmailAddress_ThrowsUserVisibleException()
     {
-        var (rsp, res) = await Client.POSTAsync<
-            CreateUser.Endpoint,
-            CreateUser.Request,
-            ApiErrorResponse
-        >(new CreateUser.Request("Ben", "invalidEmailAddress"));
+        var (rsp, res) = await Client.POSTAsync<CreateUser.Endpoint, CreateUser.Request, ApiErrorResponse>(
+            new CreateUser.Request("Ben", "invalidEmailAddress")
+        );
 
         Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
         Assert.Contains("Email", res.UserVisibleMessage);

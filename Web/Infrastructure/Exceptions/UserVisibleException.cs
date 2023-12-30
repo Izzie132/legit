@@ -16,11 +16,7 @@
             UserVisibleMessage = userVisibleMessage;
         }
 
-        public UserVisibleException(
-            string message,
-            string userVisibleMessage,
-            Exception innerException
-        )
+        public UserVisibleException(string message, string userVisibleMessage, Exception innerException)
             : base(message, innerException)
         {
             UserVisibleMessage = userVisibleMessage;

@@ -13,6 +13,5 @@ public class UserBuilder : IBuilder<Web.Features.User.User>
         Email = faker.Person.Email;
     }
 
-    public Web.Features.User.User Build() =>
-        Web.Features.User.User.CreateTestUser(id: Id, name: Name, email: Email);
+    public Web.Features.User.User Build() => Web.Features.User.User.CreateTestUser(id: Id, name: Name, email: Email);
 }

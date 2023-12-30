@@ -55,10 +55,7 @@ public class ExceptionHandlerMiddleware
                 : null
         );
 
-        await context.WriteJsonResponseAsync(
-            statusCode: GetStatusCode(exception),
-            responseBody: errorResponse
-        );
+        await context.WriteJsonResponseAsync(statusCode: GetStatusCode(exception), responseBody: errorResponse);
     }
 
     private void LogException(Exception exception)

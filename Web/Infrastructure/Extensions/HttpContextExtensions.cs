@@ -7,11 +7,7 @@ namespace Web.Infrastructure.Extensions;
 
 public static class HttpContextExtensions
 {
-    public static async Task WriteJsonResponseAsync<T>(
-        this HttpContext context,
-        HttpStatusCode statusCode,
-        T responseBody
-    )
+    public static async Task WriteJsonResponseAsync<T>(this HttpContext context, HttpStatusCode statusCode, T responseBody)
     {
         context.Response.StatusCode = (int)statusCode;
         context.Response.ContentType = "application/json; charset=utf-8";

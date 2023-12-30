@@ -5,8 +5,7 @@ using Web.Features.User;
 
 namespace Web.Database;
 
-public class DataContext(DbContextOptions options, IOptions<ProjectNameOptions> projectNameOptions)
-    : DbContext(options)
+public class DataContext(DbContextOptions options, IOptions<ProjectNameOptions> projectNameOptions) : DbContext(options)
 {
     private readonly ProjectNameOptions projectNameOptions = projectNameOptions.Value;
     public DbSet<User> Users { get; set; } = default!;
