@@ -14,11 +14,13 @@ public class CreateUserTests : BaseWebTest
     [Fact]
     public async Task ValidRequest_CreatesUser()
     {
-        var (rsp, res) = await Fixture.Client.POSTAsync<CreateUser.Endpoint, CreateUser.Request, CreateUser.Response>(
-            new CreateUser.Request("Ben", "ben@ghyston.com")
-        );
+        var (httpResponseMessage, response) = await Fixture.Client.POSTAsync<
+            CreateUser.Endpoint,
+            CreateUser.Request,
+            CreateUser.Response
+        >(new CreateUser.Request("Ben", "ben@ghyston.com"));
 
-        Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, httpResponseMessage.StatusCode);
 
         var databaseUser = await DataContext.Users.SingleOrDefaultAsync();
         Assert.NotNull(databaseUser);
@@ -33,22 +35,26 @@ public class CreateUserTests : BaseWebTest
 
         AddEntity(user);
 
-        var (rsp, res) = await Client.POSTAsync<CreateUser.Endpoint, CreateUser.Request, ApiErrorResponse>(
-            new CreateUser.Request(user.Name, user.Email)
-        );
+        var (httpResponseMessage, response) = await Client.POSTAsync<
+            CreateUser.Endpoint,
+            CreateUser.Request,
+            ApiErrorResponse
+        >(new CreateUser.Request(user.Name, user.Email));
 
-        Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
-        Assert.Contains("Email", res.UserVisibleMessage);
+        Assert.Equal(HttpStatusCode.BadRequest, httpResponseMessage.StatusCode);
+        Assert.Contains("Email", response.UserVisibleMessage);
     }
 
     [Fact]
     public async Task InvalidEmailAddress_ThrowsUserVisibleException()
     {
-        var (rsp, res) = await Client.POSTAsync<CreateUser.Endpoint, CreateUser.Request, ApiErrorResponse>(
-            new CreateUser.Request("Ben", "invalidEmailAddress")
-        );
+        var (httpResponseMessage, response) = await Client.POSTAsync<
+            CreateUser.Endpoint,
+            CreateUser.Request,
+            ApiErrorResponse
+        >(new CreateUser.Request("Ben", "invalidEmailAddress"));
 
-        Assert.Equal(HttpStatusCode.BadRequest, rsp.StatusCode);
-        Assert.Contains("Email", res.UserVisibleMessage);
+        Assert.Equal(HttpStatusCode.BadRequest, httpResponseMessage.StatusCode);
+        Assert.Contains("Email", response.UserVisibleMessage);
     }
 }

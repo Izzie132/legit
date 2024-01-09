@@ -17,11 +17,11 @@ public class GetUsersTests : BaseWebTest
 
         AddEntities(user, user2);
 
-        var (rsp, res) = await Client.GETAsync<GetUsers.Endpoint, GetUsers.Response>();
+        var (httpResponseMessage, response) = await Client.GETAsync<GetUsers.Endpoint, GetUsers.Response>();
 
-        Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
-        Assert.Equal(2, res.Users.Count);
-        Assert.Contains(res.Users, u => u.Id == user.Id);
-        Assert.Contains(res.Users, u => u.Id == user2.Id);
+        Assert.Equal(HttpStatusCode.OK, httpResponseMessage.StatusCode);
+        Assert.Equal(2, response.Users.Count);
+        Assert.Contains(response.Users, u => u.Id == user.Id);
+        Assert.Contains(response.Users, u => u.Id == user2.Id);
     }
 }

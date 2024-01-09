@@ -11,10 +11,10 @@ public class GetWeatherTests : BaseWebTest
     [Fact]
     public async Task ValidRequest_HasValidData()
     {
-        var (rsp, res) = await Client.GETAsync<GetWeather.Endpoint, GetWeather.Response>();
+        var (httpResponseMessage, response) = await Client.GETAsync<GetWeather.Endpoint, GetWeather.Response>();
 
-        Assert.Equal(HttpStatusCode.OK, rsp.StatusCode);
-        Assert.True(res.WindSpeed >= 0);
-        Assert.True(res.Temperature >= -273.15);
+        Assert.Equal(HttpStatusCode.OK, httpResponseMessage.StatusCode);
+        Assert.True(response.WindSpeed >= 0);
+        Assert.True(response.Temperature >= -273.15);
     }
 }
