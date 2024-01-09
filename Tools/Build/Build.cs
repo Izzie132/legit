@@ -51,6 +51,15 @@ class Build : NukeBuild
                     DotNetTasks.DotNetRestore();
                 });
 
+    Target RestoreDotNetTools =>
+        _ =>
+            _.Description("Restores dotnet tools and installs prerequisites")
+                .Executes(() =>
+                {
+                    DotNetTasks.DotNetToolRestore();
+                    DotNetTasks.DotNet("husky install");
+                });
+
     Target RestoreFrontEnd =>
         _ =>
             _.Description("Restores npm packages for React SPA")
@@ -138,9 +147,9 @@ class Build : NukeBuild
     Target CheckBackEndCodeQuality =>
         _ =>
             _.Description("Run CSharpier on solution")
+                .DependsOn(RestoreDotNetTools)
                 .Executes(() =>
                 {
-                    DotNetTasks.DotNetToolRestore();
                     DotNetTasks.DotNet("csharpier --check .");
                 });
 
@@ -297,7 +306,7 @@ class Build : NukeBuild
     Target SetupDevelopmentEnvironment =>
         _ =>
             _.Description("Setup development environment with docker database and required packages")
-                .DependsOn(CreateAndSetupDatabaseDockerContainer, RestoreSolution, RestoreFrontEnd);
+                .DependsOn(CreateAndSetupDatabaseDockerContainer, RestoreSolution, RestoreFrontEnd, RestoreDotNetTools);
 
     #endregion
 }

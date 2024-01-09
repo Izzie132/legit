@@ -1,0 +1,17 @@
+{
+  "tasks": [
+    {
+      "name": "Prettier Frontend",
+      "command": "npx",
+      "args": ["prettier", "--ignore-unknown", "--write", "${staged}"],
+      "pathMode": "absolute",
+      "cwd": "./Web/client-app"
+    },
+    {
+      "name": "CSharpier Solution",
+      "command": "dotnet",
+      "args": ["csharpier", "${staged}"],
+      "include": ["**/*.cs"]
+    }
+  ]
+}
