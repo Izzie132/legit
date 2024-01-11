@@ -30,12 +30,12 @@ export const Weather = () => {
   );
 
   useEffect(() => {
-    getWeather.makeRequest({
+    void getWeather.makeRequest({
       onSuccess: (response) => {
         setWeatherInfo(response);
       },
     });
-  }, []);
+  }, [getWeather.makeRequest]);
 
   const cycleTemperatureUnits = () => {
     switch (temperatureUnits) {

@@ -3,7 +3,7 @@ import {
   ApiResponse,
   cancelledRequestErrorMessage,
 } from "@/api/makeApiRequest";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type CoreMakeRequestArguments<TResponse> = {
   onSuccess?: (response: TResponse) => void;
@@ -43,23 +43,25 @@ export const useApiRequest = <
     }));
   };
 
-  const makeRequest = ({
-    onSuccess,
-    onFailure,
-    ...makeRequestArguments
-  }: TMakeRequestArguments) => {
-    cancelRequest();
+  const makeRequest = useCallback(
+    async ({
+      onSuccess,
+      onFailure,
+      ...makeRequestArguments
+    }: TMakeRequestArguments) => {
+      cancelRequest();
 
-    setState((previousState) => ({
-      ...previousState,
-      isLoading: true,
-    }));
+      setState((previousState) => ({
+        ...previousState,
+        isLoading: true,
+      }));
 
-    return makeApiRequest({
-      ...makeRequestArguments,
-      endpointUrl,
-      cancelTokenSource: abortController.current.signal,
-    } as unknown as TApiRequestParameters).then((apiResponse) => {
+      const apiResponse = await makeApiRequest({
+        ...makeRequestArguments,
+        endpointUrl,
+        cancelTokenSource: abortController.current.signal,
+      } as unknown as TApiRequestParameters);
+
       if (apiResponse.success) {
         setState((previousState) => ({
           ...previousState,
@@ -81,10 +83,10 @@ export const useApiRequest = <
 
         onFailure?.(apiResponse.error);
       }
-
       return apiResponse;
-    });
-  };
+    },
+    [endpointUrl, makeApiRequest],
+  );
 
   // Cancel the request when the component unmounts.
   useEffect(() => {

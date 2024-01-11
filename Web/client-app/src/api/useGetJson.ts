@@ -1,5 +1,6 @@
 import { useJsonApiRequest } from "@/api/useJsonApiRequest";
 import { QueryParameters } from "@/api/makeApiRequest.ts";
+import { useCallback } from "react";
 
 type MakeRequestParameters<
   TQueryParameters extends QueryParameters | undefined,
@@ -16,25 +17,36 @@ export const useGetJson = <
 >(
   endpointUrl: string,
 ) => {
-  const apiRequest = useJsonApiRequest<undefined, TResponse>({
+  const { makeRequest, cancelRequest, state } = useJsonApiRequest<
+    undefined,
+    TResponse
+  >({
     method: "GET",
     endpointUrl,
   });
 
-  const makeRequest = (
-    makeRequestParameters?: MakeRequestParameters<TQueryParameters, TResponse>,
-  ) => {
-    const onSuccess = makeRequestParameters?.onSuccess;
-    const onFailure = makeRequestParameters?.onFailure;
+  const wrappedMakeRequest = useCallback(
+    (
+      makeRequestParameters?: MakeRequestParameters<
+        TQueryParameters,
+        TResponse
+      >,
+    ) => {
+      const onSuccess = makeRequestParameters?.onSuccess;
+      const onFailure = makeRequestParameters?.onFailure;
 
-    return apiRequest.makeRequest({
-      onSuccess,
-      onFailure,
-    });
-  };
+      return makeRequest({
+        ...makeRequestParameters,
+        onSuccess,
+        onFailure,
+      });
+    },
+    [makeRequest],
+  );
 
   return {
-    ...apiRequest,
-    makeRequest,
+    cancelRequest,
+    state,
+    makeRequest: wrappedMakeRequest,
   };
 };

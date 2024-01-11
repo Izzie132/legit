@@ -1,4 +1,5 @@
 import { useJsonApiRequest } from "@/api/useJsonApiRequest";
+import { useCallback } from "react";
 
 type MakeRequestParameters<
   TRequestBody extends object | undefined,
@@ -15,27 +16,34 @@ export const usePostJson = <
 >(
   endpointUrl: string,
 ) => {
-  const apiRequest = useJsonApiRequest<TRequestBody, TResponse>({
+  const { makeRequest, cancelRequest, state } = useJsonApiRequest<
+    TRequestBody,
+    TResponse
+  >({
     method: "POST",
     endpointUrl,
   });
 
-  const makeRequest = (
-    makeRequestParameters?: MakeRequestParameters<TRequestBody, TResponse>,
-  ) => {
-    const requestBody = makeRequestParameters?.requestBody;
-    const onSuccess = makeRequestParameters?.onSuccess;
-    const onFailure = makeRequestParameters?.onFailure;
+  const wrappedMakeRequest = useCallback(
+    (
+      makeRequestParameters?: MakeRequestParameters<TRequestBody, TResponse>,
+    ) => {
+      const requestBody = makeRequestParameters?.requestBody;
+      const onSuccess = makeRequestParameters?.onSuccess;
+      const onFailure = makeRequestParameters?.onFailure;
 
-    return apiRequest.makeRequest({
-      requestBody,
-      onSuccess,
-      onFailure,
-    });
-  };
+      return makeRequest({
+        requestBody,
+        onSuccess,
+        onFailure,
+      });
+    },
+    [makeRequest],
+  );
 
   return {
-    ...apiRequest,
-    makeRequest,
+    cancelRequest,
+    state,
+    makeRequest: wrappedMakeRequest,
   };
 };

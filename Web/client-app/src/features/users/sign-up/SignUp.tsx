@@ -29,7 +29,9 @@ const signUpFormSchema = z.object({
 export const SignUp = () => {
   const { toast } = useToast();
 
-  const postUser = usePostJson<CreateUserRequest, User>("api/user/CreateUser");
+  const createUser = usePostJson<CreateUserRequest, User>(
+    "api/user/CreateUser",
+  );
 
   const form = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
@@ -45,7 +47,7 @@ export const SignUp = () => {
       email: formValues.email,
     } as CreateUserRequest;
 
-    postUser.makeRequest({
+    void createUser.makeRequest({
       requestBody: user,
       onSuccess: (user) => {
         toast({

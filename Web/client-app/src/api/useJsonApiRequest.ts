@@ -5,6 +5,7 @@ import {
   QueryParameters,
 } from "@/api/makeApiRequest";
 import { useApiRequest } from "@/api/useApiRequest";
+import { useCallback } from "react";
 
 type UseJsonApiRequestParameters = {
   method: HttpMethod;
@@ -21,9 +22,16 @@ type MakeJsonRequestArguments<TRequestBody, TResponse> = {
 export const useJsonApiRequest = <TRequestBody, TResponse>({
   method,
   endpointUrl,
-}: UseJsonApiRequestParameters) =>
-  useApiRequest<
+}: UseJsonApiRequestParameters) => {
+  const wrappedMethod = useCallback(
+    (parameters: MakeApiRequestParameters<TRequestBody>) =>
+      makeApiRequest<TRequestBody, TResponse>({ ...parameters, method }),
+    [method],
+  );
+
+  return useApiRequest<
     MakeJsonRequestArguments<TRequestBody, TResponse>,
     MakeApiRequestParameters<TRequestBody>,
     TResponse
-  >(endpointUrl, (parameters) => makeApiRequest({ ...parameters, method }));
+  >(endpointUrl, wrappedMethod);
+};

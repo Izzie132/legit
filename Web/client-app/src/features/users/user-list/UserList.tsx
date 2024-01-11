@@ -22,12 +22,12 @@ export const UserList = () => {
   const getUsers = useGetJson<undefined, GetUsersResponse>("api/user/GetUsers");
 
   useEffect(() => {
-    getUsers.makeRequest({
+    void getUsers.makeRequest({
       onSuccess: (res) => {
         setUsers(res.users);
       },
     });
-  }, []);
+  }, [getUsers.makeRequest]);
 
   return (
     <>
