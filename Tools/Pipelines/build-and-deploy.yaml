@@ -24,13 +24,13 @@ stages:
               pathToPublish: 'build-output'
               artifactName: 'build-artifacts'
             
-  - stage: qa
-    displayName: 'Deploy to QA'
+  - stage: example
+    displayName: 'Deploy to Example'
     jobs:
       - template: deploy-job-template.yaml
         parameters:
-          deploymentName: 'deploy_qa'
-          environmentName: 'QA'
-          serviceConnectionName: 'PRJCT-SERCON-LJD'
-          webAppResourceName: 'PRJCT-WA01-LJD'
-          databaseConnectionString: 'Server=tcp:prjct-sql01-ljd.database.windows.net,1433;Initial Catalog=PRJCT-SQLDB01-LJD;Encrypt=True;TrustServerCertificate=True;Connection Timeout=120;Authentication=Active Directory Default;'
+          deploymentName: 'deploy_example'
+          environmentName: 'EXAMPLE'
+          serviceConnectionName: 'PRJCT-SERCON-EXMPL'
+          webAppResourceName: 'PRJCT-WA01-EXMPL'
+          databaseConnectionString: 'Server=tcp:prjct-sql01-exmpl.database.windows.net,1433;Initial Catalog=PRJCT-SQLDB01-EXMPL;Encrypt=True;TrustServerCertificate=True;Connection Timeout=120;Authentication=Active Directory Default;'

@@ -1,11 +1,17 @@
 global using FastEndpoints;
-using Microsoft.EntityFrameworkCore;
+using Azure.Identity;
 using Web.Configuration;
 using Web.Database;
 using Web.Exceptions;
 using Web.Infrastructure.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var keyVaultUri = Environment.GetEnvironmentVariable("KEYVAULT_URI");
+if (keyVaultUri != null)
+{
+    builder.Configuration.AddAzureKeyVault(vaultUri: new Uri(keyVaultUri), credential: new DefaultAzureCredential());
+}
 
 builder.Services.Configure<ProjectNameOptions>(builder.Configuration.GetSection(key: ProjectNameOptions.ConfigurationKey));
 

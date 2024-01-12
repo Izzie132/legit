@@ -62,5 +62,24 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
   }
 }
 
+resource allowGhystonIps 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
+  name: 'Ghyston IP Range'
+  parent: sqlServer
+  properties: {
+    startIpAddress: '31.221.86.250'
+    endIpAddress: '31.221.86.254'
+  }
+}
+
+resource allowAllAzureIps 'Microsoft.Sql/servers/firewallRules@2020-11-01-preview' = {
+  name: 'AllowAllWindowsAzureIps'
+  parent: sqlServer
+  properties: {
+    startIpAddress: '0.0.0.0'
+    endIpAddress: '0.0.0.0'
+  }
+}
+
+
 output sqlDatabaseName string = sqlDatabase.name
 output sqlServerFqdn string = sqlServer.properties.fullyQualifiedDomainName

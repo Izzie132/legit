@@ -5,11 +5,16 @@ param projectCode string
 
 @minLength(1)
 @maxLength(5)
-@description('An identifier for the environemnt being deployed, e.g. TEST/QA/PROD')
+@description('An identifier for the environment being deployed, e.g. TEST/QA/PROD')
 param environment string
 
 @minLength(1)
+@description('The environment for the ASP.NET Core app')
 param aspNetCoreEnvironment string
+
+@minLength(1)
+@description('The name of the project configuration section in the ASP.NET Core appsettings.json file')
+param aspNetCoreProjectConfigurationSection string
 
 @description('The location for the resources to be created')
 param location string
@@ -29,6 +34,9 @@ param appInsightsConnectionString string
 param dbFqdn string
 @description('The name of the database on the SQL server')
 param dbName string
+
+@description('The URI of the Azure Key Vault')
+param keyVaultUri string
 
 var skuDetails = {
   nonprod: {
@@ -77,16 +85,20 @@ resource webApp 'Microsoft.Web/sites@2023-01-01' = {
       linuxFxVersion: 'DOTNETCORE|8.0'
       appSettings: [
         {
-          name: 'ProjectName__ConnectionString'
+          name: '${aspNetCoreProjectConfigurationSection}__ConnectionString'
           value: 'Data Source=${dbFqdn}; Initial Catalog=${dbName}; Encrypt=True;Authentication="Active Directory Default";'
         }
         {
-          name: 'APPLICATIONINSIGHTS__CONNECTIONSTRING'
+          name: 'ApplicationInsights__ConnectionString'
           value: appInsightsConnectionString
         }
         {
           name: 'ASPNETCORE_ENVIRONMENT'
           value: aspNetCoreEnvironment
+        }
+        {
+          name: 'KEYVAULT_URI'
+          value: keyVaultUri
         }
       ]
     }
@@ -132,3 +144,5 @@ resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-pr
     ]
   }
 }
+
+output managedIdentityId string = webApp.identity.principalId

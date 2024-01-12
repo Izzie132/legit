@@ -22,11 +22,6 @@ public static class MigrationRunner
         {
             new Argument<string>("connectionString"),
             new Option<bool>(
-                name: "--useAzureIdentity",
-                description: "Configures the database connection to authenticate with Azure Active Directory",
-                getDefaultValue: () => false
-            ),
-            new Option<bool>(
                 name: "--cleanFirst",
                 description: "Runs scripts to clean the database before running migrations (should only be used in development/test scenarios)",
                 getDefaultValue: () => false
@@ -35,7 +30,7 @@ public static class MigrationRunner
         };
 
         rootCommand.Handler = CommandHandler.Create(
-            (string connectionString, bool useAzureIdentity, bool cleanFirst, bool quiet) =>
+            (string connectionString, bool cleanFirst, bool quiet) =>
             {
                 try
                 {
@@ -44,26 +39,7 @@ public static class MigrationRunner
                         throw new ArgumentException("Please pass a connection string as the first argument");
                     }
 
-                    IConnectionManager connectionManager;
-
-                    if (useAzureIdentity)
-                    {
-                        var defaultAzureCredentialOptions = new DefaultAzureCredentialOptions();
-                        var azureCredential = new DefaultAzureCredential(defaultAzureCredentialOptions);
-
-                        var databaseAccessToken = azureCredential.GetToken(
-                            new TokenRequestContext(new[] { "https://database.windows.net/.default" })
-                        );
-
-                        connectionManager = new AzureSqlConnectionManager(
-                            connectionString,
-                            azureAccessToken: databaseAccessToken.Token
-                        );
-                    }
-                    else
-                    {
-                        connectionManager = new SqlConnectionManager(connectionString);
-                    }
+                    var connectionManager = new SqlConnectionManager(connectionString);
 
                     if (cleanFirst)
                     {

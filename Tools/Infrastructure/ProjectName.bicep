@@ -6,8 +6,11 @@ param location string = resourceGroup().location
 @minLength(1)
 @maxLength(5)
 @description('An identifier for the project being deployed, used as a prefix for all deployed resources')
-param projectCode string
+param projectCode string = 'PRJCT'
 
+@minLength(1)
+@description('The name of the project configuration section in the ASP.NET Core appsettings.json file')
+param aspNetCoreProjectConfigurationSection string = 'ProjectName'
 
 @minLength(1)
 @maxLength(5)
@@ -22,6 +25,11 @@ param sqlAdminGroupName string
 @description('The object ID of the Microsoft Entra ID group to use for admin access to the SQL server')
 param sqlAdminGroupObjectId string
 
+@description('The object ID of the Microsoft Entra ID group to use for admin access to the Key Vault')
+param keyVaultAdminGroupObjectId string
+@secure()
+@description('The value of the secret message password to be stored in the key vault')
+param secretMessagePassword string
 
 @allowed([ 'nonprod', 'prod' ])
 @description('The compute level required for the deployed resources')
@@ -59,6 +67,9 @@ module appInsights 'modules/appInsights.bicep' = {
   }
 }
 
+// This avoids a circular dependency. Make sure to keep this in sync with the value in the keyVault.bicep file.
+var keyVaultUri = 'https://${toLower(projectCode)}-kv-${toLower(environment)}.vault.azure.net/'
+
 module webApp 'modules/webApp.bicep' = {
   name: 'webApp'
   params: {
@@ -69,7 +80,22 @@ module webApp 'modules/webApp.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.logAnalyticsWorkspaceId
     appInsightsConnectionString: appInsights.outputs.appInsightsConnectionString
     aspNetCoreEnvironment: aspNetCoreEnvironment
+    aspNetCoreProjectConfigurationSection: aspNetCoreProjectConfigurationSection
     dbFqdn: sqlServer.outputs.sqlServerFqdn
     dbName: sqlServer.outputs.sqlDatabaseName
+    keyVaultUri: keyVaultUri
+  }
+}
+
+module keyVault 'modules/keyVault.bicep' = {
+  name: 'keyVault'
+  params: {
+    projectCode: projectCode
+    environment: environment
+    tenantId: tenantId
+    location: location
+    webAppManagedIdentityId: webApp.outputs.managedIdentityId
+    keyVaultAdminGroupObjectId: keyVaultAdminGroupObjectId
+    secretMessagePassword: secretMessagePassword
   }
 }
