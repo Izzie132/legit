@@ -24,7 +24,7 @@ param keyVaultAdminGroupObjectId string
 @description('The value of the secret message password to be stored in the key vault')
 param secretMessagePassword string
 
-resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' = {
+resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: '${projectCode}-KV-${environment}'
   location: location
   properties: {
