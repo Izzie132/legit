@@ -59,7 +59,7 @@ resource keyVaultSecretOfficerRoleRoleDefinition 'Microsoft.Authorization/roleDe
 }
 
 @description('Grant the web app managed identity with key vault secret user role permissions over the key vault. This allows reading secret contents')
-resource keyVaultSecretUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
+resource keyVaultSecretUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: keyVault
   name: guid(resourceGroup().id, webAppManagedIdentityId, keyVaultSecretUserRoleRoleDefinition.id)
   properties: {
@@ -70,7 +70,7 @@ resource keyVaultSecretUserRoleAssignment 'Microsoft.Authorization/roleAssignmen
 }
 
 @description('Grant the key vault admin group with key vault secret officer role permissions over the key vault. This allows managing secrets')
-resource keyVaultSecretOfficerRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
+resource keyVaultSecretOfficerRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: keyVault
   name: guid(resourceGroup().id, keyVaultAdminGroupObjectId, keyVaultSecretOfficerRoleRoleDefinition.id)
   properties: {
