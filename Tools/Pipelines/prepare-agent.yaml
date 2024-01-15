@@ -1,14 +1,18 @@
 steps:
   - task: DockerInstaller@0
     inputs:
-      dockerVersion: '17.09.0-ce'
-  - task: PowerShell@2
-    displayName: 'Spin up SQL Server in a Docker container'
+      dockerVersion: "17.09.0-ce"
+  - task: UseDotNet@2
     inputs:
-      filePath: './build.ps1'
-      arguments: 'CreateDatabaseContainer'
+      packageType: "sdk"
+      useGlobalJson: true
   - task: PowerShell@2
-    displayName: 'Create test database'
+    displayName: "Spin up SQL Server in a Docker container"
     inputs:
-      filePath: './build.ps1'
-      arguments: 'CreateTestDatabase'
+      filePath: "./build.ps1"
+      arguments: "CreateDatabaseContainer"
+  - task: PowerShell@2
+    displayName: "Create test database"
+    inputs:
+      filePath: "./build.ps1"
+      arguments: "CreateTestDatabase"

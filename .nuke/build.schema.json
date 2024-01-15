@@ -81,6 +81,7 @@
               "Publish",
               "ResetDevelopmentDatabase",
               "ResetTestDatabase",
+              "RestoreDotNetTools",
               "RestoreFrontEnd",
               "RestoreSolution",
               "RunBackendTests",
@@ -116,6 +117,7 @@
               "Publish",
               "ResetDevelopmentDatabase",
               "ResetTestDatabase",
+              "RestoreDotNetTools",
               "RestoreFrontEnd",
               "RestoreSolution",
               "RunBackendTests",
@@ -127,12 +129,7 @@
         "Verbosity": {
           "type": "string",
           "description": "Logging verbosity during build execution. Default is 'Normal'",
-          "enum": [
-            "Minimal",
-            "Normal",
-            "Quiet",
-            "Verbose"
-          ]
+          "enum": ["Minimal", "Normal", "Quiet", "Verbose"]
         }
       }
     }
