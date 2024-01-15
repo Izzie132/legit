@@ -47,13 +47,13 @@ resource secret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
 }
 
 @description('This is the built-in Key Vault Secret User role. See https://docs.microsoft.com/azure/role-based-access-control/built-in-roles#key-vault-secrets-user')
-resource keyVaultSecretUserRoleRoleDefinition 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
+resource keyVaultSecretUserRoleRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   scope: subscription()
   name: '4633458b-17de-408a-b874-0445c86b69e6'
 }
 
 @description('This is the built-in Key Vault Secret Officer role. See https://docs.microsoft.com/azure/role-based-access-control/built-in-roles#key-vault-secrets-officer')
-resource keyVaultSecretOfficerRoleRoleDefinition 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
+resource keyVaultSecretOfficerRoleRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   scope: subscription()
   name: 'b86a8fe4-44ce-4948-aee5-eccb2c155cd7'
 }
