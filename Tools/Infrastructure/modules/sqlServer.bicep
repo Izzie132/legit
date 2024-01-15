@@ -71,7 +71,7 @@ resource allowGhystonIps 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview
   }
 }
 
-resource allowAllAzureIps 'Microsoft.Sql/servers/firewallRules@2020-11-01-preview' = {
+resource allowAllAzureIps 'Microsoft.Sql/servers/firewallRules@2021-11-01' = {
   name: 'AllowAllWindowsAzureIps'
   parent: sqlServer
   properties: {
