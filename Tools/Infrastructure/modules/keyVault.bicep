@@ -38,7 +38,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' = {
   }
 }
 
-resource secret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
+resource secret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: keyVault
   name: 'ProjectName--SecretMessagePassword'
   properties: {
