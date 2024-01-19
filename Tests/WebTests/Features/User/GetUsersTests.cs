@@ -2,7 +2,7 @@
 using Builders.Features.User;
 using Web.Features.User;
 
-namespace IntegrationTests.Features.User;
+namespace WebTests.Features.User;
 
 public class GetUsersTests : BaseWebTest
 {

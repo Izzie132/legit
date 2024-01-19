@@ -17,7 +17,7 @@ public class DataContext(DbContextOptions options, IOptions<ProjectNameOptions> 
             throw new ConnectionStringNotProvidedException();
         }
 
-        optionsBuilder.UseSqlServer(projectNameOptions.ConnectionString);
+        optionsBuilder.UseSqlServer(projectNameOptions.ConnectionString, x => x.UseNodaTime());
     }
 }
 

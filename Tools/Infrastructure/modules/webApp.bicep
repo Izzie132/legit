@@ -89,8 +89,12 @@ resource webApp 'Microsoft.Web/sites@2023-01-01' = {
           value: 'Data Source=${dbFqdn}; Initial Catalog=${dbName}; Encrypt=True;Authentication="Active Directory Default";'
         }
         {
-          name: 'ApplicationInsights__ConnectionString'
+          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
           value: appInsightsConnectionString
+        }
+        {
+          name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
+          value: '~2'
         }
         {
           name: 'ASPNETCORE_ENVIRONMENT'

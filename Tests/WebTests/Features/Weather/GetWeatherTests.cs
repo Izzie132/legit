@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Web.Features.Weather;
 
-namespace IntegrationTests.Features.Weather;
+namespace WebTests.Features.Weather;
 
 public class GetWeatherTests : BaseWebTest
 {

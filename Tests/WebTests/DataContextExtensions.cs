@@ -1,6 +1,6 @@
 ﻿using Web.Database;
 
-namespace IntegrationTests;
+namespace WebTests;
 
 public static class DataContextExtensions
 {

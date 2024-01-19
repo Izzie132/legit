@@ -1,4 +1,4 @@
-﻿namespace Web.Exceptions;
+﻿namespace Web.Infrastructure.Exceptions;
 
 public class ApiErrorResponse
 {

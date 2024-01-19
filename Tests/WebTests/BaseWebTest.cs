@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Respawn;
 using Web.Configuration;
 using Web.Database;
+using Web.Services;
+using WebTests.Mocks;
 
-namespace IntegrationTests;
+namespace WebTests;
 
 [Collection(nameof(BaseWebTest))]
 public class BaseWebTest : TestClass<WebTestFixture>, IDisposable
@@ -71,5 +72,7 @@ public class BaseWebTest : TestClass<WebTestFixture>, IDisposable
         {
             scope.Dispose();
         }
+
+        MockClockService.Reset();
     }
 }

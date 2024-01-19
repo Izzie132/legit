@@ -7,13 +7,14 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <RootNamespace>IntegrationTests</RootNamespace>
+        <RootNamespace>WebTests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="FastEndpoints.Testing" Version="5.21.2" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
         <PackageReference Include="Respawn" Version="6.2.0" />
+        <PackageReference Include="NodaTime.Testing" Version="3.1.10" />
         <PackageReference Include="xunit" Version="2.6.5"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

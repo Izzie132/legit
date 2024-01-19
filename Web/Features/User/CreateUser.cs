@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Web.Database;
+using Web.Services;
 
 namespace Web.Features.User;
 
@@ -19,7 +20,8 @@ public class CreateUser
         }
     }
 
-    public class Endpoint(DataContext dataContext) : Endpoint<Request, Response>
+    public class Endpoint(DataContext dataContext, ILogger<Endpoint> logger, IClockService clockService)
+        : Endpoint<Request, Response>
     {
         public override void Configure()
         {
@@ -36,9 +38,11 @@ public class CreateUser
 
             ThrowIfAnyErrors();
 
-            var user = new User(request.Name, request.Email);
+            var user = new User(request.Name, request.Email, clockService.Now);
             dataContext.Users.Add(user);
             await dataContext.SaveChangesAsync(cancellationToken);
+
+            logger.LogInformation("Created user {UserId} with email {UserEmail}", user.Id, user.Email);
 
             return new Response(user.Id, user.Name, user.Email);
         }

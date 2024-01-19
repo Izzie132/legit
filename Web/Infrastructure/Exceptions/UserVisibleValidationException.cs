@@ -1,5 +1,4 @@
 ﻿using FluentValidation.Results;
-using Web.Exceptions;
 
 namespace Web.Infrastructure.Exceptions
 {

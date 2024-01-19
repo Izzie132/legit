@@ -1,9 +1,9 @@
-global using FastEndpoints;
 using Azure.Identity;
+using FastEndpoints;
 using Web.Configuration;
 using Web.Database;
-using Web.Exceptions;
 using Web.Infrastructure.Exceptions;
+using Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +13,15 @@ if (keyVaultUri != null)
     builder.Configuration.AddAzureKeyVault(vaultUri: new Uri(keyVaultUri), credential: new DefaultAzureCredential());
 }
 
+builder.Services.AddApplicationInsightsTelemetry();
+
 builder.Services.Configure<ProjectNameOptions>(builder.Configuration.GetSection(key: ProjectNameOptions.ConfigurationKey));
 
 builder.Services.Configure<ExceptionOptions>(builder.Configuration.GetSection(key: ExceptionOptions.ConfigurationKey));
 
 builder.Services.AddDbContext<DataContext>();
+
+builder.Services.AddScoped<IClockService, ClockService>();
 
 if (!builder.Environment.IsDevelopment())
 {
@@ -59,4 +63,7 @@ if (!app.Environment.IsDevelopment())
 
 app.Run();
 
-public partial class Program { }
+namespace Web
+{
+    public partial class Program { }
+}

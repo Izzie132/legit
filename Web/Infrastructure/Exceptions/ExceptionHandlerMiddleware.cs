@@ -2,7 +2,6 @@
 using System.Net;
 using Microsoft.Extensions.Options;
 using Web.Configuration;
-using Web.Exceptions;
 using Web.Infrastructure.Extensions;
 
 namespace Web.Infrastructure.Exceptions;
