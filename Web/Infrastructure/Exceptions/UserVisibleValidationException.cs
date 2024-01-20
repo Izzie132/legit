@@ -20,8 +20,8 @@ namespace Web.Infrastructure.Exceptions
             "One or more validation errors occurred:"
             + string.Join(
                 string.Empty,
-                validationFailures.Select(
-                    failure => $"{Environment.NewLine}- {failure.PropertyName}: {failure.ErrorMessage}"
+                validationFailures.Select(failure =>
+                    $"{Environment.NewLine}- {failure.PropertyName}: {failure.ErrorMessage}"
                 )
             );
     }

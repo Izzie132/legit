@@ -74,8 +74,8 @@ class Build : NukeBuild
                 .DependsOn(RestoreSolution)
                 .Executes(() =>
                 {
-                    DotNetTasks.DotNetBuild(
-                        s => s.SetProjectFile(Solution).SetConfiguration(Configuration).EnableNoRestore()
+                    DotNetTasks.DotNetBuild(s =>
+                        s.SetProjectFile(Solution).SetConfiguration(Configuration).EnableNoRestore()
                     );
                 });
 
@@ -97,20 +97,18 @@ class Build : NukeBuild
                 .DependsOn(BuildAndTest)
                 .Executes(() =>
                 {
-                    DotNetTasks.DotNetPublish(
-                        s =>
-                            s.SetProject(WebProjectDirectory)
-                                .SetConfiguration(Configuration)
-                                .SetOutput(BuildOutputDirectory / "Web")
-                                .EnableNoRestore()
+                    DotNetTasks.DotNetPublish(s =>
+                        s.SetProject(WebProjectDirectory)
+                            .SetConfiguration(Configuration)
+                            .SetOutput(BuildOutputDirectory / "Web")
+                            .EnableNoRestore()
                     );
 
-                    DotNetTasks.DotNetPublish(
-                        s =>
-                            s.SetProject(MigrationsDirectory)
-                                .SetConfiguration(Configuration)
-                                .SetOutput(BuildOutputDirectory / "Migrations")
-                                .EnableNoRestore()
+                    DotNetTasks.DotNetPublish(s =>
+                        s.SetProject(MigrationsDirectory)
+                            .SetConfiguration(Configuration)
+                            .SetOutput(BuildOutputDirectory / "Migrations")
+                            .EnableNoRestore()
                     );
                 });
 
@@ -159,8 +157,8 @@ class Build : NukeBuild
                 .DependsOn(CompileSolution, ResetTestDatabase)
                 .Executes(() =>
                 {
-                    DotNetTasks.DotNetTest(
-                        s => s.SetProjectFile(Solution).SetConfiguration(Configuration).EnableNoRestore()
+                    DotNetTasks.DotNetTest(s =>
+                        s.SetProjectFile(Solution).SetConfiguration(Configuration).EnableNoRestore()
                     );
                 });
 
@@ -189,12 +187,11 @@ class Build : NukeBuild
                 {
                     DockerTasks.DockerPull(c => c.SetName("mcr.microsoft.com/mssql/server:2022-latest"));
 
-                    DockerTasks.DockerCreate(
-                        c =>
-                            c.SetImage("mcr.microsoft.com/mssql/server:2022-latest")
-                                .SetName(ProjectName)
-                                .SetEnv("ACCEPT_EULA=Y", $"SA_PASSWORD={DatabaseServerAdminPassword}")
-                                .SetPublish($"{DatabasePort}:1433")
+                    DockerTasks.DockerCreate(c =>
+                        c.SetImage("mcr.microsoft.com/mssql/server:2022-latest")
+                            .SetName(ProjectName)
+                            .SetEnv("ACCEPT_EULA=Y", $"SA_PASSWORD={DatabaseServerAdminPassword}")
+                            .SetPublish($"{DatabasePort}:1433")
                     );
 
                     DockerTasks.DockerStart(c => c.SetContainers(ProjectName));
