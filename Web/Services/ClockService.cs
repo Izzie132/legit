@@ -16,20 +16,15 @@ public interface IClockService
     LocalDateTime ToLocal(Instant instant);
 }
 
-public class ClockService : IClockService
+public class ClockService(IClock clock) : IClockService
 {
-    protected readonly IClock clock;
+    protected readonly IClock clock = clock;
 
-    public DateTimeZone TimeZone { get; private set; }
+    public DateTimeZone TimeZone { get; private set; } =
+        DateTimeZoneProviders.Tzdb.GetZoneOrNull("Europe/London") ?? throw new Exception("Time zone not found");
 
     public ClockService()
         : this(SystemClock.Instance) { }
-
-    public ClockService(IClock clock)
-    {
-        this.clock = clock;
-        TimeZone = DateTimeZoneProviders.Tzdb.GetZoneOrNull("Europe/London") ?? throw new Exception("Time zone not found");
-    }
 
     public Instant Now => clock.GetCurrentInstant();
 

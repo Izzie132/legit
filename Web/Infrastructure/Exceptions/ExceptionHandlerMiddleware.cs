@@ -6,22 +6,13 @@ using Web.Infrastructure.Extensions;
 
 namespace Web.Infrastructure.Exceptions;
 
-public class ExceptionHandlerMiddleware
+public class ExceptionHandlerMiddleware(
+    RequestDelegate next,
+    ILogger<ExceptionHandlerMiddleware> logger,
+    IOptions<ExceptionOptions> exceptionOptions
+)
 {
-    private readonly RequestDelegate next;
-    private readonly ILogger<ExceptionHandlerMiddleware> logger;
-    private readonly ExceptionOptions exceptionOptions;
-
-    public ExceptionHandlerMiddleware(
-        RequestDelegate next,
-        ILogger<ExceptionHandlerMiddleware> logger,
-        IOptions<ExceptionOptions> exceptionOptions
-    )
-    {
-        this.next = next;
-        this.logger = logger;
-        this.exceptionOptions = exceptionOptions.Value;
-    }
+    private readonly ExceptionOptions exceptionOptions = exceptionOptions.Value;
 
     public async Task Invoke(HttpContext context)
     {

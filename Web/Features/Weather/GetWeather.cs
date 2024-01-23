@@ -23,27 +23,26 @@ public class GetWeather
         }
 
         private readonly List<string> weatherDescriptions =
-            new()
-            {
-                "Clear",
-                "Cloudy",
-                "Fog",
-                "Haze",
-                "Light Rain",
-                "Mostly Cloudy",
-                "Overcast",
-                "Partly Cloudy",
-                "Rain",
-                "Rain Showers",
-                "Showers",
-                "Thunderstorm",
-                "Chance of Showers",
-                "Chance of Snow",
-                "Chance of Storm",
-                "Mostly Sunny",
-                "Partly Sunny",
-                "Scattered Showers",
-                "Sunny"
-            };
+        [
+            "Clear",
+            "Cloudy",
+            "Fog",
+            "Haze",
+            "Light Rain",
+            "Mostly Cloudy",
+            "Overcast",
+            "Partly Cloudy",
+            "Rain",
+            "Rain Showers",
+            "Showers",
+            "Thunderstorm",
+            "Chance of Showers",
+            "Chance of Snow",
+            "Chance of Storm",
+            "Mostly Sunny",
+            "Partly Sunny",
+            "Scattered Showers",
+            "Sunny"
+        ];
     }
 }
