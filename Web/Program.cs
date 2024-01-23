@@ -1,5 +1,6 @@
 using Azure.Identity;
-using FastEndpoints;
+using NodaTime;
+using NodaTime.Serialization.SystemTextJson;
 using Web.Configuration;
 using Web.Database;
 using Web.Infrastructure.Exceptions;
@@ -42,6 +43,7 @@ app.UseStaticFiles();
 app.UseFastEndpoints(c =>
 {
     c.Endpoints.RoutePrefix = "api";
+    c.Serializer.Options.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
     c.Errors.ResponseBuilder = (failures, ctx, statusCode) =>
     {
         return new ApiErrorResponse(
