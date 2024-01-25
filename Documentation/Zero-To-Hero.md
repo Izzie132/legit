@@ -19,6 +19,6 @@
 Once you have completed the above steps, you can start the application by running the `dotnet run watch`, or by using the
 `Web` rub configuration within Rider.
 
-This wil start the ASP.NET backend running on port `5000`, and the React/Vite frontend running on port `3000`.
+This will start the ASP.NET backend running on port `5000`, and the React/Vite frontend running on port `3000`.
 Requests to `/api` on the frontend will be automatically proxied to the backend, so the application should be accessed
 from https://localhost:3000.

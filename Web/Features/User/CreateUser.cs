@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 using Web.Database;
-using Web.Services;
 
 namespace Web.Features.User;
 
@@ -20,8 +20,7 @@ public class CreateUser
         }
     }
 
-    public class Endpoint(DataContext dataContext, ILogger<Endpoint> logger, IClockService clockService)
-        : Endpoint<Request, Response>
+    public class Endpoint(DataContext dataContext, ILogger<Endpoint> logger, ZonedClock clock) : Endpoint<Request, Response>
     {
         public override void Configure()
         {
@@ -38,7 +37,7 @@ public class CreateUser
 
             ThrowIfAnyErrors();
 
-            var user = new User(request.Name, request.Email, clockService.Now);
+            var user = new User(request.Name, request.Email, clock.GetCurrentInstant());
             dataContext.Users.Add(user);
             await dataContext.SaveChangesAsync(cancellationToken);
 

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using NodaTime.Text;
 using Web.Features.User;
 using Web.Infrastructure.Exceptions;
-using WebTests.Mocks;
 
 namespace WebTests.Features.User;
 
@@ -16,8 +15,8 @@ public class CreateUserTests : BaseWebTest
     [Fact]
     public async Task ValidRequest_CreatesUser()
     {
-        const string createdAtIsoString = "2022-01-01T09:30:18Z";
-        MockClockService.Clock.Reset(InstantPattern.General.Parse(createdAtIsoString).Value);
+        var createdAtInstant = InstantPattern.General.Parse("2022-01-01T09:30:18Z").Value;
+        FakeClock.Reset(createdAtInstant);
 
         var (httpResponseMessage, response) = await Fixture.Client.POSTAsync<
             CreateUser.Endpoint,
@@ -31,7 +30,7 @@ public class CreateUserTests : BaseWebTest
         Assert.NotNull(databaseUser);
         Assert.Equal("Ben", databaseUser.Name);
         Assert.Equal("ben@ghyston.com", databaseUser.Email);
-        Assert.Equal(InstantPattern.General.Parse(createdAtIsoString).Value, databaseUser.CreatedAt);
+        Assert.Equal(createdAtInstant, databaseUser.CreatedAt);
     }
 
     [Fact]

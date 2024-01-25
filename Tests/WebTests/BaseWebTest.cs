@@ -1,11 +1,11 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using NodaTime;
+using NodaTime.Testing;
 using Respawn;
 using Web.Configuration;
 using Web.Database;
-using Web.Services;
-using WebTests.Mocks;
 
 namespace WebTests;
 
@@ -13,6 +13,7 @@ namespace WebTests;
 public class BaseWebTest : TestClass<WebTestFixture>, IDisposable
 {
     protected HttpClient Client => Fx.Client;
+    protected static FakeClock FakeClock => WebTestFixture.FakeClock;
 
     protected DataContext DataContext;
 
@@ -73,6 +74,6 @@ public class BaseWebTest : TestClass<WebTestFixture>, IDisposable
             scope.Dispose();
         }
 
-        MockClockService.Reset();
+        FakeClock.Reset(SystemClock.Instance.GetCurrentInstant());
     }
 }

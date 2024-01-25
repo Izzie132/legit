@@ -1,10 +1,10 @@
 using Azure.Identity;
 using NodaTime;
+using NodaTime.Extensions;
 using NodaTime.Serialization.SystemTextJson;
 using Web.Configuration;
 using Web.Database;
 using Web.Infrastructure.Exceptions;
-using Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +22,11 @@ builder.Services.Configure<ExceptionOptions>(builder.Configuration.GetSection(ke
 
 builder.Services.AddDbContext<DataContext>();
 
-builder.Services.AddScoped<IClockService, ClockService>();
+builder.Services.AddSingleton(
+    SystemClock.Instance.InZone(
+        DateTimeZoneProviders.Tzdb.GetZoneOrNull("Europe/London") ?? throw new Exception("Time zone not found")
+    )
+);
 
 if (!builder.Environment.IsDevelopment())
 {
