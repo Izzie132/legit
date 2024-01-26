@@ -13,7 +13,7 @@ namespace WebTests;
 public class BaseWebTest : TestClass<WebTestFixture>, IDisposable
 {
     protected HttpClient Client => Fx.Client;
-    protected static FakeClock FakeClock => WebTestFixture.FakeClock;
+    protected FakeClock FakeClock => (FakeClock)ResolveService<IClock>();
 
     protected DataContext DataContext;
 
