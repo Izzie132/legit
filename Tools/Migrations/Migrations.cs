@@ -3,6 +3,7 @@ using System.CommandLine.NamingConventionBinder;
 using System.Reflection;
 using Azure.Core;
 using Azure.Identity;
+using DataSeeder;
 using DbUp;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
@@ -26,11 +27,16 @@ public static class MigrationRunner
                 description: "Runs scripts to clean the database before running migrations (should only be used in development/test scenarios)",
                 getDefaultValue: () => false
             ),
+            new Option<DataSeedMode>(
+                name: "--dataSeedMode",
+                description: "Runs the test data seeder to populate the database with realistic test data with the given mode (None, Minimal, Full, Load)",
+                getDefaultValue: () => DataSeedMode.None
+            ),
             new Option<bool>(name: "--quiet", description: "Suppresses console output", getDefaultValue: () => false),
         };
 
         rootCommand.Handler = CommandHandler.Create(
-            (string connectionString, bool cleanFirst, bool quiet) =>
+            (string connectionString, bool cleanFirst, DataSeedMode dataSeedMode, bool quiet) =>
             {
                 try
                 {
@@ -47,6 +53,11 @@ public static class MigrationRunner
                     }
 
                     RunVersionedMigrations(connectionManager, quiet);
+
+                    if (dataSeedMode != DataSeedMode.None)
+                    {
+                        DataSeeder.DataSeeder.SeedTestData(connectionString, dataSeedMode, quiet);
+                    }
 
                     if (!quiet)
                     {

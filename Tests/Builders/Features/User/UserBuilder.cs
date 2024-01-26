@@ -14,7 +14,7 @@ public class UserBuilder : IBuilder<Web.Features.User.User>
         faker ??= new Faker();
         Name = faker.Person.FullName;
         Email = faker.Person.Email;
-        CreatedAt = faker.Noda().Instant.Recent();
+        CreatedAt = faker.Noda().Instant.Past();
     }
 
     public Web.Features.User.User Build() =>

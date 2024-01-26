@@ -86,6 +86,7 @@
               "RestoreSolution",
               "RunBackendTests",
               "RunFrontEndTests",
+              "SeedDevelopmentDatabase",
               "SetupDevelopmentEnvironment"
             ]
           }
@@ -122,6 +123,7 @@
               "RestoreSolution",
               "RunBackendTests",
               "RunFrontEndTests",
+              "SeedDevelopmentDatabase",
               "SetupDevelopmentEnvironment"
             ]
           }

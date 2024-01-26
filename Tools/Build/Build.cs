@@ -32,6 +32,8 @@ class Build : NukeBuild
     private static AbsolutePath ReactClientDirectory => WebProjectDirectory / "client-app";
     AbsolutePath MigrationsDirectory => RootDirectory / "Tools" / "Migrations";
     AbsolutePath MigrationsDllFile => MigrationsDirectory / $"bin/{Configuration}/net8.0/Migrations.dll";
+    AbsolutePath DataSeederDirectory => RootDirectory / "Tools" / "DataSeeder";
+    AbsolutePath DataSeederDllFile => DataSeederDirectory / $"bin/{Configuration}/net8.0/DataSeeder.dll";
 
     private static AbsolutePath BuildOutputDirectory => RootDirectory / "build-output";
 
@@ -248,7 +250,7 @@ class Build : NukeBuild
     Target MigrateDevelopmentDatabase =>
         _ =>
             _.Description("Run migrations against development database")
-                .DependsOn(CompileSolution)
+                .DependsOn(CompileSolution, EnsureDatabaseContainerResponsive)
                 .After(CreateDevelopmentDatabase)
                 .Executes(() =>
                 {
@@ -258,20 +260,32 @@ class Build : NukeBuild
     Target MigrateTestDatabase =>
         _ =>
             _.Description("Run migrations against test database")
-                .DependsOn(CompileSolution)
+                .DependsOn(CompileSolution, EnsureDatabaseContainerResponsive)
                 .After(CreateTestDatabase)
                 .Executes(() =>
                 {
                     DotNetTasks.DotNet($"{MigrationsDllFile} {TestDatabaseConnectionString}");
                 });
 
+    Target SeedDevelopmentDatabase =>
+        _ =>
+            _.Description("Seed development database")
+                .DependsOn(CompileSolution, EnsureDatabaseContainerResponsive)
+                .After(MigrateDevelopmentDatabase)
+                .Executes(() =>
+                {
+                    DotNetTasks.DotNet($"{DataSeederDllFile} {DevelopmentDatabaseConnectionString} --dataSeedMode Full");
+                });
+
     Target ResetDevelopmentDatabase =>
         _ =>
             _.Description("Clean and run migrations against development database")
-                .DependsOn(CompileSolution)
+                .DependsOn(CompileSolution, EnsureDatabaseContainerResponsive)
                 .Executes(() =>
                 {
-                    DotNetTasks.DotNet($"{MigrationsDllFile} {DevelopmentDatabaseConnectionString} --cleanFirst");
+                    DotNetTasks.DotNet(
+                        $"{MigrationsDllFile} {DevelopmentDatabaseConnectionString} --cleanFirst --dataSeedMode Full"
+                    );
                 });
 
     Target ResetTestDatabase =>
@@ -280,8 +294,6 @@ class Build : NukeBuild
                 .DependsOn(CompileSolution)
                 .Executes(() =>
                 {
-                    Log.Information(MigrationsDllFile);
-                    Log.Information(TestDatabaseConnectionString);
                     DotNetTasks.DotNet($"{MigrationsDllFile} {TestDatabaseConnectionString} --cleanFirst");
                 });
 
@@ -292,6 +304,7 @@ class Build : NukeBuild
                     CreateDatabaseContainer,
                     CreateDevelopmentDatabase,
                     MigrateDevelopmentDatabase,
+                    SeedDevelopmentDatabase,
                     CreateTestDatabase,
                     MigrateTestDatabase
                 );

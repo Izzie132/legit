@@ -9,6 +9,20 @@ parameters:
     type: string
   - name: databaseConnectionString
     type: string
+  - name: cleanFirst
+    type: string
+    default: "true"
+    values:
+      - "true"
+      - "false"
+  - name: dataSeedMode
+    type: string
+    default: "Full"
+    values:
+      - "Load"
+      - "Full"
+      - "Minimal"
+      - "None"
 
 jobs:
   - deployment: ${{ parameters.deploymentName }}
@@ -19,17 +33,17 @@ jobs:
         deploy:
           steps:
             - task: AzureWebApp@1
-              displayName: 'Deploy Web App'
+              displayName: "Deploy Web App"
               inputs:
                 azureSubscription: ${{ parameters.serviceConnectionName }}
-                appType: 'webAppLinux'
+                appType: "webAppLinux"
                 appName: ${{ parameters.webAppResourceName }}
-                package: '$(Agent.BuildDirectory)/build-artifacts/Web/'
-                runtimeStack: 'DOTNETCORE|8.0'
+                package: "$(Agent.BuildDirectory)/build-artifacts/Web/"
+                runtimeStack: "DOTNETCORE|8.0"
             - task: AzureCLI@2
-              displayName: 'Dotnet migrate'
+              displayName: "Dotnet migrate"
               inputs:
                 azureSubscription: ${{ parameters.serviceConnectionName }}
-                scriptType: 'pscore'
-                scriptLocation: 'inlineScript'
-                inlineScript: "dotnet $(Agent.BuildDirectory)/build-artifacts/Migrations/Migrations.dll '${{ parameters.databaseConnectionString }}'"
+                scriptType: "pscore"
+                scriptLocation: "inlineScript"
+                inlineScript: "dotnet $(Agent.BuildDirectory)/build-artifacts/Migrations/Migrations.dll '${{ parameters.databaseConnectionString }}' --cleanFirst ${{ parameters.cleanFirst }} --dataSeedMode ${{ parameters.dataSeedMode }}"

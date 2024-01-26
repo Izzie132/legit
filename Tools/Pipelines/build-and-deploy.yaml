@@ -1,4 +1,21 @@
-trigger: 
+parameters:
+  - name: exampleCleanFirst
+    displayName: EXAMPLE - Clean DB?
+    type: string
+    default: false
+    values:
+      - true
+      - false
+  - name: exampleDataSeedMode
+    displayName: EXAMPLE - Data Seed Mode
+    type: string
+    default: None
+    values:
+      - None
+      - Minimal
+      - Full
+
+trigger:
   - main
 
 pool:
@@ -6,31 +23,33 @@ pool:
 
 stages:
   - stage: build_and_test
-    displayName: 'Build and Test'
+    displayName: "Build and Test"
     jobs:
       - job: build_and_test
-        displayName: 'Build and Test'
+        displayName: "Build and Test"
         steps:
           - template: prepare-agent.yaml
           - task: PowerShell@2
-            displayName: 'Build, test and publish'
+            displayName: "Build, test and publish"
             inputs:
-              filePath: './build.ps1'
-              arguments: 'Publish'
+              filePath: "./build.ps1"
+              arguments: "Publish"
           - powershell: ls
           - task: PublishBuildArtifacts@1
-            displayName: 'Publish build artifacts'
+            displayName: "Publish build artifacts"
             inputs:
-              pathToPublish: 'build-output'
-              artifactName: 'build-artifacts'
-            
+              pathToPublish: "build-output"
+              artifactName: "build-artifacts"
+
   - stage: example
-    displayName: 'Deploy to Example'
+    displayName: "Deploy to Example"
     jobs:
       - template: deploy-job-template.yaml
         parameters:
-          deploymentName: 'deploy_example'
-          environmentName: 'EXAMPLE'
-          serviceConnectionName: 'PRJCT-SERCON-EXMPL'
-          webAppResourceName: 'PRJCT-WA01-EXMPL'
-          databaseConnectionString: 'Server=tcp:prjct-sql01-exmpl.database.windows.net,1433;Initial Catalog=PRJCT-SQLDB01-EXMPL;Encrypt=True;TrustServerCertificate=True;Connection Timeout=120;Authentication=Active Directory Default;'
+          deploymentName: "deploy_example"
+          environmentName: "EXAMPLE"
+          serviceConnectionName: "PRJCT-SERCON-EXMPL"
+          webAppResourceName: "PRJCT-WA01-EXMPL"
+          databaseConnectionString: "Server=tcp:prjct-sql01-exmpl.database.windows.net,1433;Initial Catalog=PRJCT-SQLDB01-EXMPL;Encrypt=True;TrustServerCertificate=True;Connection Timeout=120;Authentication=Active Directory Default;"
+          cleanFirst: ${{ parameters.exampleCleanFirst }}
+          dataSeedMode: ${{ parameters.exampleDataSeedMode }}
