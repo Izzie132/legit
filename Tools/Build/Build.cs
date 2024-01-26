@@ -116,11 +116,11 @@ class Build : NukeBuild
 
     Target CheckFrontEndCompiles =>
         _ =>
-            _.Description("Check frontend typescript compiles")
+            _.Description("Check build runs successfully")
                 .DependsOn(RestoreFrontEnd)
                 .Executes(() =>
                 {
-                    NpmTasks.Npm("run typecheck", ReactClientDirectory);
+                    NpmTasks.Npm("run build", ReactClientDirectory);
                 });
 
     Target CheckFrontEndCodeQuality =>

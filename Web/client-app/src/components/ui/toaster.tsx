@@ -5,7 +5,7 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from "@/components/ui/toast.ts";
+} from "@/components/ui/toast.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
 
 export const Toaster = () => {
