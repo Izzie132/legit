@@ -2,18 +2,19 @@ parameters:
   - name: exampleCleanFirst
     displayName: EXAMPLE - Clean DB?
     type: string
-    default: false
+    default: true
     values:
       - true
       - false
   - name: exampleDataSeedMode
     displayName: EXAMPLE - Data Seed Mode
     type: string
-    default: None
+    default: Full
     values:
       - None
       - Minimal
       - Full
+      - Load
 
 trigger:
   - main

@@ -11,18 +11,18 @@ parameters:
     type: string
   - name: cleanFirst
     type: string
-    default: "true"
+    default: false
     values:
-      - "true"
-      - "false"
+      - true
+      - false
   - name: dataSeedMode
     type: string
-    default: "Full"
+    default: None
     values:
-      - "Load"
-      - "Full"
-      - "Minimal"
-      - "None"
+      - None
+      - Minimal
+      - Full
+      - Load
 
 jobs:
   - deployment: ${{ parameters.deploymentName }}
