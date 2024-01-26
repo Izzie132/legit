@@ -1,7 +1,9 @@
-﻿import { Title } from "@/components/text/Title.tsx";
+﻿import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { usePostJson } from "@/api/usePostJson.ts";
+import { Title } from "@/components/text/Title.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import {
   Form,
   FormControl,
@@ -11,10 +13,8 @@ import {
   FormMessage,
 } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { Button } from "@/components/ui/button";
-import { User } from "@/features/users/user.ts";
-import { usePostJson } from "@/api/usePostJson.ts";
 import { useToast } from "@/components/ui/use-toast.ts";
+import type { User } from "@/features/users/user.ts";
 
 type CreateUserRequest = {
   name: string;
@@ -49,10 +49,10 @@ export const SignUp = () => {
 
     void createUser.makeRequest({
       requestBody: user,
-      onSuccess: (user) => {
+      onSuccess: (createdUser) => {
         toast({
           title: "User created",
-          description: `User ${user.name} created successfully`,
+          description: `User ${createdUser.name} created successfully`,
         });
       },
       onFailure: (err) => {

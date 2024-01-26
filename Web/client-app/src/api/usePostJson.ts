@@ -1,5 +1,6 @@
-import { useJsonApiRequest } from "@/api/useJsonApiRequest";
 import { useCallback } from "react";
+import type { ApiRequest } from "@/api/useApiRequest.ts";
+import { useJsonApiRequest } from "@/api/useJsonApiRequest.ts";
 
 type MakeRequestParameters<
   TRequestBody extends object | undefined,
@@ -15,7 +16,7 @@ export const usePostJson = <
   TResponse extends object,
 >(
   endpointUrl: string,
-) => {
+): ApiRequest<MakeRequestParameters<TRequestBody, TResponse>, TResponse> => {
   const { makeRequest, cancelRequest, state } = useJsonApiRequest<
     TRequestBody,
     TResponse

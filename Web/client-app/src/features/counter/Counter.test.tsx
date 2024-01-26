@@ -1,5 +1,5 @@
+import { render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { screen, render, waitFor } from "@testing-library/react";
 import { Counter } from "@/features/counter/Counter.tsx";
 
 describe("Counter", () => {

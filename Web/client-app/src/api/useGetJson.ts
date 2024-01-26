@@ -1,6 +1,7 @@
-import { useJsonApiRequest } from "@/api/useJsonApiRequest";
-import { QueryParameters } from "@/api/makeApiRequest.ts";
 import { useCallback } from "react";
+import type { QueryParameters } from "@/api/makeApiRequest.ts";
+import type { ApiRequest } from "@/api/useApiRequest.ts";
+import { useJsonApiRequest } from "@/api/useJsonApiRequest.ts";
 
 type MakeRequestParameters<
   TQueryParameters extends QueryParameters | undefined,
@@ -16,7 +17,10 @@ export const useGetJson = <
   TResponse extends object,
 >(
   endpointUrl: string,
-) => {
+): ApiRequest<
+  MakeRequestParameters<TQueryParameters, TResponse>,
+  TResponse
+> => {
   const { makeRequest, cancelRequest, state } = useJsonApiRequest<
     undefined,
     TResponse

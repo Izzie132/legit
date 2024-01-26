@@ -1,10 +1,10 @@
-import {
-  temperatureConverter,
-  TemperatureUnits,
-  windSpeedConverter,
-  WindSpeedUnits,
-} from "./unitConverters";
 import { describe, expect, test } from "vitest";
+import {
+  type TemperatureUnits,
+  type WindSpeedUnits,
+  temperatureConverter,
+  windSpeedConverter,
+} from "./unitConverters.ts";
 
 type TestTemperatureConverterInputs = {
   input: number;

@@ -1,11 +1,11 @@
-import { CancelTokenSource } from "axios";
-import {
-  ApiResponse,
-  cancelledRequestErrorMessage,
-} from "@/api/makeApiRequest";
+import type { CancelTokenSource } from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type ApiResponse,
+  cancelledRequestErrorMessage,
+} from "@/api/makeApiRequest.ts";
 
-type CoreMakeRequestArguments<TResponse> = {
+export type CoreMakeRequestArguments<TResponse> = {
   onSuccess?: (response: TResponse) => void;
   onFailure?: (error: string) => void;
 };
@@ -19,6 +19,18 @@ type State = {
   isLoading: boolean;
   error: string | null;
 };
+
+export type ApiRequest<
+  TMakeRequestArguments extends CoreMakeRequestArguments<TResponse>,
+  TResponse,
+> = {
+  makeRequest: (
+    args: TMakeRequestArguments,
+  ) => Promise<ApiResponse<TResponse> | undefined>;
+  cancelRequest: () => void;
+  state: State;
+};
+
 export const useApiRequest = <
   TMakeRequestArguments extends CoreMakeRequestArguments<TResponse>,
   TApiRequestParameters extends CoreApiRequestParameters,
@@ -28,7 +40,7 @@ export const useApiRequest = <
   makeApiRequest: (
     parameters: TApiRequestParameters,
   ) => Promise<ApiResponse<TResponse>>,
-) => {
+): ApiRequest<TMakeRequestArguments, TResponse> => {
   const [state, setState] = useState<State>({
     isLoading: false,
     error: null,
@@ -89,13 +101,11 @@ export const useApiRequest = <
   );
 
   // Cancel the request when the component unmounts.
-  useEffect(() => {
-    return () => cancelRequest();
-  }, []);
+  useEffect(() => () => cancelRequest(), []);
 
   return {
     makeRequest,
     cancelRequest,
-    state: state,
+    state,
   };
 };

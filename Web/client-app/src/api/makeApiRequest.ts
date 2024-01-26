@@ -1,13 +1,13 @@
 import axios, {
-  AxiosRequestHeaders,
-  AxiosResponse,
-  CancelTokenSource,
-  Method,
-  RawAxiosRequestHeaders,
-  ResponseType,
+  type AxiosRequestHeaders,
+  type AxiosResponse,
+  type CancelTokenSource,
+  type Method,
+  type RawAxiosRequestHeaders,
+  type ResponseType,
 } from "axios";
-import { isApiErrorResponse } from "@/api/ApiErrorResponse";
 import queryString from "query-string";
+import { isApiErrorResponse } from "@/api/ApiErrorResponse.ts";
 
 export type HttpMethod = Method;
 
@@ -26,7 +26,7 @@ export type MakeApiRequestParameters<TRequestBody> = {
   headers?: AxiosRequestHeaders;
 };
 
-export const makeApiRequest = async <TRequestBody, TResponse>({
+export const makeApiRequest = <TRequestBody, TResponse>({
   method,
   endpointUrl,
   cancelTokenSource,
@@ -46,8 +46,8 @@ export const makeApiRequest = async <TRequestBody, TResponse>({
       : `${endpointUrl}?${queryString.stringify(queryParameters)}`;
 
   const request = axios({
-    method: method,
-    url: url,
+    method,
+    url,
     cancelToken: cancelTokenSource?.token,
     data: requestBody,
     responseType: responseType ?? "json",
@@ -89,6 +89,7 @@ const handleSuccessfulApiResponse = <TResponse>(
 
 const handleFailedApiResponse = (error: unknown): FailedApiResponse => {
   if (isCancelledError(error)) {
+    // eslint-disable-next-line no-console -- We want to know about this if it happens
     console.warn(cancelledRequestErrorMessage);
     return buildErrorResponse({
       error: cancelledRequestErrorMessage,
@@ -96,15 +97,14 @@ const handleFailedApiResponse = (error: unknown): FailedApiResponse => {
     });
   }
 
+  // eslint-disable-next-line no-console -- If we've got a failed API response, this will help with debugging
   console.error(error);
 
-  if (isHttpStatusCodeError(error) && error.response != null) {
-    const responseData = error.response.data;
-
+  if (isHttpStatusCodeError(error)) {
     const errorMessage =
-      (isApiErrorResponse(responseData)
-        ? responseData.userVisibleMessage || responseData.message
-        : null) || "An unexpected error has occurred";
+      (isApiErrorResponse(error.response.data)
+        ? error.response.data.userVisibleMessage ?? error.response.data.message
+        : null) ?? "An unexpected error has occurred";
 
     return buildErrorResponse({
       error: errorMessage,
@@ -112,7 +112,7 @@ const handleFailedApiResponse = (error: unknown): FailedApiResponse => {
     });
   }
 
-  if (isNoResponseReceivedError(error) && error.request != null) {
+  if (isNoResponseReceivedError(error)) {
     return buildErrorResponse({
       error: "The request was sent but no response was received",
       statusCode: null,
@@ -132,12 +132,18 @@ const isCancelledError = (error: unknown): boolean => axios.isCancel(error);
 const isHttpStatusCodeError = (
   error: unknown,
 ): error is { response: AxiosResponse } =>
-  typeof error === "object" && error != null && "response" in error;
+  typeof error === "object" &&
+  error != null &&
+  "response" in error &&
+  error.response != null;
 
 const isNoResponseReceivedError = (
   error: unknown,
 ): error is { request: XMLHttpRequest } =>
-  typeof error === "object" && error != null && "request" in error;
+  typeof error === "object" &&
+  error != null &&
+  "request" in error &&
+  error.request != null;
 
 const buildErrorResponse = ({
   error,

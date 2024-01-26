@@ -1,17 +1,17 @@
 ﻿import { useEffect, useState } from "react";
-import {
-  temperatureConverter,
-  temperatureSuffixByUnit,
-  TemperatureUnits,
-  windSpeedConverter,
-  windSpeedSuffixByUnit,
-  WindSpeedUnits,
-} from "@/helpers/unitConverters.ts";
-import WindIcon from "@/assets/icons/wind-solid.svg?react";
-import TemperatureIcon from "@/assets/icons/temperature-half-solid.svg?react";
 import { useGetJson } from "@/api/useGetJson.ts";
+import TemperatureIcon from "@/assets/icons/temperature-half-solid.svg?react";
+import WindIcon from "@/assets/icons/wind-solid.svg?react";
 import { Loading } from "@/components/Loading.tsx";
 import { Title } from "@/components/text/Title.tsx";
+import {
+  type TemperatureUnits,
+  type WindSpeedUnits,
+  temperatureConverter,
+  temperatureSuffixByUnit,
+  windSpeedConverter,
+  windSpeedSuffixByUnit,
+} from "@/helpers/unitConverters.ts";
 
 type WeatherInfo = {
   temperature: number;
@@ -25,17 +25,17 @@ export const Weather = () => {
     useState<TemperatureUnits>("celsius");
   const [windSpeedUnits, setWindSpeedUnits] = useState<WindSpeedUnits>("mph");
 
-  const getWeather = useGetJson<undefined, WeatherInfo>(
+  const { makeRequest, state } = useGetJson<undefined, WeatherInfo>(
     "api/weather/GetWeather",
   );
 
   useEffect(() => {
-    void getWeather.makeRequest({
+    void makeRequest({
       onSuccess: (response) => {
         setWeatherInfo(response);
       },
     });
-  }, [getWeather.makeRequest]);
+  }, [makeRequest]);
 
   const cycleTemperatureUnits = () => {
     switch (temperatureUnits) {
@@ -66,7 +66,7 @@ export const Weather = () => {
     }
   };
 
-  if (getWeather.state.isLoading) {
+  if (state.isLoading) {
     return <Loading />;
   }
 
@@ -77,6 +77,7 @@ export const Weather = () => {
         <>
           <h2 className="mb-2 text-xl">{weatherInfo.description}</h2>
           <div className="mb-2 flex items-center">
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions -- TODO make this accessible */}
             <div
               className="mr-2 flex h-[20px] w-[20px] justify-center"
               onClick={cycleTemperatureUnits}
@@ -93,6 +94,7 @@ export const Weather = () => {
             </p>
           </div>
           <div className="mb-2 flex items-center">
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions -- TODO make this accessible */}
             <div
               className="mr-2 flex h-[20px] w-[20px] justify-center"
               onClick={cycleWindSpeedUnits}

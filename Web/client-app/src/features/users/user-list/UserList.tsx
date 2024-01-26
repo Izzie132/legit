@@ -1,7 +1,6 @@
-import { Title } from "@/components/text/Title.tsx";
-import { User } from "@/features/users/user.ts";
 import { useEffect, useState } from "react";
 import { useGetJson } from "@/api/useGetJson.ts";
+import { Title } from "@/components/text/Title.tsx";
 import {
   Table,
   TableBody,
@@ -11,23 +10,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table.tsx";
+import type { User } from "@/features/users/user.ts";
 
 type GetUsersResponse = {
-  users: User[];
+  users: Array<User>;
 };
 
 export const UserList = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<Array<User>>([]);
 
-  const getUsers = useGetJson<undefined, GetUsersResponse>("api/user/GetUsers");
+  const { makeRequest } = useGetJson<undefined, GetUsersResponse>(
+    "api/user/GetUsers",
+  );
 
   useEffect(() => {
-    void getUsers.makeRequest({
+    void makeRequest({
       onSuccess: (res) => {
         setUsers(res.users);
       },
     });
-  }, [getUsers.makeRequest]);
+  }, [makeRequest]);
 
   return (
     <>

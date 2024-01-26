@@ -5,19 +5,17 @@ type NavBarLinkProps = {
   label: string;
 };
 
-export const NavBarLink = (props: NavBarLinkProps) => {
-  return (
-    <>
-      <div className="mr-8">
-        <NavLink
-          to={props.to}
-          className={({ isActive }) =>
-            isActive ? "text-l font-semibold" : "text-l"
-          }
-        >
-          {props.label}
-        </NavLink>
-      </div>
-    </>
-  );
-};
+export const NavBarLink = (props: NavBarLinkProps) => (
+  <>
+    <div className="mr-8">
+      <NavLink
+        to={props.to}
+        className={({ isActive }) =>
+          isActive ? "text-l font-semibold" : "text-l"
+        }
+      >
+        {props.label}
+      </NavLink>
+    </div>
+  </>
+);

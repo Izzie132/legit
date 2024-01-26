@@ -1,7 +1,7 @@
 ﻿import { useState } from "react";
+import { Title } from "@/components/text/Title.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { Title } from "@/components/text/Title.tsx";
 
 export const Counter = () => {
   const [count, setCount] = useState<number>(0);
@@ -16,7 +16,7 @@ export const Counter = () => {
         <Input
           id="count"
           value={count}
-          type={"number"}
+          type="number"
           onChange={(e) => setCount(+e.target.value)}
           data-testid="count-input"
         />
