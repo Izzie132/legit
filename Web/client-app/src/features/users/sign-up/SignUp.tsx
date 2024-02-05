@@ -1,7 +1,10 @@
 ﻿import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { usePostJson } from "@/api/usePostJson.ts";
+import type { CreateUserRequest } from "@/api/ApiClient.ts";
+import { parseApiException } from "@/api/apiErrorReponse.ts";
+import { useApiClient } from "@/api/useApiClient.tsx";
 import { Title } from "@/components/text/Title.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -14,12 +17,6 @@ import {
 } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
-import type { User } from "@/features/users/user.ts";
-
-type CreateUserRequest = {
-  name: string;
-  email: string;
-};
 
 const signUpFormSchema = z.object({
   name: z.string().min(3).max(20),
@@ -29,9 +26,11 @@ const signUpFormSchema = z.object({
 export const SignUp = () => {
   const { toast } = useToast();
 
-  const createUser = usePostJson<CreateUserRequest, User>(
-    "api/user/CreateUser",
-  );
+  const apiClient = useApiClient();
+
+  const createUser = useMutation({
+    mutationFn: (user: CreateUserRequest) => apiClient.createUser(user),
+  });
 
   const form = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
@@ -47,18 +46,17 @@ export const SignUp = () => {
       email: formValues.email,
     } as CreateUserRequest;
 
-    void createUser.makeRequest({
-      requestBody: user,
+    createUser.mutate(user, {
       onSuccess: (createdUser) => {
         toast({
           title: "User created",
           description: `User ${createdUser.name} created successfully`,
         });
       },
-      onFailure: (err) => {
+      onError: (err) => {
         toast({
           title: "User creation failed",
-          description: err,
+          description: parseApiException(err).userVisibleMessage,
           variant: "destructive",
         });
       },

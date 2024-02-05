@@ -1,5 +1,7 @@
-﻿import { useEffect, useState } from "react";
-import { useGetJson } from "@/api/useGetJson.ts";
+﻿import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { parseApiException } from "@/api/apiErrorReponse.ts";
+import { useApiClient } from "@/api/useApiClient.tsx";
 import TemperatureIcon from "@/assets/icons/temperature-half-solid.svg?react";
 import WindIcon from "@/assets/icons/wind-solid.svg?react";
 import { Loading } from "@/components/Loading.tsx";
@@ -13,29 +15,17 @@ import {
   windSpeedSuffixByUnit,
 } from "@/helpers/unitConverters.ts";
 
-type WeatherInfo = {
-  temperature: number;
-  windSpeed: number;
-  description: string;
-};
-
 export const Weather = () => {
-  const [weatherInfo, setWeatherInfo] = useState<WeatherInfo | null>(null);
   const [temperatureUnits, setTemperatureUnits] =
     useState<TemperatureUnits>("celsius");
   const [windSpeedUnits, setWindSpeedUnits] = useState<WindSpeedUnits>("mph");
 
-  const { makeRequest, state } = useGetJson<undefined, WeatherInfo>(
-    "api/weather/GetWeather",
-  );
+  const apiClient = useApiClient();
 
-  useEffect(() => {
-    void makeRequest({
-      onSuccess: (response) => {
-        setWeatherInfo(response);
-      },
-    });
-  }, [makeRequest]);
+  const getWeather = useQuery({
+    queryKey: ["getWeather"],
+    queryFn: ({ signal }) => apiClient.getWeather(signal),
+  });
 
   const cycleTemperatureUnits = () => {
     switch (temperatureUnits) {
@@ -66,27 +56,30 @@ export const Weather = () => {
     }
   };
 
-  if (state.isLoading) {
+  if (getWeather.isLoading) {
     return <Loading />;
+  }
+
+  if (getWeather.isError) {
+    return <div>{parseApiException(getWeather.error).userVisibleMessage}</div>;
   }
 
   return (
     <div className="flex flex-col items-center">
       <Title>Weather</Title>
-      {weatherInfo && (
+      {getWeather.isSuccess && (
         <>
-          <h2 className="mb-2 text-xl">{weatherInfo.description}</h2>
+          <h2 className="mb-2 text-xl">{getWeather.data.description}</h2>
           <div className="mb-2 flex items-center">
-            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions -- TODO make this accessible */}
-            <div
+            <button
               className="mr-2 flex h-[20px] w-[20px] justify-center"
               onClick={cycleTemperatureUnits}
             >
               <TemperatureIcon />
-            </div>
+            </button>
             <p>
               {temperatureConverter(
-                weatherInfo.temperature,
+                getWeather.data.temperature,
                 "celsius",
                 temperatureUnits,
               )}{" "}
@@ -94,15 +87,18 @@ export const Weather = () => {
             </p>
           </div>
           <div className="mb-2 flex items-center">
-            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions -- TODO make this accessible */}
-            <div
+            <button
               className="mr-2 flex h-[20px] w-[20px] justify-center"
               onClick={cycleWindSpeedUnits}
             >
               <WindIcon />
-            </div>
+            </button>
             <p>
-              {windSpeedConverter(weatherInfo.windSpeed, "mph", windSpeedUnits)}{" "}
+              {windSpeedConverter(
+                getWeather.data.windSpeed,
+                "mph",
+                windSpeedUnits,
+              )}{" "}
               {windSpeedSuffixByUnit[windSpeedUnits]}
             </p>
           </div>

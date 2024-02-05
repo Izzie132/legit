@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Web.Database;
+using Web.Infrastructure.Exceptions;
 
 namespace Web.Features.User;
 

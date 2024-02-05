@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
-import { useGetJson } from "@/api/useGetJson.ts";
+import { useQuery } from "@tanstack/react-query";
+import { parseApiException } from "@/api/apiErrorReponse.ts";
+import { useApiClient } from "@/api/useApiClient.tsx";
+import { Loading } from "@/components/Loading.tsx";
 import { Title } from "@/components/text/Title.tsx";
 import {
   Table,
@@ -10,50 +12,47 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table.tsx";
-import type { User } from "@/features/users/user.ts";
-
-type GetUsersResponse = {
-  users: Array<User>;
-};
 
 export const UserList = () => {
-  const [users, setUsers] = useState<Array<User>>([]);
+  const apiClient = useApiClient();
 
-  const { makeRequest } = useGetJson<undefined, GetUsersResponse>(
-    "api/user/GetUsers",
-  );
+  const getUsersQuery = useQuery({
+    queryKey: ["getUsers"],
+    queryFn: ({ signal }) => apiClient.getUsers(signal),
+  });
 
-  useEffect(() => {
-    void makeRequest({
-      onSuccess: (res) => {
-        setUsers(res.users);
-      },
-    });
-  }, [makeRequest]);
+  if (getUsersQuery.isLoading) {
+    return <Loading />;
+  }
+  if (getUsersQuery.isError) {
+    return (
+      <div>{parseApiException(getUsersQuery.error).userVisibleMessage}</div>
+    );
+  }
+  if (getUsersQuery.isSuccess)
+    return (
+      <>
+        <Title>User List</Title>
 
-  return (
-    <>
-      <Title>User List</Title>
-
-      <Table>
-        <TableCaption>A list of users.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Id</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {users.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell>{user.id}</TableCell>
-              <TableCell>{user.name}</TableCell>
-              <TableCell>{user.email}</TableCell>
+        <Table>
+          <TableCaption>A list of users.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Id</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </>
-  );
+          </TableHeader>
+          <TableBody>
+            {getUsersQuery.data.users.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell>{user.id}</TableCell>
+                <TableCell>{user.name}</TableCell>
+                <TableCell>{user.email}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </>
+    );
 };
