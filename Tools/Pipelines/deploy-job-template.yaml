@@ -32,6 +32,13 @@ jobs:
       runOnce:
         deploy:
           steps:
+            - task: AzureCLI@2
+              displayName: "Dotnet migrate"
+              inputs:
+                azureSubscription: ${{ parameters.serviceConnectionName }}
+                scriptType: "pscore"
+                scriptLocation: "inlineScript"
+                inlineScript: "dotnet $(Agent.BuildDirectory)/build-artifacts/Migrations/Migrations.dll '${{ parameters.databaseConnectionString }}' --cleanFirst ${{ parameters.cleanFirst }} --dataSeedMode ${{ parameters.dataSeedMode }}"
             - task: AzureWebApp@1
               displayName: "Deploy Web App"
               inputs:
@@ -40,10 +47,3 @@ jobs:
                 appName: ${{ parameters.webAppResourceName }}
                 package: "$(Agent.BuildDirectory)/build-artifacts/Web/"
                 runtimeStack: "DOTNETCORE|8.0"
-            - task: AzureCLI@2
-              displayName: "Dotnet migrate"
-              inputs:
-                azureSubscription: ${{ parameters.serviceConnectionName }}
-                scriptType: "pscore"
-                scriptLocation: "inlineScript"
-                inlineScript: "dotnet $(Agent.BuildDirectory)/build-artifacts/Migrations/Migrations.dll '${{ parameters.databaseConnectionString }}' --cleanFirst ${{ parameters.cleanFirst }} --dataSeedMode ${{ parameters.dataSeedMode }}"
