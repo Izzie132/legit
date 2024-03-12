@@ -1,6 +1,6 @@
 ﻿using NodaTime;
 
-namespace Web.Features.User;
+namespace Web.Features.Users;
 
 public class User(string name, string email, Instant createdAt)
 {

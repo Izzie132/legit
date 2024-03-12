@@ -1,8 +1,6 @@
 ﻿using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Reflection;
-using Azure.Core;
-using Azure.Identity;
 using DataSeeder;
 using DbUp;
 using DbUp.Engine;
@@ -68,11 +66,13 @@ public static class MigrationRunner
 
                     return 0;
                 }
+#pragma warning disable CA1031 // (Do not catch general exception types) We specifically want to catch all exceptions and return the correct exit code
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                     return 1;
                 }
+#pragma warning restore CA1031
             }
         );
 
@@ -104,6 +104,7 @@ public static class MigrationRunner
         {
             upgradeEngineBuilder.LogToConsole();
         }
+
         upgradeEngineBuilder
             .Build()
             .PerformUpgradeAndLogResult(successMessage: quiet ? null : "Finished running clean scripts");

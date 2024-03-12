@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using Builders.Features.User;
-using Web.Features.User;
+using Web.Features.Users;
 
 namespace WebTests.Features.User;
 

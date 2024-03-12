@@ -1,67 +1,65 @@
-using Azure.Identity;
+﻿using Azure.Identity;
 using FastEndpoints.Swagger;
 using Web.Configuration.Extensions;
 using Web.Database;
 using Web.Infrastructure.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.ConfigureServices();
-var app = await builder.ConfigureApp();
-app.Run();
+ConfigureServices(builder);
+var app = await ConfigureApp(builder);
 
-public static class WebApplicationBuilderExtensions
+await app.RunAsync();
+
+static void ConfigureServices(WebApplicationBuilder builder)
 {
-    public static void ConfigureServices(this WebApplicationBuilder builder)
+    var services = builder.Services;
+
+    var keyVaultUri = Environment.GetEnvironmentVariable("KEYVAULT_URI");
+    if (keyVaultUri != null)
     {
-        var services = builder.Services;
-
-        var keyVaultUri = Environment.GetEnvironmentVariable("KEYVAULT_URI");
-        if (keyVaultUri != null)
-        {
-            builder.Configuration.AddAzureKeyVault(vaultUri: new Uri(keyVaultUri), credential: new DefaultAzureCredential());
-        }
-
-        services.AddApplicationInsightsTelemetry();
-
-        services.ConfigureOptions(builder.Configuration);
-
-        services.AddDbContext<DataContext>();
-
-        services.ConfigureNodaTime();
-
-        if (!builder.Environment.IsDevelopment())
-        {
-            services.AddSpaStaticFiles(spaStaticFiles =>
-            {
-                spaStaticFiles.RootPath = "client-app/dist";
-            });
-        }
-
-        services.AddFastEndpoints();
-        services.ConfigureSwaggerDocument();
+        builder.Configuration.AddAzureKeyVault(vaultUri: new Uri(keyVaultUri), credential: new DefaultAzureCredential());
     }
 
-    public static async Task<WebApplication> ConfigureApp(this WebApplicationBuilder builder)
+    services.AddApplicationInsightsTelemetry();
+
+    services.ConfigureOptions(builder.Configuration);
+
+    services.AddDbContext<DataContext>();
+
+    services.ConfigureNodaTime();
+
+    if (!builder.Environment.IsDevelopment())
     {
-        var app = builder.Build();
-
-        app.UseMiddleware<ExceptionHandlerMiddleware>();
-
-        app.UseStaticFiles();
-
-        app.ConfigureFastEndpoints();
-
-        app.UseSwaggerGen();
-
-        await app.GenerateTypescriptApiClientAndExitAsync();
-
-        if (!app.Environment.IsDevelopment())
+        services.AddSpaStaticFiles(spaStaticFiles =>
         {
-            app.MapFallbackToFile("index.html");
-        }
-
-        return app;
+            spaStaticFiles.RootPath = "client-app/dist";
+        });
     }
+
+    services.AddFastEndpoints();
+    services.ConfigureSwaggerDocument();
+}
+
+static async Task<WebApplication> ConfigureApp(WebApplicationBuilder builder)
+{
+    var app = builder.Build();
+
+    app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+    app.UseStaticFiles();
+
+    app.ConfigureFastEndpoints();
+
+    app.UseSwaggerGen();
+
+    await app.GenerateTypescriptApiClientAndExitAsync();
+
+    if (!app.Environment.IsDevelopment())
+    {
+        app.MapFallbackToFile("index.html");
+    }
+
+    return app;
 }
 
 // Needed to make the `Program` class available to the test projects.

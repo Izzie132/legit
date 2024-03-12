@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Web.Database;
-using Web.Infrastructure.Exceptions;
 
-namespace Web.Features.User;
+namespace Web.Features.Users;
 
-public class GetUsers
+public static class GetUsers
 {
     public record Response(ICollection<Response.UserResponse> Users)
     {

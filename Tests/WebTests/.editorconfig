@@ -1,0 +1,4 @@
+[*.cs]
+# Identifiers should not contain underscores
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1707
+dotnet_diagnostic.CA1707.severity = none # We disable this for test files

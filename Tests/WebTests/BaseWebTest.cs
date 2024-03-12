@@ -15,18 +15,32 @@ public class BaseWebTest : TestClass<WebTestFixture>, IDisposable
     protected HttpClient Client => Fx.Client;
     protected FakeClock FakeClock => (FakeClock)ResolveService<IClock>();
 
-    protected DataContext DataContext;
-
-    private readonly List<IServiceScope> serviceScopes = new();
+    protected DataContext DataContext { get; }
 
     private static string? connectionString;
     private static SqlConnection? connection;
     private static Respawner? respawner;
 
+    private readonly List<IServiceScope> serviceScopes = [];
+
     public BaseWebTest(WebTestFixture f, ITestOutputHelper o)
         : base(f, o)
     {
         DataContext = ResolveService<DataContext>();
+    }
+
+    public void Dispose()
+    {
+        ResetDatabase().Wait();
+
+        foreach (var scope in serviceScopes)
+        {
+            scope.Dispose();
+        }
+
+        DataContext.Dispose();
+
+        FakeClock.Reset(SystemClock.Instance.GetCurrentInstant());
     }
 
     protected T ResolveService<T>()
@@ -56,24 +70,12 @@ public class BaseWebTest : TestClass<WebTestFixture>, IDisposable
 
         if (connection == null)
         {
-            connection ??= new SqlConnection(connectionString);
+            connection = new SqlConnection(connectionString);
             await connection.OpenAsync();
         }
 
         respawner ??= await Respawner.CreateAsync(connection);
 
         await respawner.ResetAsync(connection);
-    }
-
-    public void Dispose()
-    {
-        ResetDatabase().Wait();
-
-        foreach (var scope in serviceScopes)
-        {
-            scope.Dispose();
-        }
-
-        FakeClock.Reset(SystemClock.Instance.GetCurrentInstant());
     }
 }

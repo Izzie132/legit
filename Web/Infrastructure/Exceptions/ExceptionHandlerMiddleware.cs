@@ -35,6 +35,14 @@ public class ExceptionHandlerMiddleware(
         }
     }
 
+    private static HttpStatusCode GetStatusCode(Exception exception) =>
+        exception switch
+        {
+            UserVisibleValidationException => HttpStatusCode.BadRequest,
+
+            _ => HttpStatusCode.InternalServerError
+        };
+
     private async Task HandleException(HttpContext context, Exception exception)
     {
         var errorResponse = new ApiErrorResponse(
@@ -53,10 +61,10 @@ public class ExceptionHandlerMiddleware(
         // Validation/Not Found exceptions should be treated as warnings, not errors.
         switch (exception)
         {
-            case UserVisibleValidationException _:
+            case UserVisibleValidationException:
                 logger.LogWarning(exception, "A user visible validation error occurred");
                 break;
-            case UserVisibleException _:
+            case UserVisibleException:
                 logger.LogError(exception, "A user visible error occurred");
                 break;
             default:
@@ -64,12 +72,4 @@ public class ExceptionHandlerMiddleware(
                 break;
         }
     }
-
-    private static HttpStatusCode GetStatusCode(Exception exception) =>
-        exception switch
-        {
-            UserVisibleValidationException _ => HttpStatusCode.BadRequest,
-
-            _ => HttpStatusCode.InternalServerError
-        };
 }

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Serilog;
-using Serilog.Configuration;
 
 public class DatabaseHelper
 {
@@ -17,6 +15,12 @@ public class DatabaseHelper
         );
     }
 
+    public static string GetConnectionString(string server, string databaseName, string databasePassword)
+    {
+        return $"Server={server};Database={databaseName};User Id={databaseName};Password={databasePassword};Encrypt=False;";
+    }
+
+#pragma warning disable CA2100 // (Review SQL queries for security vulnerabilities) These values don't come from user input
     public async Task CreateDatabase(string databaseName, string databaseUser, string databasePassword)
     {
         Log.Information("Connecting to SQL Server...");
@@ -24,12 +28,12 @@ public class DatabaseHelper
         Log.Information("Successfully connected to SQL Server");
 
         Log.Information("Creating database {databaseName} on {Server}...", databaseName, Server);
-        var createDatabaseCommand = new SqlCommand($"CREATE DATABASE {databaseName}", SqlConnection);
+        await using var createDatabaseCommand = new SqlCommand($"CREATE DATABASE {databaseName}", SqlConnection);
         await createDatabaseCommand.ExecuteNonQueryAsync();
         Log.Information("Successfully created database");
 
         Log.Information("Creating login {databaseUser} on {Server}...", databaseName, Server);
-        var createLoginCommand = new SqlCommand(
+        await using var createLoginCommand = new SqlCommand(
             $"CREATE LOGIN {databaseUser} WITH PASSWORD = '{databasePassword}', DEFAULT_DATABASE={databaseName}, CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF;",
             SqlConnection
         );
@@ -37,7 +41,7 @@ public class DatabaseHelper
         Log.Information("Successfully created login");
 
         Log.Information("Creating user {databaseUser} on {Server}/{databaseName}...", databaseName, Server, databaseName);
-        var createUserCommand = new SqlCommand(
+        await using var createUserCommand = new SqlCommand(
             $"USE {databaseName};"
                 + $"CREATE USER {databaseUser} FOR LOGIN {databaseUser};"
                 + $"ALTER ROLE db_datareader ADD MEMBER {databaseUser};"
@@ -48,40 +52,39 @@ public class DatabaseHelper
         await createUserCommand.ExecuteNonQueryAsync();
         Log.Information("Successfully created user");
     }
+#pragma warning restore CA2100
 
     public async Task WaitForSqlServerResponse()
     {
         const int maxConnectionAttempts = 15;
         const int delayBetweenConnectionAttempts = 5000;
-        var connectionAttempts = 0;
+        var connectionAttempt = 1;
 
         Log.Information("Waiting for SQL Server to start up...");
 
-        while (connectionAttempts < maxConnectionAttempts)
+        while (true)
         {
             try
             {
                 await SqlConnection.OpenAsync();
                 Log.Information(
-                    "Connection Attempt {ConnectionAttempt} - Success connecting to {Server}!",
-                    connectionAttempts + 1,
+                    "Connection Attempt {connectionAttempt} - Success connecting to {Server}!",
+                    connectionAttempt,
                     Server
                 );
                 return;
             }
             catch (SqlException e)
             {
-                Log.Information("Connection Attempt {ConnectionAttempts} - {Message}", connectionAttempts + 1, e.Message);
-                connectionAttempts++;
+                if (connectionAttempt == maxConnectionAttempts)
+                {
+                    throw;
+                }
+
+                Log.Information("Connection Attempt {connectionAttempt} - {Message}", connectionAttempt, e.Message);
+                connectionAttempt++;
                 await Task.Delay(delayBetweenConnectionAttempts);
             }
         }
-
-        throw new Exception("Failed to connect to SQL Server");
-    }
-
-    public static string GetConnectionString(string server, string databaseName, string databasePassword)
-    {
-        return $"Server={server};Database={databaseName};User Id={databaseName};Password={databasePassword};Encrypt=False;";
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Web.Features.Weather;
 
-public class GetWeather
+public static class GetWeather
 {
     public record Response(int Temperature, double WindSpeed, string Description);
 
@@ -15,9 +15,11 @@ public class GetWeather
         public override Task<Response> ExecuteAsync(CancellationToken ct)
         {
             var rand = new Random();
+#pragma warning disable CA5394 // (Do not use insecure randomness) This is only an example
             var temperature = rand.Next(-20, 55);
             var windSpeed = Math.Round(rand.NextDouble() * 100, 2);
             var description = weatherDescriptions[rand.Next(weatherDescriptions.Count)];
+#pragma warning restore CA5394
 
             return Task.FromResult(new Response(temperature, windSpeed, description));
         }

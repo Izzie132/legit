@@ -13,9 +13,9 @@ namespace DataSeeder;
 
 public static class DataSeeder
 {
+    public static DataSeederModeAmounts DataSeederModeAmounts { get; private set; } = default!;
+    public static Stopwatch Stopwatch { get; private set; } = default!;
     private static DataContext dataContext = default!;
-    public static DataSeederModeAmounts DataSeederModeAmounts = default!;
-    public static Stopwatch Stopwatch = default!;
     private static bool quiet = default!;
 
     public static int Main(string[] args)
@@ -36,10 +36,22 @@ public static class DataSeeder
         return rootCommand.Invoke(args);
     }
 
+    public static void Insert<TEntity>(ICollection<TEntity> entities)
+        where TEntity : class
+    {
+        IfVerbose(Console.Write, $"Seeding {typeof(TEntity).Name} x {GetHumanReadableEntityCount(entities.Count)} ...");
+        const SqlBulkCopyOptions bulkCopyOptions = SqlBulkCopyOptions.Default;
+        dataContext.BulkInsert(entities, new BulkConfig { SqlBulkCopyOptions = bulkCopyOptions });
+        IfVerbose(Console.WriteLine, Stopwatch.ElapsedMilliseconds);
+        Stopwatch.Restart();
+    }
+
     public static void SeedTestData(string connectionString, DataSeedMode dataSeedMode, bool quiet)
     {
         if (dataSeedMode == DataSeedMode.None)
+        {
             return;
+        }
 
         dataContext = new DataContext(
             new DbContextOptionsBuilder<DataContext>().Options,
@@ -68,6 +80,22 @@ public static class DataSeeder
         }
     }
 
+    public static void WriteLineElapsedTime(long elapsedMilliseconds)
+    {
+        var foregroundColor = Console.ForegroundColor;
+        Console.ForegroundColor = GetConsoleColor(elapsedMilliseconds);
+        Console.WriteLine($" {GetHumanReadableElapsedTime(elapsedMilliseconds)}");
+        Console.ForegroundColor = foregroundColor;
+    }
+
+    public static void IfVerbose<T>(Action<T> action, T value)
+    {
+        if (!quiet)
+        {
+            action(value);
+        }
+    }
+
     private static void SeedData()
     {
         Stopwatch = Stopwatch.StartNew();
@@ -79,16 +107,6 @@ public static class DataSeeder
         dataContext.SaveChanges();
 
         IfVerbose(Console.WriteLine, $"Seeding data complete in {Stopwatch.ElapsedMilliseconds}ms");
-    }
-
-    public static void Insert<TEntity>(ICollection<TEntity> entities)
-        where TEntity : class
-    {
-        IfVerbose(Console.Write, $"Seeding {typeof(TEntity).Name} x {GetHumanReadableEntityCount(entities.Count)} ...");
-        const SqlBulkCopyOptions bulkCopyOptions = SqlBulkCopyOptions.Default;
-        dataContext.BulkInsert(entities, new BulkConfig { SqlBulkCopyOptions = bulkCopyOptions });
-        IfVerbose(Console.WriteLine, Stopwatch.ElapsedMilliseconds);
-        Stopwatch.Restart();
     }
 
     private static string GetHumanReadableEntityCount(int entityCount) =>
@@ -115,20 +133,4 @@ public static class DataSeeder
             < 60_000 => ConsoleColor.Red,
             _ => ConsoleColor.DarkRed
         };
-
-    public static void WriteLineElapsedTime(long elapsedMilliseconds)
-    {
-        var foregroundColor = Console.ForegroundColor;
-        Console.ForegroundColor = GetConsoleColor(elapsedMilliseconds);
-        Console.WriteLine($" {GetHumanReadableElapsedTime(elapsedMilliseconds)}");
-        Console.ForegroundColor = foregroundColor;
-    }
-
-    public static void IfVerbose<T>(Action<T> action, T value)
-    {
-        if (!quiet)
-        {
-            action(value);
-        }
-    }
 }

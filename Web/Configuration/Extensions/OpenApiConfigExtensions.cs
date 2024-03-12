@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using FastEndpoints.ClientGen;
 using FastEndpoints.Swagger;
 using NJsonSchema.CodeGeneration.TypeScript;
@@ -49,7 +49,7 @@ public static class OpenApiConfigExtensions
         );
     }
 
-    private class CustomSchemaNameGenerator : ISchemaNameGenerator
+    private sealed class CustomSchemaNameGenerator : ISchemaNameGenerator
     {
         public string Generate(Type type)
         {

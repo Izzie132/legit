@@ -1,5 +1,5 @@
-using Builders.Features.User;
-using Web.Features.User;
+﻿using Builders.Features.User;
+using Web.Features.Users;
 
 namespace DataSeeder.Features.Users;
 
@@ -15,7 +15,7 @@ public static class TestUsers
         DataSeeder.Insert(seedUsers.ToList());
     }
 
-    private static IReadOnlyCollection<User> GetSeedUsers(DataSeederModeAmounts dataSeederModeAmounts)
+    private static List<User> GetSeedUsers(DataSeederModeAmounts dataSeederModeAmounts)
     {
         var testUsers = Enumerable.Range(0, dataSeederModeAmounts.MaxUsers).Select(_ => new UserBuilder().Build()).ToList();
 

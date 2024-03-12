@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Web.Database;
 
-namespace Web.Features.User;
+namespace Web.Features.Users;
 
-public class CreateUser
+public static class CreateUser
 {
     public record Request(string Name, string Email);
 

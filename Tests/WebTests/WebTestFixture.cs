@@ -2,9 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
-using NodaTime.Extensions;
 using NodaTime.Testing;
-using Web;
 
 namespace WebTests;
 
@@ -28,7 +26,7 @@ public class WebTestFixture(IMessageSink s) : TestFixture<Program>(s)
         s.AddSingleton<IClock>(new FakeClock(SystemClock.Instance.GetCurrentInstant()));
     }
 
-    private void RemoveServiceIfExists<T>(IServiceCollection services)
+    private static void RemoveServiceIfExists<T>(IServiceCollection services)
     {
         var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(T));
 

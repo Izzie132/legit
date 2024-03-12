@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Web.Configuration;
-using Web.Features.User;
+using Web.Features.Users;
 
 namespace Web.Database;
 

@@ -1,9 +1,9 @@
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Web.Configuration;
 
 namespace Web.Features.SecretMessage;
 
-public class GetSecretMessage
+public static class GetSecretMessage
 {
     public record Request(string Password);
 

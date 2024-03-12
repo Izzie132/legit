@@ -23,6 +23,10 @@
       <option name="INTERPOLATION_NEW_LINE_AFTER_START_DELIMITER" value="false" />
       <option name="INTERPOLATION_NEW_LINE_BEFORE_END_DELIMITER" value="false" />
     </VueCodeStyleSettings>
+    <stylecop>
+      <option name="ENABLED" value="true" />
+      <option name="SC_EDITORCONFIG_ENABLED" value="true" />
+    </stylecop>
     <codeStyleSettings language="HTML">
       <option name="SOFT_MARGINS" value="80" />
       <indentOptions>

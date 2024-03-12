@@ -1,4 +1,4 @@
-using NodaTime;
+﻿using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using Web.Infrastructure.Exceptions;
 

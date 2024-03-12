@@ -2,7 +2,7 @@
 using Builders.Features.User;
 using Microsoft.EntityFrameworkCore;
 using NodaTime.Text;
-using Web.Features.User;
+using Web.Features.Users;
 using Web.Infrastructure.Exceptions;
 
 namespace WebTests.Features.User;
@@ -17,8 +17,7 @@ public class CreateUserTests : BaseWebTest
     {
         var createdAtInstant = InstantPattern.General.Parse("2022-01-01T09:30:18Z").Value;
         FakeClock.Reset(createdAtInstant);
-
-        var (httpResponseMessage, response) = await Fixture.Client.POSTAsync<
+        var (httpResponseMessage, _) = await Fixture.Client.POSTAsync<
             CreateUser.Endpoint,
             CreateUser.Request,
             CreateUser.Response

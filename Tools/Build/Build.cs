@@ -1,41 +1,39 @@
-using System;
-using System.Linq;
-using Nuke.Common;
+﻿using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.Docker;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Npm;
-using Nuke.Common.Tools.PowerShell;
-using Serilog;
-using static Nuke.Common.EnvironmentInfo;
 
-class Build : NukeBuild
+#pragma warning disable SA1124 // (DoNotUseRegions) Regions are useful in this file
+#pragma warning disable SA1203 // (ConstantsMustAppearBeforeFields) This would prevent us from putting e.g. the database constants with the database code
+#pragma warning disable IDE0051 // (Remove unused private member) Nuke accesses these via reflection
+sealed class Build : NukeBuild
 {
-    /// Support plugins are available for:
-    ///   - JetBrains ReSharper        https://nuke.build/resharper
-    ///   - JetBrains Rider            https://nuke.build/rider
-    ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
-    ///   - Microsoft VSCode           https://nuke.build/vscode
-
+    // Support plugins are available for:
+    //   - JetBrains ReSharper        https://nuke.build/resharper
+    //   - JetBrains Rider            https://nuke.build/rider
+    //   - Microsoft VisualStudio     https://nuke.build/visualstudio
+    //   - Microsoft VSCode           https://nuke.build/vscode
     public static int Main() => Execute<Build>(x => x.CompileSolution);
 
     [Solution]
     readonly Solution Solution;
 
-    readonly Configuration Configuration = Configuration.Release;
+    readonly BuildConfiguration buildConfiguration = BuildConfiguration.Release;
 
-    static string ProjectName = "ProjectName";
+    const string ProjectName = "ProjectName";
 
     private static AbsolutePath WebProjectDirectory => RootDirectory / "Web";
 
     private static AbsolutePath ReactClientDirectory => WebProjectDirectory / "client-app";
-    AbsolutePath MigrationsDirectory => RootDirectory / "Tools" / "Migrations";
-    AbsolutePath MigrationsDllFile => MigrationsDirectory / $"bin/{Configuration}/net8.0/Migrations.dll";
-    AbsolutePath DataSeederDirectory => RootDirectory / "Tools" / "DataSeeder";
-    AbsolutePath DataSeederDllFile => DataSeederDirectory / $"bin/{Configuration}/net8.0/DataSeeder.dll";
 
     private static AbsolutePath BuildOutputDirectory => RootDirectory / "build-output";
+
+    AbsolutePath MigrationsDirectory => RootDirectory / "Tools" / "Migrations";
+    AbsolutePath MigrationsDllFile => MigrationsDirectory / $"bin/{buildConfiguration}/net8.0/Migrations.dll";
+    AbsolutePath DataSeederDirectory => RootDirectory / "Tools" / "DataSeeder";
+    AbsolutePath DataSeederDllFile => DataSeederDirectory / $"bin/{buildConfiguration}/net8.0/DataSeeder.dll";
 
     Target CleanSolution =>
         _ =>
@@ -77,7 +75,7 @@ class Build : NukeBuild
                 .Executes(() =>
                 {
                     DotNetTasks.DotNetBuild(s =>
-                        s.SetProjectFile(Solution).SetConfiguration(Configuration).EnableNoRestore()
+                        s.SetProjectFile(Solution).SetConfiguration(buildConfiguration).EnableNoRestore()
                     );
                 });
 
@@ -101,14 +99,14 @@ class Build : NukeBuild
                 {
                     DotNetTasks.DotNetPublish(s =>
                         s.SetProject(WebProjectDirectory)
-                            .SetConfiguration(Configuration)
+                            .SetConfiguration(buildConfiguration)
                             .SetOutput(BuildOutputDirectory / "Web")
                             .EnableNoRestore()
                     );
 
                     DotNetTasks.DotNetPublish(s =>
                         s.SetProject(MigrationsDirectory)
-                            .SetConfiguration(Configuration)
+                            .SetConfiguration(buildConfiguration)
                             .SetOutput(BuildOutputDirectory / "Migrations")
                             .EnableNoRestore()
                     );
@@ -150,6 +148,8 @@ class Build : NukeBuild
                 .DependsOn(RestoreDotNetTools)
                 .Executes(() =>
                 {
+                    DotNetTasks.DotNet("format style --verify-no-changes");
+                    DotNetTasks.DotNet("format analyzers --verify-no-changes");
                     DotNetTasks.DotNet("csharpier --check .");
                 });
 
@@ -160,7 +160,7 @@ class Build : NukeBuild
                 .Executes(() =>
                 {
                     DotNetTasks.DotNetTest(s =>
-                        s.SetProjectFile(Solution).SetConfiguration(Configuration).EnableNoRestore()
+                        s.SetProjectFile(Solution).SetConfiguration(buildConfiguration).EnableNoRestore()
                     );
                 });
 
@@ -168,17 +168,17 @@ class Build : NukeBuild
 
     #region Databases
 
-    static readonly int DatabasePort = 1407;
+    const int DatabasePort = 1407;
     static string DatabaseServer => $"localhost,{DatabasePort}";
-    static readonly string DatabaseServerAdminPassword = "SuperSecure0!";
+    const string DatabaseServerAdminPassword = "SuperSecure0!";
 
-    static readonly string DevelopmentDatabaseName = ProjectName;
-    static readonly string DevelopmentDatabasePassword = "DefinitelyDurable1!";
+    const string DevelopmentDatabaseName = ProjectName;
+    const string DevelopmentDatabasePassword = "DefinitelyDurable1!";
     static string DevelopmentDatabaseConnectionString =>
         DatabaseHelper.GetConnectionString(DatabaseServer, DevelopmentDatabaseName, DevelopmentDatabasePassword);
 
-    static readonly string TestDatabaseName = $"{ProjectName}Test";
-    static readonly string TestDatabasePassword = "TotallyTrusted2!";
+    const string TestDatabaseName = $"{ProjectName}Test";
+    const string TestDatabasePassword = "TotallyTrusted2!";
     static string TestDatabaseConnectionString =>
         DatabaseHelper.GetConnectionString(DatabaseServer, TestDatabaseName, TestDatabasePassword);
 
@@ -320,3 +320,4 @@ class Build : NukeBuild
 
     #endregion
 }
+#pragma warning restore SA1124, SA1203, IDE0051

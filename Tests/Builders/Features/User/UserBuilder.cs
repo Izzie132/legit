@@ -2,7 +2,7 @@
 
 namespace Builders.Features.User;
 
-public class UserBuilder : IBuilder<Web.Features.User.User>
+public class UserBuilder : IBuilder<Web.Features.Users.User>
 {
     public int Id { get; set; } = default!;
     public string Name { get; set; }
@@ -17,6 +17,6 @@ public class UserBuilder : IBuilder<Web.Features.User.User>
         CreatedAt = faker.Noda().Instant.Past();
     }
 
-    public Web.Features.User.User Build() =>
-        Web.Features.User.User.CreateTestUser(id: Id, name: Name, email: Email, createdAt: CreatedAt);
+    public Web.Features.Users.User Build() =>
+        Web.Features.Users.User.CreateTestUser(id: Id, name: Name, email: Email, createdAt: CreatedAt);
 }

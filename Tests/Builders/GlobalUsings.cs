@@ -1,1 +1,1 @@
-global using Bogus;
+﻿global using Bogus;

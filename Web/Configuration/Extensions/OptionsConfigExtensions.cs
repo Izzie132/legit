@@ -1,4 +1,4 @@
-namespace Web.Configuration.Extensions;
+﻿namespace Web.Configuration.Extensions;
 
 public static class OptionsConfigExtensions
 {
