@@ -70,7 +70,7 @@ resource appServiceServerFarm 'Microsoft.Web/serverfarms@2023-01-01' = {
 }
 
 var webAppName = '${projectCode}-WA01-${environment}'
-resource webApp 'Microsoft.Web/sites@2023-01-01' = {
+resource webApp 'Microsoft.Web/sites@2023-12-01' = {
   name: webAppName
   location: location
   kind: 'app,linux'
