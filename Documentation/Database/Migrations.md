@@ -4,7 +4,7 @@ Database migrations are handled by the `Tools/Migrations` project, using [DbUp](
 ## Creating a new migration
 To create a new migration, create a new SQL files within `Tools/Migrations/Scripts` with a name that follows the pattern
 `M<yyyy><MM><dd>T<HH><mm>_<MIGRATION_NAME>.sql`. For example, if a migration was created to add a users table,
-it might have a name like `M20230523Y1225_CreateUsersTable.sql`
+it might have a name like `M20230523T1225_CreateUsersTable.sql`
 
 Within this migration, you can add the SQL required to be run against the database. Remember that all migrations with an
 earlier datestamp will have been run before the this one. For the above example migration, we might expect the contents to
