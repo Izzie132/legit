@@ -35,7 +35,6 @@ stages:
             inputs:
               filePath: "./build.ps1"
               arguments: "Publish"
-          - powershell: ls
           - task: PublishBuildArtifacts@1
             displayName: "Publish build artifacts"
             inputs:
