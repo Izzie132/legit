@@ -6,8 +6,13 @@ using Web.Infrastructure.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigureServices(builder);
-var app = await ConfigureApp(builder);
 
+if (builder.ShouldGenerateClients())
+{
+    await builder.GenerateTypescriptApiClientAndExitAsync();
+}
+
+var app = await ConfigureApp(builder);
 await app.RunAsync();
 
 static void ConfigureServices(WebApplicationBuilder builder)
@@ -51,8 +56,6 @@ static async Task<WebApplication> ConfigureApp(WebApplicationBuilder builder)
     app.ConfigureFastEndpoints();
 
     app.UseSwaggerGen();
-
-    await app.GenerateTypescriptApiClientAndExitAsync();
 
     if (!app.Environment.IsDevelopment())
     {

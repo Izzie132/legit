@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using FakeItEasy.Sdk;
 using FastEndpoints.ClientGen;
 using FastEndpoints.Swagger;
 using NJsonSchema.CodeGeneration.TypeScript;
@@ -9,6 +10,11 @@ namespace Web.Configuration.Extensions;
 
 public static class OpenApiConfigExtensions
 {
+    public static bool ShouldGenerateClients(this WebApplicationBuilder builder)
+    {
+        return builder.Configuration["generateclients"] == "true";
+    }
+
     public static void ConfigureSwaggerDocument(this IServiceCollection serviceCollection)
     {
         serviceCollection.SwaggerDocument(o =>
@@ -26,8 +32,15 @@ public static class OpenApiConfigExtensions
         });
     }
 
-    public static async Task GenerateTypescriptApiClientAndExitAsync(this WebApplication app)
+    public static async Task GenerateTypescriptApiClientAndExitAsync(this WebApplicationBuilder builder)
     {
+        /* Replace any services with a mock that are not required for client generation and will cause errors on initialization
+        e.g. ReplaceWithMock<IExampleService>();*/
+
+        var app = builder.Build();
+        app.ConfigureFastEndpoints();
+        app.UseSwaggerGen();
+
         await app.GenerateClientsAndExitAsync(
             documentName: "v1",
             destinationPath: "client-app/src/api",
@@ -47,6 +60,24 @@ public static class OpenApiConfigExtensions
                 c.TypeScriptGeneratorSettings.TemplateDirectory = "client-app/src/api/templates";
             }
         );
+
+        return;
+
+#pragma warning disable CS8321 // Local function is declared but never used - remove when used
+        void ReplaceWithMock<T>()
+#pragma warning restore CS8321 // Local function is declared but never used
+        {
+            var descriptorsToReplace = builder
+                .Services.Where(serviceDescriptor => serviceDescriptor.ServiceType == typeof(T))
+                .ToList();
+
+            foreach (var descriptor in descriptorsToReplace)
+            {
+                var mock = Create.Fake(descriptor.ServiceType);
+                builder.Services.Remove(descriptor);
+                builder.Services.Add(ServiceDescriptor.Singleton(descriptor.ServiceType, mock));
+            }
+        }
     }
 
     private sealed class CustomSchemaNameGenerator : ISchemaNameGenerator

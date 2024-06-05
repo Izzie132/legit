@@ -65,7 +65,7 @@ public class BaseWebTest : TestBase<WebTestFixture>, IDisposable
     {
         if (connectionString == null)
         {
-            var options = ResolveService<IOptions<ProjectNameOptions>>().Value;
+            var options = ResolveService<IOptions<AppOptions>>().Value;
             connectionString = options.ConnectionString;
         }
 

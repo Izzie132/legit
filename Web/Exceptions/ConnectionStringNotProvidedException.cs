@@ -7,7 +7,7 @@ public class ConnectionStringNotProvidedException : Exception
     public ConnectionStringNotProvidedException()
         : base(
             $"Could not determine connection string - please ensure the "
-                + $"'{ProjectNameOptions.ConfigurationKey}:{nameof(ProjectNameOptions.ConnectionString)}' "
+                + $"'{AppOptions.ConfigurationKey}:{nameof(AppOptions.ConnectionString)}' "
                 + $"config value is set"
         ) { }
 }

@@ -18,17 +18,17 @@ sealed class Build : NukeBuild
     public static int Main() => Execute<Build>(x => x.CompileSolution);
 
     [Solution]
-    readonly Solution Solution;
+    readonly Solution solution;
 
     readonly BuildConfiguration buildConfiguration = BuildConfiguration.Release;
 
-    const string ProjectName = "ProjectName";
+    const string ProjectName = "QQProjectName";
 
-    private static AbsolutePath WebProjectDirectory => RootDirectory / "Web";
+    static AbsolutePath WebProjectDirectory => RootDirectory / "Web";
 
-    private static AbsolutePath ReactClientDirectory => WebProjectDirectory / "client-app";
+    static AbsolutePath ReactClientDirectory => WebProjectDirectory / "client-app";
 
-    private static AbsolutePath BuildOutputDirectory => RootDirectory / "build-output";
+    static AbsolutePath BuildOutputDirectory => RootDirectory / "build-output";
 
     AbsolutePath MigrationsDirectory => RootDirectory / "Tools" / "Migrations";
     AbsolutePath MigrationsDllFile => MigrationsDirectory / $"bin/{buildConfiguration}/net8.0/Migrations.dll";
@@ -75,7 +75,7 @@ sealed class Build : NukeBuild
                 .Executes(() =>
                 {
                     DotNetTasks.DotNetBuild(s =>
-                        s.SetProjectFile(Solution).SetConfiguration(buildConfiguration).EnableNoRestore()
+                        s.SetProjectFile(solution).SetConfiguration(buildConfiguration).EnableNoRestore()
                     );
                 });
 
@@ -160,7 +160,7 @@ sealed class Build : NukeBuild
                 .Executes(() =>
                 {
                     DotNetTasks.DotNetTest(s =>
-                        s.SetProjectFile(Solution).SetConfiguration(buildConfiguration).EnableNoRestore()
+                        s.SetProjectFile(solution).SetConfiguration(buildConfiguration).EnableNoRestore()
                     );
                 });
 

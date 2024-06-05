@@ -10,7 +10,7 @@ param projectCode string = 'PRJCT'
 
 @minLength(1)
 @description('The name of the project configuration section in the ASP.NET Core appsettings.json file')
-param aspNetCoreProjectConfigurationSection string = 'ProjectName'
+param aspNetCoreProjectConfigurationSection string = 'QQProjectName'
 
 @minLength(1)
 @maxLength(5)
@@ -37,7 +37,7 @@ param resourceSizing string
 
 module sqlServer 'modules/sqlServer.bicep' = {
   name: 'sqlServer'
-  params: {   
+  params: {
     projectCode: projectCode
     environment: environment
     location: location

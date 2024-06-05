@@ -95,12 +95,12 @@ To verify you are logged in to the correct Azure Subscription, you can run the f
 az group list --output table
 ```
 
-Finally, run the following command to create the Azure Resources. This will create the resources defined in the `ProjectName.bicep` file, using the parameters defined in the `<ENVIRONMENT_NAME>.bicepparams` file.
+Finally, run the following command to create the Azure Resources. This will create the resources defined in the `QQProjectName.bicep` file, using the parameters defined in the `<ENVIRONMENT_NAME>.bicepparams` file.
 Make sure to add any secure parameters as environment variables before running the command.
 
 ```powershell
 $env:<ENVIRONMENT_NAME>_SECRET_MESSAGE_PASSWORD = 'Password123'
-az deployment group create --template-file ./Tools/Infrastructure/ProjectName.bicep --parameters ./Tools/Infrastructure/<ENVIRONMENT_NAME>.bicepparams -g <RESOURCE_GROUP_NAME> -c
+az deployment group create --template-file ./Tools/Infrastructure/QQProjectName.bicep --parameters ./Tools/Infrastructure/<ENVIRONMENT_NAME>.bicepparams -g <RESOURCE_GROUP_NAME> -c
 ```
 
 You will now be prompted to review the proposed changes. If everything looks correct, you can confirm the changes and the deployment will begin.
@@ -112,7 +112,7 @@ az login
 az account set --subscription 5447147c-724a-4276-8f93-b7c64f4ca033
 az group list --output table
 $env:UAT_SECRET_MESSAGE_PASSWORD = 'Password123'
-az deployment group create --template-file ./Tools/Infrastructure/ProjectName.bicep --parameters ./Tools/Infrastructure/uat.bicepparams -g PRJCT-RG-UAT -c
+az deployment group create --template-file ./Tools/Infrastructure/QQProjectName.bicep --parameters ./Tools/Infrastructure/uat.bicepparams -g PRJCT-RG-UAT -c
 ```
 
 This will login to the correct Azure Subscription, and tell Bicep that we want to create a deployment into the `PRJCT-RG-UAT` Resource Group, using the `PorjectName.bicep` root template file, with parameters from the `uat.bicepparam` file.

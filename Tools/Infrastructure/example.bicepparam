@@ -1,4 +1,4 @@
-using 'projectName.bicep'
+using 'QQProjectName.bicep'
 
 // Non Secure Parameters
 param environment = 'EXMPL'

@@ -9,9 +9,9 @@ public static class GetSecretMessage
 
     public record Response(string Message);
 
-    public class Endpoint(IOptions<ProjectNameOptions> projectNameOptions) : Endpoint<Request, Response>
+    public class Endpoint(IOptions<AppOptions> projectNameOptions) : Endpoint<Request, Response>
     {
-        private readonly ProjectNameOptions projectNameOptions = projectNameOptions.Value;
+        private readonly AppOptions appOptions = projectNameOptions.Value;
 
         public override void Configure()
         {
@@ -21,7 +21,7 @@ public static class GetSecretMessage
 
         public override Task<Response> ExecuteAsync(Request request, CancellationToken cancellationToken)
         {
-            if (request.Password != projectNameOptions.SecretMessagePassword)
+            if (request.Password != appOptions.SecretMessagePassword)
             {
                 AddError(r => r.Password, "Incorrect password");
             }

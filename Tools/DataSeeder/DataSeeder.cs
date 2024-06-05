@@ -55,7 +55,7 @@ public static class DataSeeder
 
         dataContext = new DataContext(
             new DbContextOptionsBuilder<DataContext>().Options,
-            new OptionsWrapper<ProjectNameOptions>(new ProjectNameOptions { ConnectionString = connectionString })
+            new OptionsWrapper<AppOptions>(new AppOptions { ConnectionString = connectionString })
         );
         DataSeeder.quiet = quiet;
 
