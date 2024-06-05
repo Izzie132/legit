@@ -114,7 +114,7 @@ public static class DataSeeder
         {
             < 1_000 => $"{entityCount}",
             < 1_000_000 => $"{entityCount / 1000.0:0.##}k",
-            _ => $"{entityCount / 1000_000.0:0.##}m"
+            _ => $"{entityCount / 1000_000.0:0.##}m",
         };
 
     private static string GetHumanReadableElapsedTime(long elapsedMilliseconds) =>
@@ -122,7 +122,7 @@ public static class DataSeeder
         {
             < 1_000 => $"{elapsedMilliseconds}ms",
             < 60_000 => $"{elapsedMilliseconds / 1000}s",
-            _ => $"{elapsedMilliseconds / 1000 / 60}m {elapsedMilliseconds / 1000 % 60}s"
+            _ => $"{elapsedMilliseconds / 1000 / 60}m {elapsedMilliseconds / 1000 % 60}s",
         };
 
     private static ConsoleColor GetConsoleColor(long elapsedMilliseconds) =>
@@ -131,6 +131,6 @@ public static class DataSeeder
             < 1_000 => ConsoleColor.Green,
             < 10_000 => ConsoleColor.Yellow,
             < 60_000 => ConsoleColor.Red,
-            _ => ConsoleColor.DarkRed
+            _ => ConsoleColor.DarkRed,
         };
 }

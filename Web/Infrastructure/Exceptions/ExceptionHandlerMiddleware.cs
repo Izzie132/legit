@@ -40,7 +40,7 @@ public class ExceptionHandlerMiddleware(
         {
             UserVisibleValidationException => HttpStatusCode.BadRequest,
 
-            _ => HttpStatusCode.InternalServerError
+            _ => HttpStatusCode.InternalServerError,
         };
 
     private async Task HandleException(HttpContext context, Exception exception)
