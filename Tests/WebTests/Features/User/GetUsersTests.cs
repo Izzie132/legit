@@ -4,11 +4,8 @@ using Web.Features.Users;
 
 namespace WebTests.Features.User;
 
-public class GetUsersTests : BaseWebTest
+public class GetUsersTests(WebTestFixture f) : BaseWebTest(f)
 {
-    public GetUsersTests(WebTestFixture f, ITestOutputHelper o)
-        : base(f, o) { }
-
     [Fact]
     public async Task ValidRequest_ReturnsUsers()
     {

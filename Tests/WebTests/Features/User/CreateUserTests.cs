@@ -7,21 +7,16 @@ using Web.Infrastructure.Exceptions;
 
 namespace WebTests.Features.User;
 
-public class CreateUserTests : BaseWebTest
+public class CreateUserTests(WebTestFixture f) : BaseWebTest(f)
 {
-    public CreateUserTests(WebTestFixture f, ITestOutputHelper o)
-        : base(f, o) { }
-
     [Fact]
     public async Task ValidRequest_CreatesUser()
     {
         var createdAtInstant = InstantPattern.General.Parse("2022-01-01T09:30:18Z").Value;
         FakeClock.Reset(createdAtInstant);
-        var (httpResponseMessage, _) = await Fixture.Client.POSTAsync<
-            CreateUser.Endpoint,
-            CreateUser.Request,
-            CreateUser.Response
-        >(new CreateUser.Request("Ben", "ben@ghyston.com"));
+        var (httpResponseMessage, _) = await Client.POSTAsync<CreateUser.Endpoint, CreateUser.Request, CreateUser.Response>(
+            new CreateUser.Request("Ben", "ben@ghyston.com")
+        );
 
         Assert.Equal(HttpStatusCode.OK, httpResponseMessage.StatusCode);
 

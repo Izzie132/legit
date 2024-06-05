@@ -10,9 +10,10 @@ using Web.Database;
 namespace WebTests;
 
 [Collection(nameof(BaseWebTest))]
-public class BaseWebTest : TestClass<WebTestFixture>, IDisposable
+public class BaseWebTest : TestBase<WebTestFixture>, IDisposable
 {
-    protected HttpClient Client => Fx.Client;
+    private readonly WebTestFixture fixture;
+    protected HttpClient Client => fixture.Client;
     protected FakeClock FakeClock => (FakeClock)ResolveService<IClock>();
 
     protected DataContext DataContext { get; }
@@ -23,9 +24,9 @@ public class BaseWebTest : TestClass<WebTestFixture>, IDisposable
 
     private readonly List<IServiceScope> serviceScopes = [];
 
-    public BaseWebTest(WebTestFixture f, ITestOutputHelper o)
-        : base(f, o)
+    protected BaseWebTest(WebTestFixture fixture)
     {
+        this.fixture = fixture;
         DataContext = ResolveService<DataContext>();
     }
 
@@ -46,7 +47,7 @@ public class BaseWebTest : TestClass<WebTestFixture>, IDisposable
     protected T ResolveService<T>()
         where T : notnull
     {
-        var scope = Fx.Services.CreateScope();
+        var scope = fixture.Services.CreateScope();
         serviceScopes.Add(scope);
         return scope.ServiceProvider.GetRequiredService<T>();
     }

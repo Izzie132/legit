@@ -1,7 +1,9 @@
 # Migration
+
 Database migrations are handled by the `Tools/Migrations` project, using [DbUp](https://dbup.readthedocs.io/en/latest/).
 
 ## Creating a new migration
+
 To create a new migration, create a new SQL files within `Tools/Migrations/Scripts` with a name that follows the pattern
 `M<yyyy><MM><dd>T<HH><mm>_<MIGRATION_NAME>.sql`. For example, if a migration was created to add a users table,
 it might have a name like `M20230523T1225_CreateUsersTable.sql`
@@ -19,9 +21,10 @@ CREATE TABLE Users (
 ```
 
 ## Running the migrations
+
 To run the migrations, you can open a terminal in the `Tools/Migrations` directory and run `dotnet run <CONNECTION_STRING>`.
 
-By default, this will ensure that the target database has had all existing migrations run against it. DbUp tracks what 
+By default, this will ensure that the target database has had all existing migrations run against it. DbUp tracks what
 migrations have been run against the database using the `SchemaVersions` table.
 There a multiple options that you can pass into this command to customise how it works:
 

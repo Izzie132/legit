@@ -3,11 +3,8 @@ using Web.Features.Weather;
 
 namespace WebTests.Features.Weather;
 
-public class GetWeatherTests : BaseWebTest
+public class GetWeatherTests(WebTestFixture f) : BaseWebTest(f)
 {
-    public GetWeatherTests(WebTestFixture f, ITestOutputHelper o)
-        : base(f, o) { }
-
     [Fact]
     public async Task ValidRequest_HasValidData()
     {

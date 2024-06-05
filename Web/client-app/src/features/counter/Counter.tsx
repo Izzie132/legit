@@ -9,7 +9,7 @@ export const Counter = () => {
   return (
     <>
       <Title>Counter</Title>
-      <div className=" flex">
+      <div className="flex">
         <Button className="mr-5" onClick={() => setCount(count - 1)}>
           Decrement
         </Button>
