@@ -2751,7 +2751,7 @@ dotnet_diagnostic.SA1648.severity = none
 
 # FileNameMustMatchTypeName
 # https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1649.md
-dotnet_diagnostic.SA1649.severity = warning
+dotnet_diagnostic.SA1649.severity = none
 
 # DoNotUsePlaceholderElements
 # https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1651.md
