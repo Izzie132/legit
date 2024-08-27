@@ -1,9 +1,11 @@
-﻿using Nuke.Common;
+﻿using System.Linq;
+using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.Docker;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Npm;
+using Serilog;
 
 #pragma warning disable SA1124 // (DoNotUseRegions) Regions are useful in this file
 #pragma warning disable SA1203 // (ConstantsMustAppearBeforeFields) This would prevent us from putting e.g. the database constants with the database code
@@ -169,6 +171,8 @@ sealed class Build : NukeBuild
     #region Databases
 
     const int DatabasePort = 1407;
+    static string DatabaseContainerName => $"{ProjectName}_Database";
+
     static string DatabaseServer => $"localhost,{DatabasePort}";
     const string DatabaseServerAdminPassword = "SuperSecure0!";
 
@@ -185,27 +189,38 @@ sealed class Build : NukeBuild
     Target CreateDatabaseContainer =>
         _ =>
             _.Description("Create SQL Server 2022 Docker container")
+                .DependsOn(DestroyDatabaseContainer)
                 .Executes(() =>
                 {
                     DockerTasks.DockerPull(c => c.SetName("mcr.microsoft.com/mssql/server:2022-latest"));
 
                     DockerTasks.DockerCreate(c =>
                         c.SetImage("mcr.microsoft.com/mssql/server:2022-latest")
-                            .SetName(ProjectName)
+                            .SetName(DatabaseContainerName)
                             .SetEnv("ACCEPT_EULA=Y", $"SA_PASSWORD={DatabaseServerAdminPassword}")
                             .SetPublish($"{DatabasePort}:1433")
                     );
 
-                    DockerTasks.DockerStart(c => c.SetContainers(ProjectName));
+                    DockerTasks.DockerStart(c => c.SetContainers(DatabaseContainerName));
                 });
 
     Target DestroyDatabaseContainer =>
         _ =>
-            _.Description("Remove SQL Server 2022 Docker Container")
+            _.Description("Remove SQL Server 2022 Docker Container if it exists")
                 .Executes(() =>
                 {
-                    DockerTasks.DockerStop(c => c.SetContainers(ProjectName));
-                    DockerTasks.DockerRm(c => c.SetContainers(ProjectName));
+                    var list = DockerTasks.DockerContainerLs(c => c.EnableAll());
+
+                    if (list.Any(output => output.Text.Contains(DatabaseContainerName)))
+                    {
+                        Log.Information($"{DatabaseContainerName} found... Deleting container");
+                        DockerTasks.DockerStop(c => c.SetContainers(DatabaseContainerName));
+                        DockerTasks.DockerRm(c => c.SetContainers(DatabaseContainerName));
+                    }
+                    else
+                    {
+                        Log.Information($"{DatabaseContainerName} not found.");
+                    }
                 });
 
     Target EnsureDatabaseContainerResponsive =>
@@ -291,11 +306,16 @@ sealed class Build : NukeBuild
     Target ResetTestDatabase =>
         _ =>
             _.Description("Clean and run migrations against test database")
-                .DependsOn(CompileSolution)
+                .DependsOn(CompileSolution, EnsureDatabaseContainerResponsive)
                 .Executes(() =>
                 {
                     DotNetTasks.DotNet($"{MigrationsDllFile} {TestDatabaseConnectionString} --cleanFirst");
                 });
+
+    Target ResetDatabases =>
+        _ =>
+            _.Description("Clean and run migrations against both development and test databases")
+                .DependsOn(ResetDevelopmentDatabase, ResetTestDatabase);
 
     Target CreateAndSetupDatabaseDockerContainer =>
         _ =>
