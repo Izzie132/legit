@@ -10,7 +10,7 @@ import { Weather } from "@/features/weather/Weather.tsx";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+export const App = () => (
   <>
     <ApiClientContextProvider>
       <QueryClientProvider client={queryClient}>
@@ -27,5 +27,3 @@ const App = () => (
     </ApiClientContextProvider>
   </>
 );
-
-export default App;

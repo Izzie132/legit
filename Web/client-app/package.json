@@ -33,8 +33,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@ghyston/eslint-config-ghyston": "^2.0.2",
-    "@ghyston/eslint-config-ghyston-react": "^2.0.1",
+    "@ghyston/eslint-config-ghyston": "^2.2.0",
+    "@ghyston/eslint-config-ghyston-react": "^2.1.0",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^16.0.0",
     "@types/react": "^18.2.15",

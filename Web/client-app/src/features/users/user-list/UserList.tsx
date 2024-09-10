@@ -29,7 +29,7 @@ export const UserList = () => {
       <div>{parseApiException(getUsersQuery.error).userVisibleMessage}</div>
     );
   }
-  if (getUsersQuery.isSuccess)
+  if (getUsersQuery.isSuccess) {
     return (
       <>
         <Title>User List</Title>
@@ -55,4 +55,5 @@ export const UserList = () => {
         </Table>
       </>
     );
+  }
 };
