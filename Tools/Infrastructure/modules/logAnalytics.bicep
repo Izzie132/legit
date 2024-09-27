@@ -5,7 +5,7 @@ param projectCode string
 
 @minLength(1)
 @maxLength(5)
-@description('An identifier for the environemnt being deployed, e.g. TEST/QA/PROD')
+@description('An identifier for the environment being deployed, e.g. TEST/QA/PROD')
 param environment string
 
 @description('The location for the resources to be created')

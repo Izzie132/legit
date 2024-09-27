@@ -14,7 +14,7 @@ Before creating any resources in Azure via Bicep, there are a few pre-requisite 
 
 ### Create Role-Based Access Control (RBAC) Security Groups in Microsoft Entra ID
 
-- Azure users sho require access to mange the environment should be added to these groups.
+- Azure users who require access to manage the environment should be added to these groups.
 
 | Group Name             | Use                                                       |
 | ---------------------- | --------------------------------------------------------- |
@@ -29,7 +29,7 @@ Before creating any resources in Azure via Bicep, there are a few pre-requisite 
 - Grant access permission to all pipelines, and Save. This will create a App Registration in Azure Entra ID, with a pre-configured federated credential to allow Azure DevOps to connect to the Azure Resource Group.
 - Then as an Azure Admin, open the Service Connection in Azure DevOps -> Manage Service Principal -> Branding and Properties section, and give the principal the same name as the connection, as set above
 
-### Setup a new "Environment" in Azure DevOps
+### Set up a new "Environment" in Azure DevOps
 
 - In Azure DevOps, under the "Pipelines" sidebar section, go to "Environments"
 - Create a "New environment" in DevOps to represent the environment, with no resources for now, and name it appropriately (e.g. UAT to represent the UAT environment)
@@ -49,18 +49,18 @@ As well as configuring things in the cloud, there are a few pre-requisite code c
 Each environment should have its own app settings JSON file, which should be named appropriately. For example, `appsettings.uat.json` for the UAT environment. It is typically easiest to copy an existing app settings file and tweak the values contained within as necessary for the new environment.
 Anything that is not defined in this file will be taken from the `appsettings.json` file.
 
-### `Tools\Infrastricture\{env}.bicepparams`
+### `Tools\Infrastructure\{env}.bicepparam`
 
 Each environment should have its own Bicep parameters file, which should be named appropriately. For example, `uat.bicepparams` for the UAT environment. It is typically easiest to copy an existing parameters file and tweak the values contained within as necessary for the new environment.
 
-The parameters file is split into 2 sections, one for non secure parameters, and one for secure parameters. The non secret parameters are as follows and should be defined in the file:
+The parameters file is split into 2 sections, one for non-secret parameters, and one for secret parameters. The non-secret parameters are as follows and should be defined in the file:
 
 - `environment`: a short name for the environment used in the name of crated resources, e.g. `UAT`
 - `aspNetCoreEnvironment`: the ASP.NET Core environment name, e.g. `uat` (this should match the env name used in the appsettings file)
 - `sqlAdminGroupName`: the **Name** of the RBAC Security Group that was created to define the Active Directory Admin(s) for the SQL Server resource (e.g. `RBAC-SQL-PRJCT-UAT` for the UAT environment)
 - `sqlAdminObjectId` - the Object ID of the RBAC Security Group that was created to define the Active Directory Admin(s) for the SQL Server resource
 - `keyVaultAdminGroupObjectId` - the Object ID of the RBAC Security Group that was created to define the Key Vault Secret Officers for the Key Vault resource
-- `resourceSizing`: the scale of the resources to be created, e.g. `non-prod` or `prod`
+- `resourceSizing`: the scale of the resources to be created, e.g. `nonprod` or `prod`
 
 The secure parameters are as follows and should be defined as environment variables when running the Bicep deployment:
 
@@ -82,11 +82,10 @@ You should already have the correct permissions at this step, but to be able to 
 
 Open PowerShell in the [root](../../) directory of the repository and run the following steps (substituting the appropriate values for the parameters):
 
-First, login to Azure and set the correct subscription.
+First, login to Azure and select the correct subscription when prompted.
 
 ```powershell
 az login
-az account set --subscription <SUBSCRIPTION_NAME OR SUBSCRIPTION_OBJECT_ID>
 ```
 
 To verify you are logged in to the correct Azure Subscription, you can run the following command. You should see the Resource Group you are deploying to listed in the output.
@@ -95,12 +94,12 @@ To verify you are logged in to the correct Azure Subscription, you can run the f
 az group list --output table
 ```
 
-Finally, run the following command to create the Azure Resources. This will create the resources defined in the `QQProjectName.bicep` file, using the parameters defined in the `<ENVIRONMENT_NAME>.bicepparams` file.
+Finally, run the following command to create the Azure Resources. This will create the resources defined in the `QQProjectName.bicep` file, using the parameters defined in the `<ENVIRONMENT_NAME>.bicepparam` file.
 Make sure to add any secure parameters as environment variables before running the command.
 
 ```powershell
 $env:<ENVIRONMENT_NAME>_SECRET_MESSAGE_PASSWORD = 'Password123'
-az deployment group create --template-file ./Tools/Infrastructure/QQProjectName.bicep --parameters ./Tools/Infrastructure/<ENVIRONMENT_NAME>.bicepparams -g <RESOURCE_GROUP_NAME> -c
+az deployment group create --template-file ./Tools/Infrastructure/QQProjectName.bicep --parameters ./Tools/Infrastructure/<ENVIRONMENT_NAME>.bicepparam -g <RESOURCE_GROUP_NAME> -c
 ```
 
 You will now be prompted to review the proposed changes. If everything looks correct, you can confirm the changes and the deployment will begin.
@@ -109,13 +108,12 @@ For example, if setting up the UAT environment, this chain of commands might loo
 
 ```powershell
 az login
-az account set --subscription 5447147c-724a-4276-8f93-b7c64f4ca033
 az group list --output table
 $env:UAT_SECRET_MESSAGE_PASSWORD = 'Password123'
-az deployment group create --template-file ./Tools/Infrastructure/QQProjectName.bicep --parameters ./Tools/Infrastructure/uat.bicepparams -g PRJCT-RG-UAT -c
+az deployment group create --template-file ./Tools/Infrastructure/QQProjectName.bicep --parameters ./Tools/Infrastructure/uat.bicepparam -g PRJCT-RG-UAT -c
 ```
 
-This will login to the correct Azure Subscription, and tell Bicep that we want to create a deployment into the `PRJCT-RG-UAT` Resource Group, using the `PorjectName.bicep` root template file, with parameters from the `uat.bicepparam` file.
+This will log in to the correct Azure Subscription, and tell Bicep that we want to create a deployment into the `PRJCT-RG-UAT` Resource Group, using the `PorjectName.bicep` root template file, with parameters from the `uat.bicepparam` file.
 The parameters file will load the `secretMessagePassword` parameter from the `UAT_SECRET_MESSAGE_PASSWORD` environment variable, so this need to be set before we run the Bicep command.
 Bicep will ask us to review the proposed actions, and if it looks accurate, we can "confirm".
 
@@ -129,7 +127,7 @@ Running Bicep will create and configure most of the required Azure infrastructur
 
 #### Granting database access
 
-Both the Web App and Azure Pipeline require the ability to connect to the database. Bicep has setup the users in the provided Entra Id group as adminiistrators on the SQL Server, but now we need to grant these two services access.
+Both the Web App and Azure Pipeline require the ability to connect to the database. Bicep has set up the users in the provided Entra Id group as administrators on the SQL Server, but now we need to grant these two services access.
 
 Connect to the Azure SQL Database either using the [Query Editor in Azure Portal](https://learn.microsoft.com/en-us/azure/azure-sql/database/query-editor?view=azuresql), or using SSMS locally.
 
