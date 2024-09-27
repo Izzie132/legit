@@ -41,10 +41,10 @@ export const SignUp = () => {
   });
 
   const onSubmit = (formValues: z.infer<typeof signUpFormSchema>) => {
-    const user = {
+    const user: CreateUserRequest = {
       name: formValues.name,
       email: formValues.email,
-    } as CreateUserRequest;
+    };
 
     createUser.mutate(user, {
       onSuccess: (createdUser) => {

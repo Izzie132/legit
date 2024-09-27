@@ -6,16 +6,10 @@ type NavBarLinkProps = {
 };
 
 export const NavBarLink = (props: NavBarLinkProps) => (
-  <>
-    <div className="mr-8">
-      <NavLink
-        to={props.to}
-        className={({ isActive }) =>
-          isActive ? "text-l font-semibold" : "text-l"
-        }
-      >
-        {props.label}
-      </NavLink>
-    </div>
-  </>
+  <NavLink
+    to={props.to}
+    className={({ isActive }) => (isActive ? "text-l font-semibold" : "text-l")}
+  >
+    {props.label}
+  </NavLink>
 );

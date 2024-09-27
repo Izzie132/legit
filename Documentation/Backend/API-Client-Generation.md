@@ -1,13 +1,13 @@
 # API Client Generation
 
-This project [NSwag](https://github.com/RicoSuter/NSwag) to automatically generate a Typescript API client that defines
+This project uses [NSwag](https://github.com/RicoSuter/NSwag) to automatically generate a Typescript API client that defines
 methods for each endpoint in defined using FastEndpoints. This is designed to reduce the workload of the developer, who
 now can define an API endpoint in the backend, and then start using it straight away in the frontend
 
 ## NSwag
 
 [NSwag](https://github.com/RicoSuter/NSwag) is a Swagger/OpenAPI 2.0 and 3.0 toolchain for .NET, that allows for the
-generation of of OpenAPI specifications from existing ASP.NET Web API controllers and client code from these OpenAPI
+generation of OpenAPI specifications from existing ASP.NET Web API controllers and client code from these OpenAPI
 specifications.
 
 In this implementation, we are using the generated Swagger/Open API document as an input to the NSwag toolchain. This

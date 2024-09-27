@@ -25,7 +25,6 @@
     </VueCodeStyleSettings>
     <stylecop>
       <option name="ENABLED" value="true" />
-      <option name="SC_EDITORCONFIG_ENABLED" value="true" />
     </stylecop>
     <codeStyleSettings language="HTML">
       <option name="SOFT_MARGINS" value="80" />
