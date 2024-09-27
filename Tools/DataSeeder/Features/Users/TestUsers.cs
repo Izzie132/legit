@@ -1,4 +1,5 @@
-﻿using Builders.Features.User;
+﻿using Bogus;
+using Builders.Features.User;
 using Web.Features.Users;
 
 namespace DataSeeder.Features.Users;
@@ -17,7 +18,13 @@ public static class TestUsers
 
     private static List<User> GetSeedUsers(DataSeederModeAmounts dataSeederModeAmounts)
     {
-        var testUsers = Enumerable.Range(0, dataSeederModeAmounts.MaxUsers).Select(_ => new UserBuilder().Build()).ToList();
+        // Only create this once to avoid the overhead of creating one per builder
+        var faker = new Faker { Random = new Randomizer(348972347) };
+
+        var testUsers = Enumerable
+            .Range(0, dataSeederModeAmounts.MaxUsers)
+            .Select(_ => new UserBuilder(faker).Build())
+            .ToList();
 
         DataSeederContext.Users = testUsers;
 

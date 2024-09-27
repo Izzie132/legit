@@ -36,13 +36,13 @@ public static class DataSeeder
         return rootCommand.Invoke(args);
     }
 
-    public static void Insert<TEntity>(ICollection<TEntity> entities)
+    public static void Insert<TEntity>(IList<TEntity> entities)
         where TEntity : class
     {
         IfVerbose(Console.Write, $"Seeding {typeof(TEntity).Name} x {GetHumanReadableEntityCount(entities.Count)} ...");
         const SqlBulkCopyOptions bulkCopyOptions = SqlBulkCopyOptions.Default;
         dataContext.BulkInsert(entities, new BulkConfig { SqlBulkCopyOptions = bulkCopyOptions });
-        IfVerbose(Console.WriteLine, Stopwatch.ElapsedMilliseconds);
+        IfVerbose(WriteLineElapsedTime, Stopwatch.ElapsedMilliseconds);
         Stopwatch.Restart();
     }
 
@@ -98,6 +98,7 @@ public static class DataSeeder
 
     private static void SeedData()
     {
+        var topLevelStopwatch = Stopwatch.StartNew();
         Stopwatch = Stopwatch.StartNew();
 
         IfVerbose(Console.WriteLine, "Seeding data...");
@@ -106,7 +107,7 @@ public static class DataSeeder
 
         dataContext.SaveChanges();
 
-        IfVerbose(Console.WriteLine, $"Seeding data complete in {Stopwatch.ElapsedMilliseconds}ms");
+        IfVerbose(Console.WriteLine, $"Seeding data complete in {topLevelStopwatch.ElapsedMilliseconds}ms");
     }
 
     private static string GetHumanReadableEntityCount(int entityCount) =>
