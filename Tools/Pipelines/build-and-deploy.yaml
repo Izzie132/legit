@@ -25,6 +25,8 @@ pool:
 stages:
   - stage: build_and_test
     displayName: "Build and Test"
+    env:
+      SONATYPE_OSS_INDEX_API_TOKEN: $(sonatypeOssIndexApiToken)
     jobs:
       - job: build_and_test
         displayName: "Build and Test"

@@ -8,9 +8,8 @@
     ":rebaseStalePrs",
     "group:allNonMajor",
     ":automergeMinor",
-    ":automergePr"
+    ":automergePr",
+    ":pinDependencies"
   ],
-  "reviewers": [
-    "optional:Benjamin.Wallace-Stock@Ghyston.com"
-  ]
+  "reviewers": ["optional:Benjamin.Wallace-Stock@Ghyston.com"]
 }

@@ -2,6 +2,7 @@
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Docker;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Npm;
@@ -25,6 +26,12 @@ sealed class Build : NukeBuild
     readonly BuildConfiguration buildConfiguration = BuildConfiguration.Release;
 
     const string ProjectName = "QQProjectName";
+    const string DotNetVersion = "net8.0";
+
+    readonly string sonatypeOssIndexUsername = EnvironmentInfo.GetVariable<string>("SONATYPE_OSS_INDEX_USERNAME");
+    readonly string sonatypeOssIndexApiToken = EnvironmentInfo.GetVariable<string>("SONATYPE_OSS_INDEX_API_TOKEN");
+
+    static string NugetPackageListFilePath => RootDirectory / "nuget_packages.txt";
 
     static AbsolutePath WebProjectDirectory => RootDirectory / "Web";
 
@@ -33,9 +40,13 @@ sealed class Build : NukeBuild
     static AbsolutePath BuildOutputDirectory => RootDirectory / "build-output";
 
     AbsolutePath MigrationsDirectory => RootDirectory / "Tools" / "Migrations";
-    AbsolutePath MigrationsDllFile => MigrationsDirectory / $"bin/{buildConfiguration}/net8.0/Migrations.dll";
+    AbsolutePath MigrationsDllFile => MigrationsDirectory / $"bin/{buildConfiguration}/{DotNetVersion}/Migrations.dll";
+
     AbsolutePath DataSeederDirectory => RootDirectory / "Tools" / "DataSeeder";
-    AbsolutePath DataSeederDllFile => DataSeederDirectory / $"bin/{buildConfiguration}/net8.0/DataSeeder.dll";
+    AbsolutePath DataSeederDllFile => DataSeederDirectory / $"bin/{buildConfiguration}/{DotNetVersion}/DataSeeder.dll";
+
+    AbsolutePath AuditProjectDirectory => RootDirectory / "Tools" / "Audit";
+    AbsolutePath AuditProjectDllFile => AuditProjectDirectory / "bin" / buildConfiguration / DotNetVersion / "Audit.dll";
 
     Target CleanSolution =>
         _ =>
@@ -89,8 +100,10 @@ sealed class Build : NukeBuild
                     CheckFrontEndCompiles,
                     CheckFrontEndCodeQuality,
                     RunFrontEndTests,
+                    AuditFrontEndPackages,
                     CheckBackEndCodeQuality,
-                    RunBackendTests
+                    RunBackendTests,
+                    AuditBackEndPackages
                 );
 
     Target Publish =>
@@ -144,6 +157,15 @@ sealed class Build : NukeBuild
                     NpmTasks.Npm("run test:ci", ReactClientDirectory);
                 });
 
+    Target AuditFrontEndPackages =>
+        _ =>
+            _.DependsOn(RestoreFrontEnd)
+                .Executes(() =>
+                {
+                    var arguments = $"run scan -- --user {sonatypeOssIndexUsername} --password {sonatypeOssIndexApiToken}";
+                    ProcessTasks.StartProcess("npm", arguments, ReactClientDirectory).AssertZeroExitCode();
+                });
+
     Target CheckBackEndCodeQuality =>
         _ =>
             _.Description("Run CSharpier on solution")
@@ -163,6 +185,19 @@ sealed class Build : NukeBuild
                 {
                     DotNetTasks.DotNetTest(s =>
                         s.SetProjectFile(solution).SetConfiguration(buildConfiguration).EnableNoRestore()
+                    );
+                });
+
+    Target AuditBackEndPackages =>
+        _ =>
+            _.DependsOn(CompileSolution)
+                .Executes(() =>
+                {
+                    DotNetTasks.DotNet(
+                        $"{AuditProjectDllFile} "
+                            + $"packageListFilePath {NugetPackageListFilePath} "
+                            + $"sonatypeUsername {sonatypeOssIndexUsername} "
+                            + $"sonatypeApiToken {sonatypeOssIndexApiToken}"
                     );
                 });
 

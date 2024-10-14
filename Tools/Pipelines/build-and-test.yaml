@@ -2,11 +2,13 @@ trigger: none
 
 pool:
   vmImage: ubuntu-latest
-  
+
 steps:
   - template: prepare-agent.yaml
   - task: PowerShell@2
-    displayName: 'Build and test'
+    displayName: "Build and test"
     inputs:
-      filePath: './build.ps1'
-      arguments: 'BuildAndTest'
+      filePath: "./build.ps1"
+      arguments: "BuildAndTest"
+    env:
+      SONATYPE_OSS_INDEX_API_TOKEN: $(sonatypeOssIndexApiToken)

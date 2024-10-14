@@ -16,3 +16,7 @@ steps:
     inputs:
       filePath: "./build.ps1"
       arguments: "CreateTestDatabase"
+  - task: PowerShell@2
+    displayName: "Generate NuGet package list"
+    inputs:
+      filePath: "./Tools/Audit/GenerateNuGetPackageList.ps1"

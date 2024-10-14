@@ -507,3 +507,6 @@ fabric.properties
 
 # Build output
 build-output/
+
+# Package list generated for package scanning
+nuget_packages.txt

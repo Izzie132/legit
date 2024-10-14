@@ -3,6 +3,9 @@
   <component name="UserContentModel">
     <attachedFolders>
       <Path>Documentation</Path>
+      <Path>Tools/Infrastructure</Path>
+      <Path>Tools/Pipelines</Path>
+      <Path>Tools/Renovate</Path>
     </attachedFolders>
     <explicitIncludes>
       <Path>Documentation</Path>

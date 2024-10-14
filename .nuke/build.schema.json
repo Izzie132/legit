@@ -64,6 +64,8 @@
           "items": {
             "type": "string",
             "enum": [
+              "AuditBackEndPackages",
+              "AuditFrontEndPackages",
               "BuildAndTest",
               "CheckBackEndCodeQuality",
               "CheckFrontEndCodeQuality",
@@ -102,6 +104,8 @@
           "items": {
             "type": "string",
             "enum": [
+              "AuditBackEndPackages",
+              "AuditFrontEndPackages",
               "BuildAndTest",
               "CheckBackEndCodeQuality",
               "CheckFrontEndCodeQuality",

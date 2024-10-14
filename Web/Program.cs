@@ -12,7 +12,7 @@ if (builder.ShouldGenerateClients())
     await builder.GenerateTypescriptApiClientAndExitAsync();
 }
 
-var app = await ConfigureApp(builder);
+var app = ConfigureApp(builder);
 await app.RunAsync();
 
 static void ConfigureServices(WebApplicationBuilder builder)
@@ -45,7 +45,7 @@ static void ConfigureServices(WebApplicationBuilder builder)
     services.ConfigureSwaggerDocument();
 }
 
-static async Task<WebApplication> ConfigureApp(WebApplicationBuilder builder)
+static WebApplication ConfigureApp(WebApplicationBuilder builder)
 {
     var app = builder.Build();
 
