@@ -22,8 +22,10 @@ public static class SonatypeService
 
     private const string SonatypeOssIndexApiUrl = "https://ossindex.sonatype.org/api/v3/authorized/component-report";
 
-    private static readonly JsonSerializerOptions SonatypeOssIndexApiJsonSerializerOptions =
-        new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    private static readonly JsonSerializerOptions SonatypeOssIndexApiJsonSerializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+    };
 
     private sealed record ComponentReportRequest(ICollection<string> Coordinates);
 

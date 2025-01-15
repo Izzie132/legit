@@ -20,7 +20,7 @@ sealed class Build : NukeBuild
     //   - Microsoft VSCode           https://nuke.build/vscode
     public static int Main() => Execute<Build>(x => x.CompileSolution);
 
-    [Solution]
+    [Solution("QQProjectName.sln")]
     readonly Solution solution;
 
     readonly BuildConfiguration buildConfiguration = BuildConfiguration.Release;

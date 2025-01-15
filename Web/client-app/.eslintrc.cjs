@@ -1,9 +1,7 @@
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
-  plugins: ["vitest"],
   extends: [
-    "plugin:vitest/recommended",
     "@ghyston/eslint-config-ghyston",
     "@ghyston/eslint-config-ghyston-react",
   ],

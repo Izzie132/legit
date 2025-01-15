@@ -44,7 +44,7 @@ public static class GetWeather
             "Mostly Sunny",
             "Partly Sunny",
             "Scattered Showers",
-            "Sunny"
+            "Sunny",
         ];
     }
 }

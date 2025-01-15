@@ -13,7 +13,7 @@ public static class HttpContextExtensions
     }
 
     private static JsonSerializerOptions JsonSerializerOptions =>
-        new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true, };
+        new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true };
 
     private static string Serialize<T>(T responseBody) =>
         JsonSerializer.Serialize(value: responseBody, options: JsonSerializerOptions);
