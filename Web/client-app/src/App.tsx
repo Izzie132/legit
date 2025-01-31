@@ -1,12 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes } from "react-router-dom";
-import { ApiClientContextProvider } from "@/api/useApiClient.tsx";
-import { Layout } from "@/components/layout/Layout.tsx";
-import { Counter } from "@/features/counter/Counter.tsx";
-import { Home } from "@/features/Home.tsx";
-import { SignUp } from "@/features/users/sign-up/SignUp.tsx";
-import { UserList } from "@/features/users/user-list/UserList.tsx";
-import { Weather } from "@/features/weather/Weather.tsx";
+import { ApiClientContextProvider } from "@/api/useApiClient";
+import { Layout } from "@/components/layout/Layout";
+import { Counter } from "@/features/counter/Counter";
+import { Home } from "@/features/Home";
+import { SignUp } from "@/features/users/sign-up/SignUp";
+import { UserList } from "@/features/users/user-list/UserList";
+import { Weather } from "@/features/weather/Weather";
 
 const queryClient = new QueryClient();
 

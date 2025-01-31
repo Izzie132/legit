@@ -2,11 +2,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import type { CreateUserRequest } from "@/api/ApiClient.ts";
-import { parseApiException } from "@/api/apiErrorReponse.ts";
-import { useApiClient } from "@/api/useApiClient.tsx";
-import { Title } from "@/components/text/Title.tsx";
-import { Button } from "@/components/ui/button.tsx";
+import type { CreateUserRequest } from "@/api/ApiClient";
+import { parseApiException } from "@/api/apiErrorReponse";
+import { useApiClient } from "@/api/useApiClient";
+import { Title } from "@/components/text/Title";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -14,9 +14,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { useToast } from "@/components/ui/use-toast.ts";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 
 const signUpFormSchema = z.object({
   name: z.string().min(3).max(20),

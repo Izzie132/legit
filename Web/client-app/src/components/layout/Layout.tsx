@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import { NavBarLink } from "@/components/layout/NavBarLink.tsx";
-import { Toaster } from "@/components/ui/toaster.tsx";
+import { NavBarLink } from "@/components/layout/NavBarLink";
+import { Toaster } from "@/components/ui/toaster";
 
 export const Layout = () => (
   <div className="flex flex-col items-center">

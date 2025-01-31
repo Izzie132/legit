@@ -4,7 +4,7 @@ import {
   type WindSpeedUnits,
   temperatureConverter,
   windSpeedConverter,
-} from "./unitConverters.ts";
+} from "./unitConverters";
 
 type TestTemperatureConverterInputs = {
   input: number;

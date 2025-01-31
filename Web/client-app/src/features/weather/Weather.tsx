@@ -1,11 +1,11 @@
 ﻿import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { parseApiException } from "@/api/apiErrorReponse.ts";
-import { useApiClient } from "@/api/useApiClient.tsx";
+import { parseApiException } from "@/api/apiErrorReponse";
+import { useApiClient } from "@/api/useApiClient";
 import TemperatureIcon from "@/assets/icons/temperature-half-solid.svg?react";
 import WindIcon from "@/assets/icons/wind-solid.svg?react";
-import { Loading } from "@/components/Loading.tsx";
-import { Title } from "@/components/text/Title.tsx";
+import { Loading } from "@/components/Loading";
+import { Title } from "@/components/text/Title";
 import {
   type TemperatureUnits,
   type WindSpeedUnits,
@@ -13,7 +13,7 @@ import {
   temperatureSuffixByUnit,
   windSpeedConverter,
   windSpeedSuffixByUnit,
-} from "@/helpers/unitConverters.ts";
+} from "@/helpers/unitConverters";
 
 export const Weather = () => {
   const [temperatureUnits, setTemperatureUnits] =

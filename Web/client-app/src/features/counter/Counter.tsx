@@ -1,7 +1,7 @@
 ﻿import { useState } from "react";
-import { Title } from "@/components/text/Title.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import { Input } from "@/components/ui/input.tsx";
+import { Title } from "@/components/text/Title";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export const Counter = () => {
   const [count, setCount] = useState<number>(0);

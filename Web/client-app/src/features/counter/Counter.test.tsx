@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Counter } from "@/features/counter/Counter.tsx";
+import { Counter } from "@/features/counter/Counter";
 
 describe("Counter", () => {
   it("should render", () => {

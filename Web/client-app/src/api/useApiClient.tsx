@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { createContext, useContext } from "react";
-import { ApiClient } from "@/api/ApiClient.ts";
+import { ApiClient } from "@/api/ApiClient";
 
 export const ApiClientContext = createContext<ApiClient | undefined>(undefined);
 

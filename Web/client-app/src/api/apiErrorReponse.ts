@@ -1,5 +1,5 @@
-import type { ApiErrorResponse } from "@/api/ApiClient.ts";
-import { ApiException } from "@/api/ApiClient.ts";
+import type { ApiErrorResponse } from "@/api/ApiClient";
+import { ApiException } from "@/api/ApiClient";
 
 const emptyApiErrorResponse: ApiErrorResponse = {
   message: undefined,

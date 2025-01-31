@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { parseApiException } from "@/api/apiErrorReponse.ts";
-import { useApiClient } from "@/api/useApiClient.tsx";
-import { Loading } from "@/components/Loading.tsx";
-import { Title } from "@/components/text/Title.tsx";
+import { parseApiException } from "@/api/apiErrorReponse";
+import { useApiClient } from "@/api/useApiClient";
+import { Loading } from "@/components/Loading";
+import { Title } from "@/components/text/Title";
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table.tsx";
+} from "@/components/ui/table";
 
 export const UserList = () => {
   const apiClient = useApiClient();
