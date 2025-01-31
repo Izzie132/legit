@@ -189,4 +189,7 @@ const useToast = (): ToastResponse => {
   };
 };
 
+export const clearToastsForTesting = (): void =>
+  dispatch({ type: "REMOVE_TOAST" });
+
 export { useToast, toast };

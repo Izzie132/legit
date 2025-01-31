@@ -1,15 +1,28 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
+    "config:recommended",
     ":disableRateLimiting",
     ":enableVulnerabilityAlerts",
     "npm:unpublishSafe",
     ":prConcurrentLimit10",
     ":rebaseStalePrs",
-    "group:allNonMajor",
     ":automergeMinor",
     ":automergePr",
     ":pinDependencies"
+  ],
+  "packageRules": [
+    {
+      "groupName": "{{manager}} dependencies",
+      "matchManagers": ["bicep"]
+    },
+    {
+      "groupName": "all non-major dependencies",
+      "description": "Update non-major dependencies on the first and third Mondays of the month",
+      "matchUpdateTypes": ["patch", "minor"],
+      "schedule": ["* * 1-7,15-21 * 1"],
+      "automerge": true
+    }
   ],
   "reviewers": ["optional:Benjamin.Wallace-Stock@Ghyston.com"]
 }

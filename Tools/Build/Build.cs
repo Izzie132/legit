@@ -151,7 +151,7 @@ sealed class Build : NukeBuild
     Target RunFrontEndTests =>
         _ =>
             _.Description("Run test on the frontend")
-                .DependsOn(RestoreFrontEnd)
+                .DependsOn(RestoreFrontEnd, CheckFrontEndCompiles, CheckFrontEndCodeQuality)
                 .Executes(() =>
                 {
                     NpmTasks.Npm("run test:ci", ReactClientDirectory);

@@ -56,7 +56,7 @@ public class DatabaseHelper
 
     public async Task WaitForSqlServerResponse()
     {
-        const int maxConnectionAttempts = 15;
+        const int maxConnectionAttempts = 60;
         const int delayBetweenConnectionAttempts = 5000;
         var connectionAttempt = 1;
 

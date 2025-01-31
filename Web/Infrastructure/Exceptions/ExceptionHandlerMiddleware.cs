@@ -39,6 +39,7 @@ public class ExceptionHandlerMiddleware(
         exception switch
         {
             UserVisibleValidationException => HttpStatusCode.BadRequest,
+            UserVisibleNotFoundException => HttpStatusCode.NotFound,
 
             _ => HttpStatusCode.InternalServerError,
         };

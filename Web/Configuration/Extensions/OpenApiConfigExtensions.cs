@@ -58,6 +58,7 @@ public static class OpenApiConfigExtensions
                 c.TypeScriptGeneratorSettings.Namespace = "";
                 c.TypeScriptGeneratorSettings.GenerateTypeCheckFunctions = true;
                 c.TypeScriptGeneratorSettings.TemplateDirectory = "client-app/src/api/templates";
+                c.TypeScriptGeneratorSettings.DateTimeType = TypeScriptDateTimeType.String;
             }
         );
 

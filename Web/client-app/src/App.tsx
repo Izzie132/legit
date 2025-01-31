@@ -11,19 +11,17 @@ import { Weather } from "@/features/weather/Weather";
 const queryClient = new QueryClient();
 
 export const App = () => (
-  <>
-    <ApiClientContextProvider>
-      <QueryClientProvider client={queryClient}>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/weather" element={<Weather />} />
-            <Route path="/counter" element={<Counter />} />
-            <Route path="/user-list" element={<UserList />} />
-            <Route path="/sign-up" element={<SignUp />} />
-          </Route>
-        </Routes>
-      </QueryClientProvider>
-    </ApiClientContextProvider>
-  </>
+  <ApiClientContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/weather" element={<Weather />} />
+          <Route path="/counter" element={<Counter />} />
+          <Route path="/user-list" element={<UserList />} />
+          <Route path="/sign-up" element={<SignUp />} />
+        </Route>
+      </Routes>
+    </QueryClientProvider>
+  </ApiClientContextProvider>
 );

@@ -94,6 +94,13 @@ To verify you are logged in to the correct Azure Subscription, you can run the f
 az group list --output table
 ```
 
+If the expected resource group is missing, you may need to select the correct subscription:
+
+```powershell
+az account list --output table
+az account set --subscription <SUBSCRIPTION_ID>
+```
+
 Finally, run the following command to create the Azure Resources. This will create the resources defined in the `QQProjectName.bicep` file, using the parameters defined in the `<ENVIRONMENT_NAME>.bicepparam` file.
 Make sure to add any secure parameters as environment variables before running the command.
 

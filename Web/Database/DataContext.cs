@@ -6,9 +6,9 @@ using Web.Features.Users;
 
 namespace Web.Database;
 
-public class DataContext(DbContextOptions options, IOptions<AppOptions> projectNameOptions) : DbContext(options)
+public class DataContext(DbContextOptions options, IOptions<AppOptions> qqProjectNameOptions) : DbContext(options)
 {
-    private readonly AppOptions appOptions = projectNameOptions.Value;
+    private readonly AppOptions appOptions = qqProjectNameOptions.Value;
     public DbSet<User> Users { get; set; } = default!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NodaTime;
@@ -27,7 +28,11 @@ public class BaseWebTest : TestBase<WebTestFixture>, IDisposable
     protected BaseWebTest(WebTestFixture fixture)
     {
         this.fixture = fixture;
+
         DataContext = ResolveService<DataContext>();
+
+        // Disable query tracking for tests, so that we don't end up with stale data when checking the database for updates
+        DataContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
 
     public void Dispose()
