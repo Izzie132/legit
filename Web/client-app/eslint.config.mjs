@@ -1,6 +1,6 @@
 import ghyston from "@ghyston/eslint-config-ghyston";
 import ghystonReact from "@ghyston/eslint-config-ghyston-react";
-import vitest from "eslint-plugin-vitest";
+import vitest from "@vitest/eslint-plugin";
 
 export default [
   ...ghyston,
