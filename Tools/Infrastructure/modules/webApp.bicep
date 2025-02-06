@@ -53,7 +53,7 @@ var skuDetails = {
   }
 }
 
-resource appServiceServerFarm 'Microsoft.Web/serverfarms@2023-12-01' = {
+resource appServiceServerFarm 'Microsoft.Web/serverfarms@2024-04-01' = {
   name: '${projectCode}-ASP01-${environment}'
   location: location
   sku: {
@@ -70,7 +70,7 @@ resource appServiceServerFarm 'Microsoft.Web/serverfarms@2023-12-01' = {
 }
 
 var webAppName = '${projectCode}-WA01-${environment}'
-resource webApp 'Microsoft.Web/sites@2023-12-01' = {
+resource webApp 'Microsoft.Web/sites@2024-04-01' = {
   name: webAppName
   location: location
   kind: 'app,linux'
