@@ -33,6 +33,8 @@ public static class FastEndpointsConfigExtensions
                 endpoints.Description(b => b.WithName(endpoints.EndpointType.DeclaringType!.Name));
                 endpoints.Description(b => b.Produces<ApiErrorResponse>(500, "application/problem+json"));
             };
+
+            c.Validation.UsePropertyNamingPolicy = false;
         });
     }
 }

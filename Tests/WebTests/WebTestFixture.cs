@@ -6,7 +6,7 @@ using NodaTime.Testing;
 
 namespace WebTests;
 
-public class WebTestFixture(IMessageSink s) : AppFixture<Program>(s)
+public class WebTestFixture : AppFixture<Program>
 {
     protected override void ConfigureApp(IWebHostBuilder a)
     {

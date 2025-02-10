@@ -20,7 +20,7 @@ public class CreateUserTests(WebTestFixture f) : BaseWebTest(f)
 
         Assert.Equal(HttpStatusCode.OK, httpResponseMessage.StatusCode);
 
-        var databaseUser = await DataContext.Users.SingleOrDefaultAsync();
+        var databaseUser = await DataContext.Users.SingleOrDefaultAsync(CancellationToken);
         Assert.NotNull(databaseUser);
         Assert.Equal("Ben", databaseUser.Name);
         Assert.Equal("ben@ghyston.com", databaseUser.Email);

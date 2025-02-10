@@ -11,7 +11,7 @@ using Web.Database;
 namespace WebTests;
 
 [Collection(nameof(BaseWebTest))]
-public class BaseWebTest : TestBase<WebTestFixture>, IDisposable
+public class BaseWebTest : TestBase<WebTestFixture>, IAsyncDisposable
 {
     private readonly WebTestFixture fixture;
     protected HttpClient Client => fixture.Client;
@@ -22,6 +22,8 @@ public class BaseWebTest : TestBase<WebTestFixture>, IDisposable
     private static string? connectionString;
     private static SqlConnection? connection;
     private static Respawner? respawner;
+
+    protected static CancellationToken CancellationToken => TestContext.Current.CancellationToken;
 
     private readonly List<IServiceScope> serviceScopes = [];
 
@@ -35,16 +37,16 @@ public class BaseWebTest : TestBase<WebTestFixture>, IDisposable
         DataContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        ResetDatabase().Wait();
+        await ResetDatabase();
 
         foreach (var scope in serviceScopes)
         {
             scope.Dispose();
         }
 
-        DataContext.Dispose();
+        await DataContext.DisposeAsync();
 
         FakeClock.Reset(SystemClock.Instance.GetCurrentInstant());
     }
