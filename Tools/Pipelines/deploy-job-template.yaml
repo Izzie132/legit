@@ -32,6 +32,11 @@ jobs:
       runOnce:
         deploy:
           steps:
+            - task: UseDotNet@2
+              inputs:
+                packageType: "sdk"
+                useGlobalJson: true
+                workingDirectory: "$(Agent.BuildDirectory)/build-artifacts"
             - task: AzureCLI@2
               displayName: "Dotnet migrate"
               inputs:

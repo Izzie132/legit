@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -125,6 +126,8 @@ sealed class Build : NukeBuild
                             .SetOutput(BuildOutputDirectory / "Migrations")
                             .EnableNoRestore()
                     );
+
+                    File.Copy(RootDirectory / "global.json", BuildOutputDirectory / "global.json", overwrite: true);
                 });
 
     #region Tests
