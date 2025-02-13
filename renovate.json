@@ -6,7 +6,6 @@
     ":enableVulnerabilityAlerts",
     "npm:unpublishSafe",
     ":prConcurrentLimit10",
-    ":rebaseStalePrs",
     ":automergeMinor",
     ":automergePr",
     ":pinDependencies"
