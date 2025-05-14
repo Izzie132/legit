@@ -27,7 +27,7 @@ var exitCode = await rootCommand.InvokeAsync(args);
 
 return exitCode;
 
-async Task<int> Handle(string packageListFilePath, string sonatypeUsername, string sonatypeApiToken)
+static async Task<int> Handle(string packageListFilePath, string sonatypeUsername, string sonatypeApiToken)
 {
     var inputFileAbsolutePath = Path.GetFullPath(packageListFilePath);
 
@@ -54,10 +54,8 @@ async Task<int> Handle(string packageListFilePath, string sonatypeUsername, stri
 
     const int batchSize = 128;
 
-    for (var i = 0; i < allPackages.Count; i += batchSize)
+    foreach (var batch in allPackages.Chunk(batchSize))
     {
-        var batch = allPackages.Skip(i).Take(batchSize).ToList();
-
         vulnerabilities.AddRange(
             await PackageChecker.AuditPackages(
                 packages: batch,
@@ -68,41 +66,55 @@ async Task<int> Handle(string packageListFilePath, string sonatypeUsername, stri
         );
     }
 
-    vulnerabilities.RemoveAll(vulnerability =>
-        Ignored.Vulnerabilities.Any(ignoredVulnerability => ignoredVulnerability.IsMatch(vulnerability))
-    );
+    var success = true;
+
+    foreach (var ignoredVulnerability in Ignored.Vulnerabilities)
+    {
+        var numberRemoved = vulnerabilities.RemoveAll(ignoredVulnerability.IsMatch);
+
+        if (numberRemoved == 0)
+        {
+            success = false;
+            await ConsoleHelpers.WriteLineRed(
+                $"Ignored vulnerability {ignoredVulnerability.Cve} for {ignoredVulnerability.PackageName}@{ignoredVulnerability.PackageVersion} does not apply. Please remove it from the ignore list."
+            );
+        }
+    }
 
     var vulnerabilityCount = vulnerabilities.Count;
 
     if (vulnerabilityCount == 0)
     {
         await ConsoleHelpers.WriteLineGreen($"Scanned {allPackages.Count} packages - no vulnerabilities found.");
-        return 0; // Success
     }
-
-    var vulnerabilityNoun = vulnerabilityCount > 1 ? "vulnerabilities" : "vulnerability";
-
-    await Console.Error.WriteLineAsync(
-        $"Scanned {allPackages.Count} packages - {vulnerabilityCount} {vulnerabilityNoun} found."
-    );
-
-    foreach (var vulnerability in vulnerabilities)
+    else
     {
-        var foregroundColor = Console.ForegroundColor;
+        success = false;
 
-        Console.ForegroundColor = vulnerability.Severity switch
+        var vulnerabilityNoun = vulnerabilityCount > 1 ? "vulnerabilities" : "vulnerability";
+
+        await Console.Error.WriteLineAsync(
+            $"Scanned {allPackages.Count} packages - {vulnerabilityCount} {vulnerabilityNoun} found."
+        );
+
+        foreach (var vulnerability in vulnerabilities)
         {
-            VulnerabilitySeverity.Low => ConsoleColor.Gray,
-            VulnerabilitySeverity.Medium => ConsoleColor.Yellow,
-            VulnerabilitySeverity.High => ConsoleColor.Red,
-            VulnerabilitySeverity.Critical => ConsoleColor.DarkRed,
-            _ => foregroundColor,
-        };
+            var foregroundColor = Console.ForegroundColor;
 
-        await Console.Error.WriteLineAsync(vulnerability.DisplayString);
+            Console.ForegroundColor = vulnerability.Severity switch
+            {
+                VulnerabilitySeverity.Low => ConsoleColor.Gray,
+                VulnerabilitySeverity.Medium => ConsoleColor.Yellow,
+                VulnerabilitySeverity.High => ConsoleColor.Red,
+                VulnerabilitySeverity.Critical => ConsoleColor.DarkRed,
+                _ => foregroundColor,
+            };
 
-        Console.ForegroundColor = foregroundColor;
+            await Console.Error.WriteLineAsync(vulnerability.DisplayString);
+
+            Console.ForegroundColor = foregroundColor;
+        }
     }
 
-    return 1; // Failure
+    return success ? 0 : 1;
 }

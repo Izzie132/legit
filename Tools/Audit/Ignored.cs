@@ -14,13 +14,13 @@ public static class Ignored
         new List<IgnoredVulnerability>
         {
             new(
-                PackageName: "System.Private.DataContractSerialization",
-                PackageVersion: "4.3.0",
-                Cve: "CVE-2023-21538",
-                Reason: "This vulnerability only affects .NET 6 versions (we are using .NET 8).",
-                Evidence: "https://github.com/dotnet/announcements/issues/244"
+                PackageName: "System.Text.Json",
+                PackageVersion: "9.0.3",
+                Cve: "CVE-2024-43485",
+                Reason: "This is a false positive for v9, and we're not using the [ExtensionData] feature which was affected in previous versions anyway",
+                Evidence: "https://github.com/dotnet/announcements/issues/329"
+                    + ", "
+                    + "https://github.com/DependencyTrack/dependency-track/issues/4568"
             ),
-        }
-            .ToList()
-            .AsReadOnly();
+        }.AsReadOnly();
 }
