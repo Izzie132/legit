@@ -27,6 +27,7 @@ public static class OpenApiConfigExtensions
 
                 s.MarkNonNullablePropsAsRequired();
 
+                s.SchemaSettings.DefaultReferenceTypeNullHandling = ReferenceTypeNullHandling.NotNull;
                 s.SchemaSettings.SchemaNameGenerator = new CustomSchemaNameGenerator();
             };
         });

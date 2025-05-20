@@ -255,8 +255,8 @@ export interface GetUsersResponse {
 
 export interface GetUsersResponseUserResponse {
     id: number;
-    name?: string | undefined;
-    email?: string | undefined;
+    name: string;
+    email: string;
 }
 
 export interface GetSecretMessageResponse {
