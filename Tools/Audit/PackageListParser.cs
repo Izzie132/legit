@@ -53,11 +53,7 @@ public static partial class PackageListParser
             {
                 var projectName = EnclosedInSingleQuotesRegex().Match(trimmedLine).Groups[1].Value;
 
-                currentProject = new ProjectDetails(
-                    name: projectName,
-                    topLevelPackages: new List<PackageDetails>(),
-                    transitivePackages: new List<PackageDetails>()
-                );
+                currentProject = new ProjectDetails(name: projectName, topLevelPackages: [], transitivePackages: []);
 
                 projects.Add(currentProject);
             }
