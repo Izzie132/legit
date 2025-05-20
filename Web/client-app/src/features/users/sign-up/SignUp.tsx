@@ -32,7 +32,7 @@ export const SignUp = () => {
     mutationFn: (user: CreateUserRequest) => apiClient.createUser(user),
   });
 
-  const form = useForm<z.infer<typeof signUpFormSchema>>({
+  const form = useForm({
     resolver: zodResolver(signUpFormSchema),
     defaultValues: {
       name: "",
