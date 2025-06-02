@@ -5,10 +5,11 @@ import react from "@vitejs/plugin-react-swc";
 import tsconfigPaths from "vite-tsconfig-paths";
 import svgr from "vite-plugin-svgr";
 import basicSsl from "@vitejs/plugin-basic-ssl";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), tsconfigPaths(), svgr(), basicSsl()],
+  plugins: [react(), tsconfigPaths(), svgr(), basicSsl(), tailwindcss()],
   server: {
     port: 3000,
     strictPort: true,
