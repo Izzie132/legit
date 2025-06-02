@@ -510,3 +510,6 @@ build-output/
 
 # Package list generated for package scanning
 nuget_packages.txt
+
+# .editorconfig files, since they come from Ghyston.editorconfig
+**/.editorconfig

@@ -1,0 +1,4 @@
+[*.cs]
+# Type names should not match namespaces
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1724
+dotnet_diagnostic.CA1724.severity = suggestion

@@ -7,10 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="EFCore.BulkExtensions.MIT" />
-    <PackageReference Include="StyleCop.Analyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="System.CommandLine" />
     <PackageReference Include="System.CommandLine.NamingConventionBinder" />
   </ItemGroup>

@@ -16,6 +16,7 @@
     <PackageVersion Include="FastEndpoints.ClientGen" Version="6.1.0" />
     <PackageVersion Include="FastEndpoints.Swagger" Version="5.35.0" />
     <PackageVersion Include="FastEndpoints.Testing" Version="5.35.0" />
+    <PackageVersion Include="Ghyston.editorconfig" Version="1.0.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
     <PackageVersion Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.16" />
     <PackageVersion Include="Microsoft.Build.Tasks.Core" Version="17.14.8" />
@@ -46,5 +47,8 @@
     <PackageVersion Include="dbup-sqlserver" Version="6.0.0" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.0" />
     <PackageVersion Include="xunit.v3" Version="2.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Ghyston.editorconfig" />
   </ItemGroup>
 </Project>

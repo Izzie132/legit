@@ -11,7 +11,6 @@ public partial record PackageDetails(string Name, string Requested, string Resol
         //
         // If they are different, the line will be of the form:
         // "> Azure.Core                1.32.0          1.32.1"
-
         var trimmedLine = line.Trim();
 
         var lineParts = TwoOrMoreSpacesRegex().Split(trimmedLine);

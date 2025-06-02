@@ -25,7 +25,6 @@ namespace Audit;
 //    > Azure.Extensions.AspNetCore.Configuration.Secrets                 1.2.2
 //
 // ...
-
 public static partial class PackageListParser
 {
     private enum PackageType
