@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Get the remote URL from the hook parameters
+remote_url="$2"
+
+# Check if it's an Azure DevOps SSH URL
+if [[ "$remote_url" =~ vs-ssh\.visualstudio\.com:v3/([^/]+)/([^/]+)/([^/]+) ]]; then
+    org="${BASH_REMATCH[1]}"
+    project="${BASH_REMATCH[2]}"
+    repo="${BASH_REMATCH[3]}"
+
+    prs_url="https://${org}.visualstudio.com/${project}/_git/${repo}/pullrequests"
+    
+    echo >&2 "View PRs on DevOps: $prs_url"
+fi
+
+exit 0
