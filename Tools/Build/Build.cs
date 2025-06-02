@@ -177,7 +177,7 @@ sealed class Build : NukeBuild
                 {
                     DotNetTasks.DotNet("format style --verify-no-changes");
                     DotNetTasks.DotNet("format analyzers --verify-no-changes");
-                    DotNetTasks.DotNet("csharpier --check .");
+                    DotNetTasks.DotNet("csharpier check .");
                 });
 
     Target RunBackendTests =>
