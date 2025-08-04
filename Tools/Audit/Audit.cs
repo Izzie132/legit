@@ -4,26 +4,29 @@ using Audit;
 
 var rootCommand = new RootCommand
 {
-    new Option<string>(
-        name: "packageListFilePath",
-        description: "The path to the file containing the output from the `dotnet list package` command",
-        getDefaultValue: () => "../../nuget_packages.txt"
-    ),
-    new Option<string>(
-        name: "sonatypeUsername",
-        description: "The email address of the Sonatype account that will be used to make authenticated calls to the Sonatype OSS Index API",
-        getDefaultValue: () => Environment.GetEnvironmentVariable("SONATYPE_OSS_INDEX_USERNAME") ?? ""
-    ),
-    new Option<string>(
-        name: "sonatypeApiToken",
-        description: "The API token of the Sonatype account that will be used to make authenticated calls to the Sonatype OSS Index API",
-        getDefaultValue: () => Environment.GetEnvironmentVariable("SONATYPE_OSS_INDEX_API_TOKEN") ?? ""
-    ),
+    new Option<string>("packageListFilePath")
+    {
+        Description = "The path to the file containing the output from the `dotnet list package` command",
+        DefaultValueFactory = _ => "../../nuget_packages.txt",
+    },
+    new Option<string>("sonatypeUsername")
+    {
+        Description =
+            "The email address of the Sonatype account that will be used to make authenticated calls to the Sonatype OSS Index API",
+        DefaultValueFactory = _ => Environment.GetEnvironmentVariable("SONATYPE_OSS_INDEX_USERNAME") ?? "",
+    },
+    new Option<string>("sonatypeApiToken")
+    {
+        Description =
+            "The API token of the Sonatype account that will be used to make authenticated calls to the Sonatype OSS Index API",
+        DefaultValueFactory = _ => Environment.GetEnvironmentVariable("SONATYPE_OSS_INDEX_API_TOKEN") ?? "",
+    },
 };
 
-rootCommand.Handler = CommandHandler.Create(Handle);
+rootCommand.Action = CommandHandler.Create(Handle);
 
-var exitCode = await rootCommand.InvokeAsync(args);
+var parseResult = rootCommand.Parse(args);
+var exitCode = parseResult.Invoke();
 
 return exitCode;
 

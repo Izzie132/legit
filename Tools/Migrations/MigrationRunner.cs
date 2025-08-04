@@ -20,20 +20,26 @@ public static class MigrationRunner
         var rootCommand = new RootCommand
         {
             new Argument<string>("connectionString"),
-            new Option<bool>(
-                name: "--cleanFirst",
-                description: "Runs scripts to clean the database before running migrations (should only be used in development/test scenarios)",
-                getDefaultValue: () => false
-            ),
-            new Option<DataSeedMode>(
-                name: "--dataSeedMode",
-                description: "Runs the test data seeder to populate the database with realistic test data with the given mode (None, Minimal, Full, Load)",
-                getDefaultValue: () => DataSeedMode.None
-            ),
-            new Option<bool>(name: "--quiet", description: "Suppresses console output", getDefaultValue: () => false),
+            new Option<bool>(name: "--cleanFirst")
+            {
+                Description =
+                    "Runs scripts to clean the database before running migrations (should only be used in development/test scenarios)",
+                DefaultValueFactory = _ => false,
+            },
+            new Option<DataSeedMode>(name: "--dataSeedMode")
+            {
+                Description =
+                    "Runs the test data seeder to populate the database with realistic test data with the given mode (None, Minimal, Full, Load)",
+                DefaultValueFactory = _ => DataSeedMode.None,
+            },
+            new Option<bool>(name: "--quiet")
+            {
+                Description = "Suppresses console output",
+                DefaultValueFactory = _ => false,
+            },
         };
 
-        rootCommand.Handler = CommandHandler.Create(
+        rootCommand.Action = CommandHandler.Create(
             (string connectionString, bool cleanFirst, DataSeedMode dataSeedMode, bool quiet) =>
             {
                 try
@@ -76,7 +82,8 @@ public static class MigrationRunner
             }
         );
 
-        return rootCommand.Invoke(args);
+        var parseResult = rootCommand.Parse(args);
+        return parseResult.Invoke();
     }
 
     private static void RunCleanScripts(IConnectionManager connectionManager, bool quiet)

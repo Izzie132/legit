@@ -23,17 +23,22 @@ public static class DataSeeder
         var rootCommand = new RootCommand
         {
             new Argument<string>("connectionString"),
-            new Option<DataSeedMode>(
-                name: "--dataSeedMode",
-                description: "The seed mode to use",
-                getDefaultValue: () => DataSeedMode.Full
-            ),
-            new Option<bool>(name: "--quiet", description: "Suppresses console output", getDefaultValue: () => false),
+            new Option<DataSeedMode>(name: "--dataSeedMode")
+            {
+                Description = "The seed mode to use",
+                DefaultValueFactory = _ => DataSeedMode.Full,
+            },
+            new Option<bool>(name: "--quiet")
+            {
+                Description = "Suppresses console output",
+                DefaultValueFactory = _ => false,
+            },
         };
 
-        rootCommand.Handler = CommandHandler.Create(SeedTestData);
+        rootCommand.Action = CommandHandler.Create(SeedTestData);
 
-        return rootCommand.Invoke(args);
+        var parseResult = rootCommand.Parse(args);
+        return parseResult.Invoke();
     }
 
     public static void Insert<TEntity>(IList<TEntity> entities)
