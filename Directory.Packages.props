@@ -35,7 +35,7 @@
     <PackageVersion Include="Respawn" Version="6.2.1" />
     <PackageVersion Include="SimplerSoftware.EntityFrameworkCore.SqlServer.NodaTime" Version="9.1.1" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.4" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.3" />
     <PackageVersion Include="System.CommandLine" Version="2.0.0-beta6.25358.103" />
     <PackageVersion Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta5.25306.1" />
     <PackageVersion Include="System.Formats.Asn1" Version="9.0.7" />
