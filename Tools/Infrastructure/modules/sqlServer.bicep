@@ -34,7 +34,7 @@ param sqlAdminGroupName string
 param sqlAdminGroupObjectId string
 
 
-resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
+resource sqlServer 'Microsoft.Sql/servers@2023-08-01' = {
   name: toLower('${projectCode}-SQL01-${environment}')
   location: location
   properties: {
@@ -49,7 +49,7 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   }
 }
 
-resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
+resource sqlDatabase 'Microsoft.Sql/servers/databases@2023-08-01' = {
   parent: sqlServer
   name: '${projectCode}-SQLDB01-${environment}'
   location: location
@@ -62,7 +62,7 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
   }
 }
 
-resource allowGhystonIps 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
+resource allowGhystonIps 'Microsoft.Sql/servers/firewallRules@2023-08-01' = {
   name: 'Ghyston IP Range'
   parent: sqlServer
   properties: {
@@ -71,7 +71,7 @@ resource allowGhystonIps 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview
   }
 }
 
-resource allowAllAzureIps 'Microsoft.Sql/servers/firewallRules@2021-11-01' = {
+resource allowAllAzureIps 'Microsoft.Sql/servers/firewallRules@2023-08-01' = {
   name: 'AllowAllWindowsAzureIps'
   parent: sqlServer
   properties: {
