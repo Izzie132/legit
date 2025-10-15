@@ -16,7 +16,7 @@
     "scan": "auditjs ossi"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.0.0",
+    "@hookform/resolvers": "^5.2.1",
     "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.4",
@@ -32,7 +32,7 @@
     "react-router-dom": "^7.6.0",
     "tailwind-merge": "^3.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.24.1"
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "@ghyston/eslint-config-ghyston": "^3.0.1",

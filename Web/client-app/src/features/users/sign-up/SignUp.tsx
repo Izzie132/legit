@@ -20,7 +20,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 const signUpFormSchema = z.object({
   name: z.string().min(3).max(20),
-  email: z.string().email(),
+  email: z.email(),
 });
 
 export const SignUp = () => {
