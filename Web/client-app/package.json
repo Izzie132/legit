@@ -25,14 +25,14 @@
     "axios": "^1.12.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "lucide-react": "^0.545.0",
+    "lucide-react": "^0.546.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.55.0",
     "react-router-dom": "^7.6.0",
     "tailwind-merge": "^3.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^4.0.0"
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@ghyston/eslint-config-ghyston": "^3.0.1",
@@ -48,7 +48,7 @@
     "eslint": "^9.17.0",
     "jsdom": "^27.0.0",
     "prettier": "^3.0.3",
-    "prettier-plugin-tailwindcss": "^0.6.11",
+    "prettier-plugin-tailwindcss": "^0.7.0",
     "query-string": "^9.0.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.0.2",

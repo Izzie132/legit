@@ -19,6 +19,7 @@
     <PackageVersion Include="Ghyston.editorconfig" Version="1.0.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
     <PackageVersion Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.21" />
+    <PackageVersion Include="Microsoft.Build" Version="17.14.28" />
     <PackageVersion Include="Microsoft.Build.Tasks.Core" Version="17.14.28" />
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="6.1.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
