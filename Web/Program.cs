@@ -66,4 +66,4 @@ static WebApplication ConfigureApp(WebApplicationBuilder builder)
 }
 
 // Needed to make the `Program` class available to the test projects.
-public partial class Program { }
+public partial class Program;

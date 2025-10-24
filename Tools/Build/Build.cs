@@ -32,8 +32,12 @@ sealed class Build : NukeBuild
     const string ProjectName = "QQProjectName";
     const string DotNetVersion = "net8.0";
 
-    readonly string sonatypeOssIndexUsername = EnvironmentInfo.GetVariable<string>("SONATYPE_OSS_INDEX_USERNAME");
-    readonly string sonatypeOssIndexApiToken = EnvironmentInfo.GetVariable<string>("SONATYPE_OSS_INDEX_API_TOKEN");
+    T GetRequiredEnvVar<T>(string name) =>
+        EnvironmentInfo.GetVariable<T>(name)
+        ?? throw new InvalidOperationException($"Environment variable {name} is required but not set.");
+
+    string SonatypeOssIndexUsername => GetRequiredEnvVar<string>("SONATYPE_OSS_INDEX_USERNAME");
+    string SonatypeOssIndexApiToken => GetRequiredEnvVar<string>("SONATYPE_OSS_INDEX_API_TOKEN");
 
     static string NugetPackageListFilePath => RootDirectory / "nuget_packages.txt";
 
@@ -169,7 +173,7 @@ sealed class Build : NukeBuild
             _.DependsOn(RestoreFrontEnd)
                 .Executes(() =>
                 {
-                    var arguments = $"run scan -- --user {sonatypeOssIndexUsername} --password {sonatypeOssIndexApiToken}";
+                    var arguments = $"run scan -- --user {SonatypeOssIndexUsername} --password {SonatypeOssIndexApiToken}";
                     ProcessTasks.StartProcess("npm", arguments, ReactClientDirectory).AssertZeroExitCode();
                 });
 
@@ -203,8 +207,8 @@ sealed class Build : NukeBuild
                     DotNetTasks.DotNet(
                         $"{AuditProjectDllFile} "
                             + $"packageListFilePath {NugetPackageListFilePath} "
-                            + $"sonatypeUsername {sonatypeOssIndexUsername} "
-                            + $"sonatypeApiToken {sonatypeOssIndexApiToken}"
+                            + $"sonatypeUsername {SonatypeOssIndexUsername} "
+                            + $"sonatypeApiToken {SonatypeOssIndexApiToken}"
                     );
                 });
 

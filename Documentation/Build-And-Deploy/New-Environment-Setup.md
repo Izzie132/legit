@@ -8,13 +8,15 @@ Before creating any resources in Azure via Bicep, there are a few pre-requisite 
 
 ### Create a new Resource Group in Azure
 
-- The Resource Group should be created in the Azure Subscription required by the project. You may have different subscriptions for Production and Non-Production environments).
+- The Resource Group should be created in the Azure Subscription required by the project. You may have different subscriptions for Production and Non-Production environments.
 - The Resource Group should be named according to the environment it represents, for example a UAT environment should have the name `PRJCT-RG-UAT`.
 - Azure users who require access to manage the environment should be given the **Contributor** role on the Resource Group. Depending on the security requirements, this could be done via [Privileged Identity Management](https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/).
 
 ### Create Role-Based Access Control (RBAC) Security Groups in Microsoft Entra ID
 
 - Azure users who require access to manage the environment should be added to these groups.
+- To create them, go to portal.azure.com, and click on Microsoft Entra ID, and then Add -> Group.
+- Make sure to give yourself member access as well as owner access. Owner access does not give you member access by default.
 
 | Group Name             | Use                                                       |
 | ---------------------- | --------------------------------------------------------- |
@@ -26,18 +28,23 @@ Before creating any resources in Azure via Bicep, there are a few pre-requisite 
 - In Azure DevOps, go to Project Settings, then in the Pipelines subsection "Service connections"
 - "New service connection" in the top right -> Azure Resource Manager -> Workload Identity federation (automatic)
 - This Service Connection should be scoped to the newly created Resource Group in Azure, and named appropriately (e.g. `PRJCT-SERCON-UAT` for a Service Connection from DevOps through to the UAT environment Resource Group)
-- Grant access permission to all pipelines, and Save. This will create a App Registration in Azure Entra ID, with a pre-configured federated credential to allow Azure DevOps to connect to the Azure Resource Group.
+- Grant access permission to all pipelines, and Save. This will create an App Registration in Azure Entra ID, with a pre-configured federated credential to allow Azure DevOps to connect to the Azure Resource Group.
 - Then as an Azure Admin, open the Service Connection in Azure DevOps -> Manage Service Principal -> Branding and Properties section, and give the principal the same name as the connection, as set above
+  - Or another way of doing this is to
+    - Copy the ID of the service connection (just under the name of it in Azure Devops)
+    - Search for that ID in the Azure Portal, and click on the Service Principal (not the Application)
+    - Go to the properties page, change the name, and click save
+    - Refresh the page to see that the name has changed
 
 ### Set up a new "Environment" in Azure DevOps
 
 - In Azure DevOps, under the "Pipelines" sidebar section, go to "Environments"
-- Create a "New environment" in DevOps to represent the environment, with no resources for now, and name it appropriately (e.g. UAT to represent the UAT environment)
+- Create a "New environment" in DevOps to represent the environment, with no resources for now, and name it appropriately (e.g. "QQ Project Name - UAT" to represent the UAT environment)
 - Click into the Environment, and in the triple dots menu at the top right select "Security"
-  - Add a Pipeline permission in the bottom card for the main pipeline (currently Build and Deploy) to allow the pipeline to use resources from this Environment
+  - Add a Pipeline permission in the bottom card for the main pipeline (QQProjectName - Build and Deploy) to allow the pipeline to use resources from this Environment
   - Update the inherited Project Administrators permission from Reader to Administrator in the top "User permissions" card
   - Update the inherited Project Valid Users permission from Reader to User in the top "User permissions" card and hit Save
-- Click back to the Environment and in the top tabs beneath the environment name, select "Approvals and Checks"
+- If this environment should be deployed to automatically (e.g. when you merge into main) then you're done. If not, then click back to the Environment and in the top tabs beneath the environment name, select "Approvals and Checks"
   - Add an "Approvals" check (via the + or the "Add your first check" section) and add the relevant Deployment Approvers group, any description, and hit create
 
 ## Code changes for a new environment
@@ -48,6 +55,8 @@ As well as configuring things in the cloud, there are a few pre-requisite code c
 
 Each environment should have its own app settings JSON file, which should be named appropriately. For example, `appsettings.uat.json` for the UAT environment. It is typically easiest to copy an existing app settings file and tweak the values contained within as necessary for the new environment.
 Anything that is not defined in this file will be taken from the `appsettings.json` file.
+
+The deployed environments don't need a connection string because this gets set by the bicep deployment.
 
 ### `Tools\Infrastructure\{env}.bicepparam`
 
@@ -106,7 +115,7 @@ Make sure to add any secure parameters as environment variables before running t
 
 ```powershell
 $env:<ENVIRONMENT_NAME>_SECRET_MESSAGE_PASSWORD = 'Password123'
-az deployment group create --template-file ./Tools/Infrastructure/QQProjectName.bicep --parameters ./Tools/Infrastructure/<ENVIRONMENT_NAME>.bicepparam -g <RESOURCE_GROUP_NAME> -c
+az deployment group create --template-file ./Tools/Infrastructure/QQProjectName.bicep --parameters ./Tools/Infrastructure/<ENVIRONMENT_NAME>.bicepparam -g PRJCT-RG-<ENVIRONMENT_NAME> -c
 ```
 
 You will now be prompted to review the proposed changes. If everything looks correct, you can confirm the changes and the deployment will begin.
@@ -120,7 +129,7 @@ $env:UAT_SECRET_MESSAGE_PASSWORD = 'Password123'
 az deployment group create --template-file ./Tools/Infrastructure/QQProjectName.bicep --parameters ./Tools/Infrastructure/uat.bicepparam -g PRJCT-RG-UAT -c
 ```
 
-This will log in to the correct Azure Subscription, and tell Bicep that we want to create a deployment into the `PRJCT-RG-UAT` Resource Group, using the `PorjectName.bicep` root template file, with parameters from the `uat.bicepparam` file.
+This will log in to the correct Azure Subscription, and tell Bicep that we want to create a deployment into the `PRJCT-RG-UAT` Resource Group, using the `QQProjectName.bicep` root template file, with parameters from the `uat.bicepparam` file.
 The parameters file will load the `secretMessagePassword` parameter from the `UAT_SECRET_MESSAGE_PASSWORD` environment variable, so this need to be set before we run the Bicep command.
 Bicep will ask us to review the proposed actions, and if it looks accurate, we can "confirm".
 
@@ -140,16 +149,20 @@ Connect to the Azure SQL Database either using the [Query Editor in Azure Portal
 
 To allow the Pipeline Agent VM access to run migrations and seed data:
 
-- `CREATE USER [<DEVOPS_SERVICE_CONNECTION_NAME>] FROM EXTERNAL PROVIDER`
-- `ALTER ROLE db_datareader ADD MEMBER [<DEVOPS_SERVICE_CONNECTION_NAME>]`
-- `ALTER ROLE db_datawriter ADD MEMBER [<DEVOPS_SERVICE_CONNECTION_NAME>]`
-- `ALTER ROLE db_ddladmin ADD MEMBER [<DEVOPS_SERVICE_CONNECTION_NAME>]`
+```sql
+CREATE USER [PRJCT-SERCON-<ENV>] FROM EXTERNAL PROVIDER
+ALTER ROLE db_datareader ADD MEMBER [PRJCT-SERCON-<ENV>]
+ALTER ROLE db_datawriter ADD MEMBER [PRJCT-SERCON-<ENV>]
+ALTER ROLE db_ddladmin ADD MEMBER [PRJCT-SERCON-<ENV>]
+```
 
 To allow the Web App to read and write data:
 
-- `CREATE USER [<WEB_APP_NAME>] FROM EXTERNAL PROVIDER`
-- `ALTER ROLE db_datareader ADD MEMBER [<WEB_APP_NAME>]`
-- `ALTER ROLE db_datawriter ADD MEMBER [<WEB_APP_NAME>]`
+```sql
+CREATE USER [PRJCT-WA01-<ENV>] FROM EXTERNAL PROVIDER
+ALTER ROLE db_datareader ADD MEMBER [PRJCT-WA01-<ENV>]
+ALTER ROLE db_datawriter ADD MEMBER [PRJCT-WA01-<ENV>]
+```
 
 ## Set up Automated Deployments
 
@@ -171,6 +184,6 @@ The easiest way to add a new stage definition is to copy an existing definition 
   - `parameters`
     - `deploymentName` - this should be set as appropriate based on the existing naming conventions (e.g. `deploy_uat` for the UAT environment)
     - `environmentName` - this is the name of the **Environment** in Azure DevOps you created in an earlier part of the setup process
-    - `azureSubscription` - this is the name of the **Service Connection** in Azure DevOps you created right at the start to allow a connection through to Azure (e.g. `PRJCT-SERCON-UAT` for that UAT environment)
+    - `serviceConnectionName` - this is the name of the **Service Connection** in Azure DevOps you created right at the start to allow a connection through to Azure (e.g. `PRJCT-SERCON-UAT` for that UAT environment)
     - `webAppResourceName` - this is the name of the **App Service** resource in Azure that was created by running Bicep (e.g. `PRJCT-WA01-UAT` for the UAT environment)
     - `connectionString` - this is the SQL connection string used by the Pipeline VM to connect to the SQL Server Database, and is easiest defined by copying and modifying another connection string from within the same filed

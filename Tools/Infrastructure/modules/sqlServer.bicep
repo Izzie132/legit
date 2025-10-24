@@ -22,7 +22,7 @@ var skuDetails = {
   }
   prod: {
     name: 'Standard'
-    tier: 'S0'
+    tier: 'Standard'
   }
 }
 

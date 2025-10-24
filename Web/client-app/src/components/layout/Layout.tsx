@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 export const Layout = () => (
   <div className="flex flex-col items-center">
     <div className="mb-10 flex h-16 w-full items-center gap-8 px-16 shadow-sm">
-      <h1 className="mr-20 text-2xl font-semibold">Project Name</h1>
+      <h1 className="mr-20 text-2xl font-semibold">QQ Project Name</h1>
       <NavBarLink to="/" label="Home" />
       <NavBarLink to="/weather" label="Weather" />
       <NavBarLink to="/counter" label="Counter" />

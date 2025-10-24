@@ -22,7 +22,7 @@ public static class OpenApiConfigExtensions
             o.DocumentSettings = s =>
             {
                 s.DocumentName = "v1";
-                s.Title = "Project Name";
+                s.Title = "QQ Project Name";
                 s.Version = "v1";
 
                 s.MarkNonNullablePropsAsRequired();
