@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.IO;
@@ -6,7 +7,9 @@ using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Docker;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.Git;
 using Nuke.Common.Tools.Npm;
+using Nuke.Common.Utilities.Collections;
 using Serilog;
 
 #pragma warning disable SA1124 // (DoNotUseRegions) Regions are useful in this file
@@ -104,7 +107,8 @@ sealed class Build : NukeBuild
                     AuditFrontEndPackages,
                     CheckBackEndCodeQuality,
                     RunBackendTests,
-                    AuditBackEndPackages
+                    AuditBackEndPackages,
+                    CheckCleanGit
                 );
 
     Target Publish =>
@@ -203,6 +207,24 @@ sealed class Build : NukeBuild
                             + $"sonatypeApiToken {sonatypeOssIndexApiToken}"
                     );
                 });
+
+    Target CheckCleanGit =>
+        _ =>
+            _.Executes(() =>
+                {
+                    var status = GitTasks.Git($"status --porcelain");
+                    if (status.Count != 0)
+                    {
+                        Log.Error("There are uncommitted changes in the working directory");
+                        status.ForEach(x => Log.Error("{file}", x.Text));
+                        throw new InvalidOperationException("Git working directory is not clean.");
+                    }
+                    else
+                    {
+                        Log.Information("Git working directory is clean.");
+                    }
+                })
+                .DependsOn(CompileSolution, CheckFrontEndCompiles);
 
     #endregion
 

@@ -28,6 +28,7 @@
         "AuditFrontEndPackages",
         "BuildAndTest",
         "CheckBackEndCodeQuality",
+        "CheckCleanGit",
         "CheckFrontEndCodeQuality",
         "CheckFrontEndCompiles",
         "CleanSolution",
