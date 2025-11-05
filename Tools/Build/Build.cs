@@ -36,9 +36,6 @@ sealed class Build : NukeBuild
         EnvironmentInfo.GetVariable<T>(name)
         ?? throw new InvalidOperationException($"Environment variable {name} is required but not set.");
 
-    string SonatypeOssIndexUsername => GetRequiredEnvVar<string>("SONATYPE_OSS_INDEX_USERNAME");
-    string SonatypeOssIndexApiToken => GetRequiredEnvVar<string>("SONATYPE_OSS_INDEX_API_TOKEN");
-
     static string NugetPackageListFilePath => RootDirectory / "nuget_packages.txt";
 
     static AbsolutePath WebProjectDirectory => RootDirectory / "Web";
@@ -46,6 +43,9 @@ sealed class Build : NukeBuild
     static AbsolutePath ReactClientDirectory => WebProjectDirectory / "client-app";
 
     static AbsolutePath BuildOutputDirectory => RootDirectory / "build-output";
+
+    string SonatypeOssIndexUsername => GetRequiredEnvVar<string>("SONATYPE_OSS_INDEX_USERNAME");
+    string SonatypeOssIndexApiToken => GetRequiredEnvVar<string>("SONATYPE_OSS_INDEX_API_TOKEN");
 
     AbsolutePath MigrationsDirectory => RootDirectory / "Tools" / "Migrations";
     AbsolutePath MigrationsDllFile => MigrationsDirectory / $"bin/{buildConfiguration}/{DotNetVersion}/Migrations.dll";
