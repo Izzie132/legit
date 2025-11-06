@@ -14,7 +14,7 @@ public class WebTestFixture : AppFixture<Program>
 
         a.ConfigureAppConfiguration(configuration =>
         {
-            configuration.AddJsonFile("appsettings.Testing.json");
+            configuration.AddJsonFile("appsettings.IntegrationTest.json");
         });
     }
 
