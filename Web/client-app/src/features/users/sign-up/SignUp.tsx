@@ -30,6 +30,19 @@ export const SignUp = () => {
 
   const createUser = useMutation({
     mutationFn: (user: CreateUserRequest) => apiClient.createUser(user),
+    onSuccess: (createdUser) => {
+      toast({
+        title: "User created",
+        description: `User ${createdUser.name} created successfully`,
+      });
+    },
+    onError: (err) => {
+      toast({
+        title: "User creation failed",
+        description: parseApiException(err).userVisibleMessage,
+        variant: "destructive",
+      });
+    },
   });
 
   const form = useForm({
@@ -40,28 +53,8 @@ export const SignUp = () => {
     },
   });
 
-  const onSubmit = (formValues: z.infer<typeof signUpFormSchema>) => {
-    const user: CreateUserRequest = {
-      name: formValues.name,
-      email: formValues.email,
-    };
-
-    createUser.mutate(user, {
-      onSuccess: (createdUser) => {
-        toast({
-          title: "User created",
-          description: `User ${createdUser.name} created successfully`,
-        });
-      },
-      onError: (err) => {
-        toast({
-          title: "User creation failed",
-          description: parseApiException(err).userVisibleMessage,
-          variant: "destructive",
-        });
-      },
-    });
-  };
+  const onSubmit = (formValues: z.infer<typeof signUpFormSchema>) =>
+    createUser.mutate(formValues);
 
   return (
     <>
