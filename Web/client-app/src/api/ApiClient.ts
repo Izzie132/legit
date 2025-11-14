@@ -6,30 +6,7 @@
 
 // ReSharper disable InconsistentNaming
 
-export interface IApiClient {
-
-    /**
-     * @return Success
-     */
-    getWeather(signal?: AbortSignal): Promise<GetWeatherResponse>;
-
-    /**
-     * @return Success
-     */
-    createUser(request: CreateUserRequest, signal?: AbortSignal): Promise<CreateUserResponse>;
-
-    /**
-     * @return Success
-     */
-    getUsers(signal?: AbortSignal): Promise<GetUsersResponse>;
-
-    /**
-     * @return Success
-     */
-    getSecretMessage(password: string, signal?: AbortSignal): Promise<GetSecretMessageResponse>;
-}
-
-export class ApiClient implements IApiClient {
+export class ApiClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;

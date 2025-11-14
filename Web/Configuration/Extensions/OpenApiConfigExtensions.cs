@@ -53,13 +53,13 @@ public static class OpenApiConfigExtensions
 
                 c.UseAbortSignal = true;
                 c.WrapDtoExceptions = true;
-                c.GenerateClientInterfaces = true;
 
                 c.TypeScriptGeneratorSettings.TypeStyle = TypeScriptTypeStyle.Interface;
                 c.TypeScriptGeneratorSettings.Namespace = "";
                 c.TypeScriptGeneratorSettings.GenerateTypeCheckFunctions = true;
                 c.TypeScriptGeneratorSettings.TemplateDirectory = "client-app/src/api/templates";
                 c.TypeScriptGeneratorSettings.DateTimeType = TypeScriptDateTimeType.String;
+                c.TypeScriptGeneratorSettings.EnumStyle = TypeScriptEnumStyle.StringLiteral;
             }
         );
 

@@ -1,5 +1,8 @@
 ﻿using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using NodaTime;
+using NodaTime.Serialization.SystemTextJson;
 
 namespace Web.Infrastructure.Extensions;
 
@@ -12,8 +15,20 @@ public static class HttpContextExtensions
         await context.Response.WriteAsync(Serialize(responseBody));
     }
 
-    private static JsonSerializerOptions JsonSerializerOptions =>
-        new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true };
+    private static JsonSerializerOptions JsonSerializerOptions
+    {
+        get
+        {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true,
+            };
+            options.Converters.Add(new JsonStringEnumConverter());
+            options.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+            return options;
+        }
+    }
 
     private static string Serialize<T>(T responseBody) =>
         JsonSerializer.Serialize(value: responseBody, options: JsonSerializerOptions);

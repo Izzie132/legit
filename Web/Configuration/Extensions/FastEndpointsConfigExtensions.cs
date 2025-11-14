@@ -1,4 +1,5 @@
-﻿using NodaTime;
+﻿using System.Text.Json.Serialization;
+using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using Web.Infrastructure.Exceptions;
 
@@ -12,6 +13,7 @@ public static class FastEndpointsConfigExtensions
         {
             c.Endpoints.RoutePrefix = "api";
             c.Serializer.Options.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+            c.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
             c.Errors.ResponseBuilder = (failures, ctx, statusCode) =>
             {
                 return new ApiErrorResponse(
