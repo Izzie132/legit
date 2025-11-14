@@ -6,7 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="EFCore.BulkExtensions.MIT" />
     <PackageReference Include="System.CommandLine" />
     <PackageReference Include="System.CommandLine.NamingConventionBinder" />
   </ItemGroup>

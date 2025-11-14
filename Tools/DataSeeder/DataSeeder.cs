@@ -2,8 +2,6 @@
 using System.CommandLine.NamingConventionBinder;
 using System.Diagnostics;
 using DataSeeder.Features.Users;
-using EFCore.BulkExtensions;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Web.Configuration;
@@ -45,8 +43,10 @@ public static class DataSeeder
         where TEntity : class
     {
         IfVerbose(Console.Write, $"Seeding {typeof(TEntity).Name} x {GetHumanReadableEntityCount(entities.Count)} ...");
-        const SqlBulkCopyOptions bulkCopyOptions = SqlBulkCopyOptions.Default;
-        dataContext.BulkInsert(entities, new BulkConfig { SqlBulkCopyOptions = bulkCopyOptions });
+
+        dataContext.AddRange(entities);
+        dataContext.SaveChanges();
+
         IfVerbose(WriteLineElapsedTime, Stopwatch.ElapsedMilliseconds);
         Stopwatch.Restart();
     }
@@ -109,8 +109,6 @@ public static class DataSeeder
         IfVerbose(Console.WriteLine, "Seeding data...");
 
         TestUsers.BuildAndSeedUsers();
-
-        dataContext.SaveChanges();
 
         IfVerbose(Console.WriteLine, $"Seeding data complete in {topLevelStopwatch.ElapsedMilliseconds}ms");
     }
