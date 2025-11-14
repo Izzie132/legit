@@ -51,4 +51,4 @@ jobs:
                 appType: "webAppLinux"
                 appName: ${{ parameters.webAppResourceName }}
                 package: "$(Agent.BuildDirectory)/build-artifacts/Web/"
-                runtimeStack: "DOTNETCORE|8.0"
+                runtimeStack: "DOTNETCORE|10.0"

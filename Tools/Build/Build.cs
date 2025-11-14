@@ -30,7 +30,7 @@ sealed class Build : NukeBuild
     readonly BuildConfiguration buildConfiguration = BuildConfiguration.Release;
 
     const string ProjectName = "QQProjectName";
-    const string DotNetVersion = "net8.0";
+    const string DotNetVersion = "net10.0";
 
     T GetRequiredEnvVar<T>(string name) =>
         EnvironmentInfo.GetVariable<T>(name)
@@ -96,7 +96,10 @@ sealed class Build : NukeBuild
                 .Executes(() =>
                 {
                     DotNetTasks.DotNetBuild(s =>
-                        s.SetProjectFile(solution).SetConfiguration(buildConfiguration).EnableNoRestore()
+                        s.SetProjectFile(solution)
+                            .SetConfiguration(buildConfiguration)
+                            .EnableNoRestore()
+                            .SetProperty("RunAnalyzers", "false")
                     );
                 });
 
