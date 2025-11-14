@@ -39,6 +39,7 @@
         "CreateTestDatabase",
         "DestroyDatabaseContainer",
         "EnsureDatabaseContainerResponsive",
+        "LintBicepFiles",
         "MigrateDevelopmentDatabase",
         "MigrateTestDatabase",
         "Publish",

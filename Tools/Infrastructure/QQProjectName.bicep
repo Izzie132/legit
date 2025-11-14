@@ -67,7 +67,7 @@ module appInsights 'modules/appInsights.bicep' = {
   }
 }
 
-// This avoids a circular dependency. Make sure to keep this in sync with the value in the keyVault.bicep file.
+#disable-next-line no-hardcoded-env-urls // This avoids a circular dependency. Make sure to keep this in sync with the value in the keyVault.bicep file.
 var keyVaultUri = 'https://${toLower(projectCode)}-kv-${toLower(environment)}.vault.azure.net/'
 
 module webApp 'modules/webApp.bicep' = {

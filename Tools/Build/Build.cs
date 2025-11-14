@@ -63,6 +63,7 @@ sealed class Build : NukeBuild
                 {
                     DotNetTasks.DotNetClean();
                 });
+
     Target RestoreSolution =>
         _ =>
             _.Description("Restores NuGet packages for .NET solution")
@@ -115,6 +116,7 @@ sealed class Build : NukeBuild
                     CheckBackEndCodeQuality,
                     RunBackendTests,
                     AuditBackEndPackages,
+                    LintBicepFiles,
                     CheckCleanGit
                 );
 
@@ -190,6 +192,36 @@ sealed class Build : NukeBuild
                     DotNetTasks.DotNet("format analyzers --verify-no-changes");
                     DotNetTasks.DotNet("csharpier check .");
                 });
+
+    Target LintBicepFiles =>
+        _ =>
+            _.Executes(() =>
+            {
+                var hasErrors = false;
+
+                foreach (var bicepFile in RootDirectory.GlobFiles("**/*.bicep"))
+                {
+                    var process = ProcessTasks.StartProcess("az", $"bicep lint --file {bicepFile}");
+                    process.WaitForExit();
+
+                    // There's no way to get the Bicep linter to fail on warnings, so we have to check if anything was written to stderr
+                    if (
+                        process.Output.Any(output =>
+                            output.Type == OutputType.Err
+                            && !string.IsNullOrEmpty(output.Text)
+                            && !output.Text.Contains("BCP081") // We have to ignore BCP081 because there's not much we can do about it: https://learn.microsoft.com/en-gb/azure/azure-resource-manager/bicep/diagnostics/bcp081
+                        )
+                    )
+                    {
+                        hasErrors = true;
+                    }
+                }
+
+                if (hasErrors)
+                {
+                    throw new InvalidOperationException("Bicep linting issues detected.");
+                }
+            });
 
     Target RunBackendTests =>
         _ =>
