@@ -1,15 +1,19 @@
 import { NavLink } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 type NavBarLinkProps = {
   to: string;
   label: string;
+  className?: string;
 };
 
-export const NavBarLink = (props: NavBarLinkProps) => (
+export const NavBarLink = ({ to, label, className }: NavBarLinkProps) => (
   <NavLink
-    to={props.to}
-    className={({ isActive }) => (isActive ? "text-l font-semibold" : "text-l")}
+    to={to}
+    className={({ isActive }) =>
+      cn("text-l", { "font-semibold": isActive }, className)
+    }
   >
-    {props.label}
+    {label}
   </NavLink>
 );
