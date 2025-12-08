@@ -41,6 +41,7 @@ static void ConfigureServices(WebApplicationBuilder builder)
         });
     }
 
+    services.AddCors();
     services.AddFastEndpoints();
     services.ConfigureSwaggerDocument();
 }
@@ -56,6 +57,9 @@ static WebApplication ConfigureApp(WebApplicationBuilder builder)
     app.ConfigureFastEndpoints();
 
     app.UseSwaggerGen();
+
+    // ToDo isd - check whether this is right
+    app.UseCors(builder => builder.WithOrigins("http://localhost:8081").AllowAnyMethod().AllowAnyHeader());
 
     if (!app.Environment.IsDevelopment())
     {

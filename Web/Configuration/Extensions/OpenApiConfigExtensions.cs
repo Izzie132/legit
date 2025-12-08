@@ -44,7 +44,7 @@ public static class OpenApiConfigExtensions
 
         await app.GenerateClientsAndExitAsync(
             documentName: "v1",
-            destinationPath: "client-app/src/api",
+            destinationPath: "client-app/api",
             csSettings: null,
             tsSettings: c =>
             {
