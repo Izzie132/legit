@@ -27,6 +27,13 @@
     <Content Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="client-app\components.json" />
+    <_ContentIncludedByDefault Remove="client-app\package-lock.json" />
+    <_ContentIncludedByDefault Remove="client-app\package.json" />
+    <_ContentIncludedByDefault Remove="client-app\tsconfig.json" />
+    <_ContentIncludedByDefault Remove="client-app\tsconfig.node.json" />
+  </ItemGroup>
   <Target Name="PublishReact" AfterTargets="ComputeFilesToPublish">
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
