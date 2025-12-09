@@ -58,6 +58,7 @@ static WebApplication ConfigureApp(WebApplicationBuilder builder)
 
     app.UseSwaggerGen();
 
+    // ToDo isd - work out how this should behave in production
     if (app.Environment.IsDevelopment())
     {
         app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
