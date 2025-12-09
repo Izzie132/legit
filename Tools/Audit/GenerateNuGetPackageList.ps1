@@ -1,6 +1,6 @@
 ﻿$ErrorActionPreference = "Stop"
 
-$solutionName = "QQProjectName"
+$solutionName = "Legit"
 
 $projectFolderPathsFromRoot = @(
     "Tests/Builders",

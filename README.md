@@ -43,19 +43,19 @@ To set up a new project:
 
 4. Rename the project
    - Open the project in Rider
-   - Replace `QQProjectName` with your project name (without spaces)
+   - Replace `Legit` with your project name (without spaces)
      - In Rider, open the "Replace in Files" dialog with Ctrl+Shift+R
      - Tick "Include non-solution items"
      - Enable the "Preserve case" option on the very right
-     - Replace `QQProjectName` with the new name of your project & click Replace All
+     - Replace `Legit` with the new name of your project & click Replace All
    - Replace the other forms of the project name in the same way
      - Replace `QQ Project Name` with your project name separated by spaces
      - Replace `QQ-Project-Name` with your project name separated by hyphens
      - Replace `PRJCT` with a 5-character abbreviation of your project name
    - Also manually rename any files that have `QQ` in the name. This will include
      - `QQ-Project-Name.md`
-     - `QQProjectName.sln`
-     - `QQProjectName.bicep`
+     - `Legit.sln`
+     - `Legit.bicep`
    - Commit & push the change
 
 5. Set up the pipelines
@@ -72,8 +72,8 @@ To set up a new project:
    - Rename it (you can't set the name when creating it :disappointed:)
      - Go back to Pipelines in the sidebar and click the All tab at the top
      - Click the 3 dots to the right of your new pipeline, then "Rename/move"
-     - Name it "QQProjectName - Build and Test"
-   - Do the same with the `/Tools/Pipelines/build-and-deploy.yaml` file to make another pipeline called "QQProjectName - Build and Deploy"
+     - Name it "Legit - Build and Test"
+   - Do the same with the `/Tools/Pipelines/build-and-deploy.yaml` file to make another pipeline called "Legit - Build and Deploy"
 
 6. Set up branch policies to require PRs to fit some conditions before they can be merged
    - In Azure, go to Repos -> Branches

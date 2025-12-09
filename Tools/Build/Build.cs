@@ -24,12 +24,12 @@ sealed class Build : NukeBuild
     //   - Microsoft VSCode           https://nuke.build/vscode
     public static int Main() => Execute<Build>(x => x.CompileSolution);
 
-    [Solution("QQProjectName.sln")]
+    [Solution("Legit.sln")]
     readonly Solution solution;
 
     readonly BuildConfiguration buildConfiguration = BuildConfiguration.Release;
 
-    const string ProjectName = "QQProjectName";
+    const string ProjectName = "Legit";
     const string DotNetVersion = "net10.0";
 
     T GetRequiredEnvVar<T>(string name) =>

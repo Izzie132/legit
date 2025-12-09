@@ -1,4 +1,4 @@
-using 'QQProjectName.bicep'
+using 'Legit.bicep'
 
 // Non Secure Parameters
 param environment = 'EXMPL'

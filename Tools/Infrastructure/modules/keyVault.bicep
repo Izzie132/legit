@@ -40,7 +40,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2025-05-01' = {
 
 resource secret 'Microsoft.KeyVault/vaults/secrets@2025-05-01' = {
   parent: keyVault
-  name: 'QQProjectName--SecretMessagePassword'
+  name: 'Legit--SecretMessagePassword'
   properties: {
     value: secretMessagePassword
   }

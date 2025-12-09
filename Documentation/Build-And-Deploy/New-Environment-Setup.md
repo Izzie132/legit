@@ -41,7 +41,7 @@ Before creating any resources in Azure via Bicep, there are a few pre-requisite 
 - In Azure DevOps, under the "Pipelines" sidebar section, go to "Environments"
 - Create a "New environment" in DevOps to represent the environment, with no resources for now, and name it appropriately (e.g. "QQ Project Name - UAT" to represent the UAT environment)
 - Click into the Environment, and in the triple dots menu at the top right select "Security"
-  - Add a Pipeline permission in the bottom card for the main pipeline (QQProjectName - Build and Deploy) to allow the pipeline to use resources from this Environment
+  - Add a Pipeline permission in the bottom card for the main pipeline (Legit - Build and Deploy) to allow the pipeline to use resources from this Environment
   - Update the inherited Project Administrators permission from Reader to Administrator in the top "User permissions" card
   - Update the inherited Project Valid Users permission from Reader to User in the top "User permissions" card and hit Save
 - If this environment should be deployed to automatically (e.g. when you merge into main) then you're done. If not, then click back to the Environment and in the top tabs beneath the environment name, select "Approvals and Checks"
@@ -110,12 +110,12 @@ az account list --output table
 az account set --subscription <SUBSCRIPTION_ID>
 ```
 
-Finally, run the following command to create the Azure Resources. This will create the resources defined in the `QQProjectName.bicep` file, using the parameters defined in the `<ENVIRONMENT_NAME>.bicepparam` file.
+Finally, run the following command to create the Azure Resources. This will create the resources defined in the `Legit.bicep` file, using the parameters defined in the `<ENVIRONMENT_NAME>.bicepparam` file.
 Make sure to add any secure parameters as environment variables before running the command.
 
 ```powershell
 $env:<ENVIRONMENT_NAME>_SECRET_MESSAGE_PASSWORD = 'Password123'
-az deployment group create --template-file ./Tools/Infrastructure/QQProjectName.bicep --parameters ./Tools/Infrastructure/<ENVIRONMENT_NAME>.bicepparam -g PRJCT-RG-<ENVIRONMENT_NAME> -c
+az deployment group create --template-file ./Tools/Infrastructure/Legit.bicep --parameters ./Tools/Infrastructure/<ENVIRONMENT_NAME>.bicepparam -g PRJCT-RG-<ENVIRONMENT_NAME> -c
 ```
 
 You will now be prompted to review the proposed changes. If everything looks correct, you can confirm the changes and the deployment will begin.
@@ -126,10 +126,10 @@ For example, if setting up the UAT environment, this chain of commands might loo
 az login
 az group list --output table
 $env:UAT_SECRET_MESSAGE_PASSWORD = 'Password123'
-az deployment group create --template-file ./Tools/Infrastructure/QQProjectName.bicep --parameters ./Tools/Infrastructure/uat.bicepparam -g PRJCT-RG-UAT -c
+az deployment group create --template-file ./Tools/Infrastructure/Legit.bicep --parameters ./Tools/Infrastructure/uat.bicepparam -g PRJCT-RG-UAT -c
 ```
 
-This will log in to the correct Azure Subscription, and tell Bicep that we want to create a deployment into the `PRJCT-RG-UAT` Resource Group, using the `QQProjectName.bicep` root template file, with parameters from the `uat.bicepparam` file.
+This will log in to the correct Azure Subscription, and tell Bicep that we want to create a deployment into the `PRJCT-RG-UAT` Resource Group, using the `Legit.bicep` root template file, with parameters from the `uat.bicepparam` file.
 The parameters file will load the `secretMessagePassword` parameter from the `UAT_SECRET_MESSAGE_PASSWORD` environment variable, so this need to be set before we run the Bicep command.
 Bicep will ask us to review the proposed actions, and if it looks accurate, we can "confirm".
 

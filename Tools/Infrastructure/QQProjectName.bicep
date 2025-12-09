@@ -10,7 +10,7 @@ param projectCode string = 'PRJCT'
 
 @minLength(1)
 @description('The name of the project configuration section in the ASP.NET Core appsettings.json file')
-param aspNetCoreProjectConfigurationSection string = 'QQProjectName'
+param aspNetCoreProjectConfigurationSection string = 'Legit'
 
 @minLength(1)
 @maxLength(5)
