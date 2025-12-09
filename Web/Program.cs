@@ -58,8 +58,14 @@ static WebApplication ConfigureApp(WebApplicationBuilder builder)
 
     app.UseSwaggerGen();
 
-    // ToDo isd - check whether this is right
-    app.UseCors(builder => builder.WithOrigins("http://localhost:8081").AllowAnyMethod().AllowAnyHeader());
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    }
+    else
+    {
+        app.UseCors(builder => builder.WithOrigins("http://localhost:8081").AllowAnyMethod().AllowAnyHeader());
+    }
 
     if (!app.Environment.IsDevelopment())
     {
