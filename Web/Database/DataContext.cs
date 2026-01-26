@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Web.Configuration;
 using Web.Exceptions;
+using Web.Features.Activities;
 using Web.Features.Users;
 
 namespace Web.Database;
@@ -10,6 +11,7 @@ public class DataContext(DbContextOptions options, IOptions<AppOptions> qqProjec
 {
     private readonly AppOptions appOptions = qqProjectNameOptions.Value;
     public DbSet<User> Users { get; set; } = default!;
+    public DbSet<Activity> Activities { get; set; } = default!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
