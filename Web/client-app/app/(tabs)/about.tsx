@@ -1,9 +1,7 @@
-import { Text, View, StyleSheet, TextInput } from "react-native";
-import theme from "@/constants/theme";
+import { Text, View } from "react-native";
 import { CreateActivityFormSchema } from "@/features/CreateActivityFormSchema";
-import { Form, useForm } from "react-hook-form";
-import { TextField } from "@/components/form/TextInput";
-import { register } from "node:module";
+import { useForm } from "react-hook-form";
+import { TextField } from "@/components/form/TextField";
 
 // ToDo isd - rename
 export default function AboutScreen() {
@@ -16,23 +14,11 @@ export default function AboutScreen() {
   });
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Add activity</Text>
+    <View className="flex-1 bg-background-800 justify-center items-center">
+      <Text className="text-typography-900 text-xl mb-4">Add activity</Text>
       <form>
         <TextField label="title" register={createActivityForm.register} />
       </form>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.Colors.background,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    color: theme.Colors.textPrimary,
-  },
-});

@@ -15,16 +15,21 @@ type TextInputProps<T extends FieldValues> = {
   label: Path<T>;
   register: UseFormRegister<T>;
 };
-export const TextInput = <T extends FieldValues>({
+export const TextField = <T extends FieldValues>({
   label,
   register,
 }: TextInputProps<T>) => (
   <FormControl>
     <FormControlLabel>
-      <FormControlLabelText />
+      <FormControlLabelText className="text-typography-900">
+        {label}
+      </FormControlLabelText>
     </FormControlLabel>
-    <Input className="my-1" size="md">
-      <InputField {...register(label)} />
+    <Input className="my-1 bg-background-100 border border-primary-500 rounded" size="md">
+      <InputField
+        {...register(label)}
+        className="text-typography-900 placeholder:text-typography-500"
+      />
     </Input>
     <FormControlHelper>
       <FormControlHelperText />
