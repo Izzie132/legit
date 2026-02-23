@@ -72,7 +72,7 @@ export default function Index() {
 
       await MediaLibrary.saveToLibraryAsync(localUri);
       if (localUri) {
-        alert("Save dsfdsd!");
+        alert("Saved!");
       }
     } catch (e) {
       console.log(e);

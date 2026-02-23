@@ -6,7 +6,7 @@ namespace Web.Features.Activities;
 
 public static class CreateActivity
 {
-    public record Request(DateTime DateOfActivity, string Title, decimal DistanceInMeters);
+    public record Request(ActivityDto Activity);
 
     public record Response(int Id);
 
@@ -14,8 +14,8 @@ public static class CreateActivity
     {
         public Validator()
         {
-            RuleFor(x => x.Title).NotEmpty();
-            RuleFor(x => x.DistanceInMeters).GreaterThan(0);
+            RuleFor(x => x.Activity.Title).NotEmpty();
+            RuleFor(x => x.Activity.DistanceInMeters).GreaterThan(0);
         }
     }
 
@@ -32,11 +32,12 @@ public static class CreateActivity
             // ToDo isd - update ID here
             var activity = new Activity(
                 "testUser",
-                request.DateOfActivity,
-                request.Title,
-                request.DistanceInMeters,
+                request.Activity.DateOfActivity,
+                request.Activity.Title,
+                request.Activity.DistanceInMeters,
                 clock.GetCurrentInstant()
             );
+
             dataContext.Activities.Add(activity);
 
             await dataContext.SaveChangesAsync(ct);

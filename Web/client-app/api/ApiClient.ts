@@ -475,9 +475,17 @@ export interface CreateActivityResponse {
 }
 
 export interface CreateActivityRequest {
-  dateOfActivity: string;
+  activity: ActivityDto;
+}
+
+export interface ActivityDto {
+  name: string;
+  userId: string;
   title: string;
   distanceInMeters: number;
+  dateOfActivity: string;
+  imageUri?: string | undefined;
+  commentIndices?: number[] | undefined;
 }
 
 export class ApiException extends Error {

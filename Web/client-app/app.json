@@ -48,8 +48,7 @@
       "router": {},
       "eas": {
         "projectId": "4b0cda26-22b8-490a-a7e7-c5bcae3fc2b0"
-      },
-      "apiBaseUrl": "http://10.250.12.67:5000"
+      }
     },
     "owner": "isobelsd"
   }
