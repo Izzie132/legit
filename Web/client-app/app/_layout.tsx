@@ -7,6 +7,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import { useColorScheme } from "react-native";
+import "../global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ApiClientContextProvider } from "@/api/useApiClient";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";

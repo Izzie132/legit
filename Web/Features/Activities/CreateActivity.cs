@@ -1,5 +1,4 @@
 using FluentValidation;
-using NodaTime;
 using Web.Database;
 
 namespace Web.Features.Activities;
@@ -19,7 +18,7 @@ public static class CreateActivity
         }
     }
 
-    public class Endpoint(DataContext dataContext, ZonedClock clock) : Endpoint<Request, Response>
+    public class Endpoint(DataContext dataContext) : Endpoint<Request, Response>
     {
         public override void Configure()
         {
@@ -34,8 +33,7 @@ public static class CreateActivity
                 "testUser",
                 request.Activity.DateOfActivity,
                 request.Activity.Title,
-                request.Activity.DistanceInMeters,
-                clock.GetCurrentInstant()
+                request.Activity.DistanceInMeters
             );
 
             dataContext.Activities.Add(activity);

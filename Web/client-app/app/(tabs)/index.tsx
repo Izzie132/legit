@@ -1,4 +1,4 @@
-import { ImageSourcePropType, StyleSheet, View } from "react-native";
+import { ImageSourcePropType, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useEffect, useRef, useState } from "react";
 import { captureRef } from "react-native-view-shot";
@@ -13,7 +13,6 @@ import EmojiPicker from "@/components/EmojiPicker";
 import EmojiList from "@/components/EmojiList";
 import EmojiSticker from "@/components/EmojiSticker";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import theme from "@/constants/theme";
 
 const PlaceholderImage = require("@/assets/images/background-image.png");
 
@@ -80,9 +79,9 @@ export default function Index() {
   };
 
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <View style={styles.container}>
-        <View style={styles.imageContainer}>
+    <GestureHandlerRootView className="flex-1 items-center bg-brand-background">
+      <View className="flex-1 items-center bg-brand-background">
+        <View className="flex-1">
           <View ref={imageRef} collapsable={false}>
             <ImageViewer
               imgSource={PlaceholderImage}
@@ -94,8 +93,8 @@ export default function Index() {
           </View>
         </View>
         {showAppOptions ? (
-          <View style={styles.optionsContainer}>
-            <View style={styles.optionsRow}>
+          <View className="absolute bottom-20">
+            <View className="flex-row items-center">
               <IconButton icon="refresh" label="Reset" onPress={onReset} />
               <CircleButton onPress={onAddSticker} />
               <IconButton
@@ -106,7 +105,7 @@ export default function Index() {
             </View>
           </View>
         ) : (
-          <View style={styles.footerContainer}>
+          <View className="flex-[0.33] items-center">
             <Button
               theme="primary"
               label="Choose a photo"
@@ -125,26 +124,3 @@ export default function Index() {
     </GestureHandlerRootView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.Colors.background,
-    alignItems: "center",
-  },
-  imageContainer: {
-    flex: 1,
-  },
-  footerContainer: {
-    flex: 1 / 3,
-    alignItems: "center",
-  },
-  optionsContainer: {
-    position: "absolute",
-    bottom: 80,
-  },
-  optionsRow: {
-    alignItems: "center",
-    flexDirection: "row",
-  },
-});

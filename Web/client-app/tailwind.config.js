@@ -9,7 +9,6 @@ module.exports = {
     "./src/**/*.{html,js,jsx,ts,tsx,mdx}",
   ],
   presets: [require("nativewind/preset")],
-  important: "html",
   safelist: [
     {
       pattern:
@@ -19,6 +18,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        brand: {
+          primary: "#78BE20",
+          secondary: "#6CACE4",
+          dark: "#991E66",
+          background: "#333F48",
+          warning: "#FFC72C",
+          error: "#FF5C39",
+        },
         primary: {
           0: "rgb(var(--color-primary-0)/<alpha-value>)",
           50: "rgb(var(--color-primary-50)/<alpha-value>)",

@@ -1,19 +1,19 @@
 import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import theme from "@/constants/theme";
+import Colors from "@/constants/colors";
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: theme.Colors.secondary,
+        tabBarActiveTintColor: Colors.secondary,
         headerStyle: {
-          backgroundColor: theme.Colors.primary,
+          backgroundColor: Colors.primary,
         },
         headerShadowVisible: false,
-        headerTintColor: theme.Colors.white,
+        headerTintColor: Colors.white,
         tabBarStyle: {
-          backgroundColor: theme.Colors.background,
+          backgroundColor: Colors.background,
         },
       }}
     >
@@ -33,12 +33,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="about"
         options={{
-          title: "About",
+          title: "Activity",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={
-                focused ? "information-circle" : "information-circle-outline"
-              }
+              name={focused ? "add-circle" : "add-circle-outline"}
               color={color}
               size={24}
             />

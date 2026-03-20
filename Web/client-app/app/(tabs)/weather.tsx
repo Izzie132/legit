@@ -1,8 +1,7 @@
-﻿import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { useApiClient } from "@/api/useApiClient";
 import { useQuery } from "@tanstack/react-query";
 import { QueryResultWrapper } from "@/api/QueryResponseWrapper";
-import theme from "@/constants/theme";
 
 export default function WeatherScreen() {
   const apiClient = useApiClient();
@@ -14,8 +13,8 @@ export default function WeatherScreen() {
   return (
     <QueryResultWrapper query={getWeatherQuery}>
       {(weatherData) => (
-        <View style={styles.container}>
-          <Text style={styles.text}>
+        <View className="flex-1 items-center justify-center bg-brand-background">
+          <Text className="text-white">
             Today&#39;s temperature is: {weatherData.temperature}°C
           </Text>
         </View>
@@ -23,15 +22,3 @@ export default function WeatherScreen() {
     </QueryResultWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.Colors.background,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    color: theme.Colors.textPrimary,
-  },
-});

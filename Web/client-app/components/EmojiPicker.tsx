@@ -1,7 +1,6 @@
-import { Modal, View, Text, Pressable, StyleSheet } from "react-native";
+import { Modal, View, Text, Pressable } from "react-native";
 import { PropsWithChildren } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import Theme from "@/constants/theme";
 
 type Props = PropsWithChildren<{
   isVisible: boolean;
@@ -12,9 +11,11 @@ export default function EmojiPicker({ isVisible, children, onClose }: Props) {
   return (
     <View>
       <Modal animationType="slide" transparent={true} visible={isVisible}>
-        <View style={styles.modalContent}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>Choose a sticker</Text>
+        <View className="absolute bottom-0 h-1/4 w-full rounded-t-[18px] bg-brand-background">
+          <View className="h-[16%] flex-row items-center justify-between rounded-t-[10px] bg-brand-primary px-5">
+            <Text className="text-base text-brand-background">
+              Choose a sticker
+            </Text>
             <Pressable onPress={onClose}>
               <MaterialIcons name="close" color="#fff" size={22} />
             </Pressable>
@@ -25,29 +26,3 @@ export default function EmojiPicker({ isVisible, children, onClose }: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  modalContent: {
-    height: "25%",
-    width: "100%",
-    backgroundColor: Theme.Colors.background,
-    borderTopRightRadius: 18,
-    borderTopLeftRadius: 18,
-    position: "absolute",
-    bottom: 0,
-  },
-  titleContainer: {
-    height: "16%",
-    backgroundColor: Theme.Colors.primary,
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    paddingHorizontal: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  title: {
-    color: Theme.Colors.textSecondary,
-    fontSize: 16,
-  },
-});

@@ -1,6 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Theme from "@/constants/theme";
 
 type Props = {
   label: string;
@@ -11,67 +10,31 @@ type Props = {
 export default function Button({ label, theme, onPress }: Props) {
   if (theme === "primary") {
     return (
-      <View
-        style={[
-          styles.buttonContainer,
-          {
-            borderWidth: 4,
-            borderColor: Theme.Colors.primary,
-            borderRadius: 18,
-          },
-        ]}
-      >
+      <View className="mx-5 h-[68px] w-[320px] items-center justify-center rounded-[18px] border-4 border-brand-primary p-[3px]">
         <Pressable
-          style={[styles.button, { backgroundColor: Theme.Colors.white }]}
+          className="w-full h-full flex-row items-center justify-center rounded-[10px] bg-white"
           onPress={onPress}
         >
           <FontAwesome
             name="picture-o"
             size={18}
-            color={Theme.Colors.primary}
-            style={styles.buttonIcon}
+            color="#78BE20"
+            className="pr-2"
           />
-          <Text
-            style={[styles.buttonLabel, { color: Theme.Colors.background }]}
-          >
-            {label}
-          </Text>
+          <Text className="text-base text-brand-background">{label}</Text>
         </Pressable>
       </View>
     );
   }
 
   return (
-    <View style={styles.buttonContainer}>
-      <Pressable style={styles.button} onPress={onPress}>
-        <Text style={styles.buttonLabel}>{label}</Text>
+    <View className="mx-5 h-[68px] w-[320px] items-center justify-center p-[3px]">
+      <Pressable
+        className="w-full h-full flex-row items-center justify-center rounded-[10px]"
+        onPress={onPress}
+      >
+        <Text className="text-base text-white">{label}</Text>
       </Pressable>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  buttonContainer: {
-    width: 320,
-    height: 68,
-    marginHorizontal: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 3,
-  },
-  button: {
-    borderRadius: 10,
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-  },
-  buttonIcon: {
-    paddingRight: 8,
-  },
-  buttonLabel: {
-    color: Theme.Colors.white,
-    fontSize: 16,
-  },
-});

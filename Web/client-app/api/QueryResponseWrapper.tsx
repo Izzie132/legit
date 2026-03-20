@@ -1,8 +1,7 @@
-﻿import { UseQueryResult } from "@tanstack/react-query";
-import { StyleSheet, Text, View } from "react-native";
+import { UseQueryResult } from "@tanstack/react-query";
+import { Text, View } from "react-native";
 import { parseApiException } from "@/api/apiErrorReponse";
 import { ReactNode } from "react";
-import theme from "@/constants/theme";
 
 type QueryResultWrapperProps<T> = {
   query: UseQueryResult<T>;
@@ -18,8 +17,8 @@ export const QueryResultWrapper = <QueryType,>({
   const { isPending, isError, error, data } = query;
   if (isPending) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>Loading...</Text>
+      <View className="flex-1 items-center justify-center bg-brand-background">
+        <Text className="text-white">Loading...</Text>
       </View>
     );
   }
@@ -27,9 +26,9 @@ export const QueryResultWrapper = <QueryType,>({
   if (isError) {
     return (
       errorContent ?? (
-        <View style={styles.container}>
-          <Text style={styles.text}>An error occurred: </Text>
-          <Text style={styles.text}>
+        <View className="flex-1 items-center justify-center bg-brand-background">
+          <Text className="text-white">An error occurred: </Text>
+          <Text className="text-white">
             {parseApiException(error).userVisibleMessage}
           </Text>
         </View>
@@ -39,15 +38,3 @@ export const QueryResultWrapper = <QueryType,>({
 
   return children(data);
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.Colors.background,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    color: theme.Colors.textPrimary,
-  },
-});

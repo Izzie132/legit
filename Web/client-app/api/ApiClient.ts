@@ -484,8 +484,6 @@ export interface ActivityDto {
   title: string;
   distanceInMeters: number;
   dateOfActivity: string;
-  imageUri?: string | undefined;
-  commentIndices?: number[] | undefined;
 }
 
 export class ApiException extends Error {
