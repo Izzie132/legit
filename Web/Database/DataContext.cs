@@ -7,9 +7,9 @@ using Web.Features.Users;
 
 namespace Web.Database;
 
-public class DataContext(DbContextOptions options, IOptions<AppOptions> qqProjectNameOptions) : DbContext(options)
+public class DataContext(DbContextOptions options, IOptions<AppOptions> appOptionsAccessor) : DbContext(options)
 {
-    private readonly AppOptions appOptions = qqProjectNameOptions.Value;
+    private readonly AppOptions appOptions = appOptionsAccessor.Value;
     public DbSet<User> Users { get; set; } = default!;
     public DbSet<Activity> Activities { get; set; } = default!;
 

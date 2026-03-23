@@ -1,6 +1,6 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import { Text, View } from "react-native";
-import { parseApiException } from "@/api/apiErrorReponse";
+import { parseApiException } from "@/api/apiErrorResponse";
 import { ReactNode } from "react";
 
 type QueryResultWrapperProps<T> = {

@@ -28,9 +28,8 @@ public static class CreateActivity
 
         public override async Task<Response> ExecuteAsync(Request request, CancellationToken ct)
         {
-            // ToDo isd - update ID here
             var activity = new Activity(
-                "testUser",
+                request.Activity.UserId,
                 request.Activity.DateOfActivity,
                 request.Activity.Title,
                 request.Activity.DistanceInMeters

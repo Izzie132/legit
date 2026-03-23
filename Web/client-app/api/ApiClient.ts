@@ -479,7 +479,6 @@ export interface CreateActivityRequest {
 }
 
 export interface ActivityDto {
-  name: string;
   userId: string;
   title: string;
   distanceInMeters: number;

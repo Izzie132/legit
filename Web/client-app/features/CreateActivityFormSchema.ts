@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const CreateActivityFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title is too long"),
-  name: z.string().min(1, "Name is required"),
   distanceInMeters: z.number().positive("Distance must be positive"),
   dateOfActivity: z
     .string()
